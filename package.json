@@ -1,16 +1,16 @@
 {
-  "name": "retweet",
-  "version": "1.0.0",
-  "description": "Twitter mais par des jeunes français",
-  "main": "src/app.js",
-  "repository": "https://github.com/hickatheworld/statuette.git",
-  "author": "Hicka, Florilaige",
-  "license": "MIT",
-  "private": true,
-  "dependencies": {
-    "bcrypt": "^5.0.1",
-    "dotenv": "^15.0.0",
-    "express": "^4.17.2",
-    "mysql": "^2.18.1"
-  }
+	"name": "retweet",
+	"version": "1.0.0",
+	"description": "Twitter mais par des jeunes français",
+	"main": "src/app.js",
+	"repository": "https://github.com/hickatheworld/retweet.git",
+	"author": "Hicka, Florilaige",
+	"license": "MIT",
+	"private": true,
+	"dependencies": {
+		"bcrypt": "^5.0.1",
+		"dotenv": "^15.0.0",
+		"express": "^4.17.2",
+		"mysql": "^2.18.1"
+	}
 }
