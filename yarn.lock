@@ -512,6 +512,13 @@ __metadata:
   languageName: node
   linkType: hard
 
+"colors@npm:^1.4.0":
+  version: 1.4.0
+  resolution: "colors@npm:1.4.0"
+  checksum: 98aa2c2418ad87dedf25d781be69dc5fc5908e279d9d30c34d8b702e586a0474605b3a189511482b9d5ed0d20c867515d22749537f7bc546256c6014f3ebdcec
+  languageName: node
+  linkType: hard
+
 "concat-map@npm:0.0.1":
   version: 0.0.1
   resolution: "concat-map@npm:0.0.1"
@@ -2220,6 +2227,7 @@ __metadata:
   resolution: "retweet@workspace:."
   dependencies:
     bcrypt: ^5.0.1
+    colors: ^1.4.0
     dotenv: ^15.0.0
     express: ^4.17.2
     mysql: ^2.18.1
