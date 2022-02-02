@@ -7,10 +7,17 @@
 	"author": "Hicka, Florilaige",
 	"license": "MIT",
 	"private": true,
+	"scripts": {
+		"start": "node src/app.js",
+		"dev": "nodemon -e js,pug -L"
+	},
 	"dependencies": {
 		"bcrypt": "^5.0.1",
 		"dotenv": "^15.0.0",
 		"express": "^4.17.2",
 		"mysql": "^2.18.1"
+	},
+	"devDependencies": {
+		"nodemon": "^2.0.15"
 	}
 }
