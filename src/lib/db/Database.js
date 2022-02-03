@@ -55,7 +55,7 @@ class Database {
 		if (rows.length === 0) {
 			return null;
 		}
-		return new Account(rows[0]);
+		return new Account(rows[0], this.connection);
 	}
 
 }
