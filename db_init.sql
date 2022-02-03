@@ -6,7 +6,7 @@ CREATE TABLE `account` (
   `display_name` varchar(50) DEFAULT NULL,
   `password` char(60) NOT NULL,
   `created_at` DATETIME NOT NULL,
-  `avatar_id` char(16) NOT NULL DEFAULT '0000000000000001',
+  `avatar_id` char(16) DEFAULT NULL,
   `banner_id` char(16) DEFAULT NULL,
   `bio` varchar(160) DEFAULT NULL,
   `website` varchar(50) DEFAULT NULL,
