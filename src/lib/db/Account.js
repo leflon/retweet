@@ -1,4 +1,5 @@
 class Account {
+	#db;
 	constructor(sqlRow, db) {
 		this.#db = db;
 		this.id = sqlRow.id;
