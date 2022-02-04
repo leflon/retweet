@@ -61,4 +61,4 @@ class Database {
 	}
 
 }
-module.exports = Database;
+module.exports = new Database(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASSWORD);
