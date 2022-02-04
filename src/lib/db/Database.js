@@ -1,4 +1,5 @@
 const mysql = require('mysql2/promise');
+const Logger = require('../misc/Logger');
 const Account = require('./Account');
 
 /**
@@ -15,6 +16,7 @@ class Database {
 		this.user = user;
 		this.password = password;
 		this.connection = null;
+		this.log = new Logger('Database');
 	}
 
 	/**
@@ -55,7 +57,7 @@ class Database {
 		if (rows.length === 0) {
 			return null;
 		}
-		return new Account(rows[0], this.connection);
+		return new Account(rows[0], this);
 	}
 
 }
