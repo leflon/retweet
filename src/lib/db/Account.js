@@ -38,6 +38,11 @@ class Account {
 		 */
 		this.displayName = sqlRow.display_name || null;
 		/**
+		 * Email address of this account.
+		 * @type {string}
+		 */
+		this.email = sqlRow.email;
+		/**
 		 * Password of this account. Encrypted with bcrypt.
 		 * @type {string}
 		 */

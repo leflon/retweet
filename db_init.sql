@@ -4,6 +4,7 @@ CREATE TABLE `account` (
   `id` char(16) NOT NULL,
   `username` varchar(16) NOT NULL,
   `display_name` varchar(50) DEFAULT NULL,
+  `email` varchar(350) DEFAULT NULL,
   `password` char(60) NOT NULL,
   `created_at` DATETIME NOT NULL,
   `avatar_id` char(16) DEFAULT NULL,
