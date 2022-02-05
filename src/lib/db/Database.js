@@ -87,5 +87,6 @@ class Database {
 			likes: []
 		}, this);
 	}
-
 }
+
+module.exports = new Database(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASSWORD);
