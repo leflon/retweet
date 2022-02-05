@@ -58,7 +58,7 @@ CREATE TABLE `media` (
 
 CREATE TABLE `auth` (
   `user_id` CHAR(16) NOT NULL,
-  `token` CHAR(60) NOT NULL,
+  `token` CHAR(32) NOT NULL,
   `created_at` DATETIME NOT NULL,
   `user_agent` VARCHAR(255) NOT NULL,
   `ip_address` VARCHAR(45) NOT NULL,
