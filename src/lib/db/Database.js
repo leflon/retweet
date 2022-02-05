@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
-
+require('dotenv').config();
 /**
  * Utility class for interacting with the MySQL database.
  */
@@ -66,17 +66,26 @@ class Database {
 	 * @param {object} data Required data to create the account.
 	 * @param {string} data.username The username of the account.
 	 * @param {string} data.password The clear password of the account. Will be encrypted in this function.
- 	 * @returns {Account} The generated account object.
+	 * @returns {Account} The generated account object.
 	 */
 	async addAccount(data) {
 		const id = await this.generateId();
-		const now = new Date();
+		const d = new Date();
 		const z = n => n < 10 ? `0${n}` : `${n}`;
-		const datetime = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${z(now.getHours())}:${z(now.getMinutes())}:${z(now.getSeconds())}` 
+		const datetime = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
 		const encrypted = await bcrypt.hash(data.password, 10);
-		await this.connection.query('INSERT INTO Account (id, username, password, created_at) VALUES ( ?, ?, ?, ?);', [id, data.username, encrypted, datetime]);
-		// TODO: test,return,log
+		await this.connection.query('INSERT INTO Account (id, username, password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
+			[id, data.username, encrypted, datetime]);
+		this.log.info(`[${id}] Created account ${data.username}`);
+		return new Account({
+			id,
+			username: data.username,
+			password: encrypted,
+			created_at: d,
+			follows: [],
+			followers: [],
+			likes: []
+		}, this);
 	}
 
 }
-module.exports = new Database(process.env.DB_HOST, process.env.DB_USER, process.env.DB_PASSWORD);
