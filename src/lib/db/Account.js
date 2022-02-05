@@ -138,5 +138,23 @@ class Account {
 		this.#db.log.info(`[${this.id}] ${field} : "${old}" -> "${value}"`);
 	}
 
+	async generateToken(userAgent, ip) {
+		const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@$!';
+		const token = Array(32)
+			.fill()
+			.map(() => chars[Math.floor(Math.random() * chars.length)])
+			.join('');
+		const [rows] = await this.#db.connection.query('SELECT * FROM auth WHERE token = ? ', [token]);
+
+		if (rows.length !== 0)
+			return await this.generateToken();
+		const z = n => n < 10 ? `0${n}` : `${n}`;
+		const d = new Date();
+		const datetime = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
+		await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, ?, ?, ?)', [this.id, token, datetime, userAgent, ip]);
+		this.#db.log.info(`[${this.id}] Generated new auth token. (UA: "${userAgent}", IP: ${ip})`);
+		return token;
+	}
+
 }
 module.exports = Account;
