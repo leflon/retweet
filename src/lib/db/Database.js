@@ -1,3 +1,4 @@
+const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
@@ -58,6 +59,23 @@ class Database {
 			return null;
 		}
 		return new Account(rows[0], this);
+	}
+
+	/**
+	 * Inserts an account in the database.
+	 * @param {object} data Required data to create the account.
+	 * @param {string} data.username The username of the account.
+	 * @param {string} data.password The clear password of the account. Will be encrypted in this function.
+ 	 * @returns {Account} The generated account object.
+	 */
+	async addAccount(data) {
+		const id = await this.generateId();
+		const now = new Date();
+		const z = n => n < 10 ? `0${n}` : `${n}`;
+		const datetime = `${now.getFullYear()}-${now.getMonth()+1}-${now.getDate()} ${z(now.getHours())}:${z(now.getMinutes())}:${z(now.getSeconds())}` 
+		const encrypted = await bcrypt.hash(data.password, 10);
+		await this.connection.query('INSERT INTO Account (id, username, password, created_at) VALUES ( ?, ?, ?, ?);', [id, data.username, encrypted, datetime]);
+		// TODO: test,return,log
 	}
 
 }
