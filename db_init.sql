@@ -56,6 +56,14 @@ CREATE TABLE `media` (
   `is_deleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
 
+CREATE TABLE `auth` (
+  `user_id` CHAR(16) NOT NULL,
+  `token` CHAR(60) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  `user_agent` VARCHAR(255) NOT NULL,
+  `ip_address` VARCHAR(45) NOT NULL,
+  PRIMARY KEY (`user_id`));
+
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,
