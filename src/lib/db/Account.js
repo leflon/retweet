@@ -36,7 +36,7 @@ class Account {
 		 * Display name of this account. Falls back to username in the UI if not set.
 		 * @type {?string}
 		 */
-		this.displayName = sqlRow.display_name;
+		this.displayName = sqlRow.display_name || null;
 		/**
 		 * Password of this account. Encrypted with bcrypt.
 		 * @type {string}
@@ -51,28 +51,28 @@ class Account {
 		 * Id of the account's profile picture. Falls back to default profile picture in the UI if not set.
 		 * @type {?string}
 		 */
-		this.avatarId = sqlRow.avatar_id;
+		this.avatarId = sqlRow.avatar_id || null;
 		/**
 		 * Id of the account's banner. Falls back to default banner in the UI if not set.
 		 * @type {?string}
 		 */
-		this.bannerId = sqlRow.banner_id;
+		this.bannerId = sqlRow.banner_id || null;
 		/**
 		 * Bio of this account.
 		 * @type {?string}
 		 */
-		this.bio = sqlRow.bio;
+		this.bio = sqlRow.bio || null;
 		/**
 		 * Website of this account.
 		 * @type {?string}
 		 */
-		this.website = sqlRow.website;
+		this.website = sqlRow.website || null;
 
 		/**
 		 * Location of this account. Not a real location, but rather a string set by the user.
 		 * @type {?string}
 		 */
-		this.location = sqlRow.location;
+		this.location = sqlRow.location || null;
 		/**
 		 * List of the ids of the accounts this account follows.
 		 * @type {string[]}
