@@ -62,7 +62,7 @@ CREATE TABLE `auth` (
   `created_at` DATETIME NOT NULL,
   `user_agent` VARCHAR(255) NOT NULL,
   `ip_address` VARCHAR(45) NOT NULL,
-  PRIMARY KEY (`user_id`));
+  PRIMARY KEY (`token`));
 
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
