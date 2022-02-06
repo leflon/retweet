@@ -1,6 +1,8 @@
 const Account = require('../lib/db/Account');
 
 module.exports = async function(req, res, next) {
+	if (req.path.startsWith('/public/'))
+		return next();
 	if (req.path === '/login' && req.signedCookies.auth)
 		return res.redirect('/home');
 	if (!req.signedCookies.auth && req.path !== '/login')
