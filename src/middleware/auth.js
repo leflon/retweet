@@ -21,7 +21,6 @@ module.exports = async function(req, res, next) {
 		return res.redirect('/login');
 	}
 	[row] = await db.connection.query('SELECT * FROM account WHERE id = ?', [row.user_id]);
-	console.log(row);
 	const user = new Account(row[0], db);
 	req.user = user;
 	next();
