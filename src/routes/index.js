@@ -8,7 +8,15 @@ router.get('/', (req, res) => {
 });
 
 router.get('/login', (req, res) => {
-	res.render('login');
+	res.render('login', {mode: 'login'});
+});
+
+router.get('/register', (req, res) => {
+	res.render('login', {mode: 'register'});
+});
+
+router.get('/recover', (req, res) => {
+	res.send('TODO');
 });
 
 router.post('/login', async (req, res) => {
@@ -16,13 +24,15 @@ router.post('/login', async (req, res) => {
 	const [result] = await req.app.db.connection.query('SELECT * FROM account WHERE username = ?', [username]);
 	if (result.length === 0) {
 		return res.render('login', {
-			error: 'Invalid username or password.',
+			error: true,
+			mode: 'login'
 		});
 	}
 	const user = new Account(result[0], req.app.db);
 	if (!await bcrypt.compare(password, user.encryptedPassword)) {
 		return res.render('login', {
-			error: 'Invalid username or password.',
+			error: true,
+			mode: 'login'
 		});
 	}
 	const token = await user.generateToken(req.get('user-agent'), req.ip);
