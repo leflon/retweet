@@ -4,12 +4,27 @@ html(lang='en')
 		meta(charset='UTF-8')
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(rel='stylesheet', href='/public/css/main.css')
+		link(rel='stylesheet', href='/public/css/login.css')
 		title Login - Retweet
 	body 
-		h1 Sign in
-		.error(style='color:red')
-			= error
-		form(action='', method='POST')
-			input(type='text', name='username', placeholder='Username')
-			input(type='password', name='password', placeholder='Password')
-			input(type='submit', value='Sign in')
+		.title
+			img(src='/public/img/logo.svg' alt='Logo')
+			b Retweet
+		if mode == 'login'
+			form(action='', method='POST')
+				#top-logo
+				h1 Se connecter
+				if error
+					#error Nom d'utilisateur ou mot de passe invalide.
+				input(type='text', name='username', placeholder='Nom d\'utilisateur')
+				input(type='password', name='password', placeholder='Mot de passe')
+				#form-actions
+					input#submit(type='submit', value='Connexion')
+					a#recover(href='/recover') Mot de passe oublié ?
+				#register-cta
+					span Vous n'avez pas de compte ?
+					a(href='/register') Inscrivez-vous
+		else
+			h1 Register
+			p TODO

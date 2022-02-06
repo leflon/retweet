@@ -1,0 +1,137 @@
+form {
+	width: 100%;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+form #top-logo {
+	display: none;
+}
+
+form h1 {
+	font: 500 2.5rem 'Montserrat';
+	text-align: center;
+}
+
+form #error {
+	color: #b61212;
+	margin-bottom: 10px;
+}
+
+form input[type='text'],
+form input[type='password'] {
+	font: 1.3rem 'Roboto';
+	margin: 4px 0;
+	width: auto;
+	appearance: none;
+	border: 1px solid #555;
+	color: #fff;
+	padding: 14px 6px;
+	border-radius: 8px;
+	background: transparent;
+	outline: 0px solid transparent;
+	transition: outline .1s linear;
+}
+
+form input[type='text']::placeholder,
+form input[type='password']::placeholder {
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	color: #555;
+	font-size: 1.1rem;
+	transition: .3s ease;
+}
+
+form input[type='text']:focus,
+form input[type='password']:focus {
+	outline: 4px solid #1D9BF0;
+	border-color: transparent;
+}
+
+form input[type='text']:focus::placeholder,
+form input[type='password']:focus::placeholder {
+	position: absolute;
+	font-size: 0.75rem;
+	top: 1px;
+	transform: translateY(0);
+	color: #1D9BF0;
+}
+
+#form-actions {
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	width: 100%;
+	margin: 20px 0;
+}
+
+#form-actions #recover,
+#form-actions #submit {
+	margin: 10px 0;
+	width: 200px;
+	padding: 10px 20px;
+	border-radius: 10em;
+	display: block;
+	box-sizing: content-box;
+	text-align: center;
+	font: 500 1.1rem 'Montserrat';
+	cursor: pointer;
+}
+
+#form-actions #submit {
+	border: none;
+	background-color: #fff;
+	transition: .3s ease;
+}
+
+#form-actions #submit:hover {
+	background-color: #ddd;
+}
+
+#form-actions #recover {
+	border: 1px solid #555;
+	color: #fff;
+	text-decoration: none;
+	transition: .3s ease;
+}
+
+#form-actions #recover:hover {
+	background-color: #ffffff15;
+}
+
+#register-cta span {
+	margin-right: 5px;
+}
+
+#register-cta a {
+	color: #1D9BF0;
+	text-decoration: none;
+}
+
+
+@media screen and (min-width: 1024px) {
+	form {
+		width: 550px;
+		padding: 10px;
+		border-radius: 12px;
+		background-color: #000000;
+		box-shadow: 0px 10px 10px #00000040;
+		margin-left: 50%;
+		transform: translateX(-50%);
+	}
+
+	form #top-logo {
+		display: block;
+		width: 100%;
+		height: 40px;
+		position: relative;
+		background: url('../img/logo.svg') no-repeat center;
+	}
+
+	form h1 {
+		margin: 10px 0;
+	}
+}
