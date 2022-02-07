@@ -22,7 +22,7 @@ form #error {
 form input[type='text'],
 form input[type='password'] {
 	font: 1.3rem 'Roboto';
-	margin: 4px 0;
+	margin: 6px 0;
 	width: auto;
 	appearance: none;
 	border: 1px solid #555;
@@ -57,6 +57,64 @@ form input[type='password']:focus::placeholder {
 	top: 1px;
 	transform: translateY(0);
 	color: #1D9BF0;
+}
+
+.input-line {
+	position: relative;
+}
+
+.input-line .info {
+	z-index: 5;
+	display: inline-block;
+	position: absolute;
+	top: 50%;
+	transform: translateY(-50%);
+	margin-left: 10px;
+}
+
+.input-line .info .info-icon {
+	background-color: #fff;
+	border-radius: 50%;
+	color: #000000;
+	width: 20px;
+	height: 20px;
+	display: inline-flex;
+	font-weight: 800;
+	justify-content: center;
+	align-items: center;
+	cursor: pointer;
+}
+
+.input-line .info .info-text {
+	position: absolute;
+	width: 200px;
+	left: -10px;
+	top: 50%;
+	transform: translate(-100%, -50%);
+	background: #fff;
+	color: #000;
+	padding: 10px 20px;
+	border-radius: 8px;
+	opacity: 0;
+	transition: opacity .1s ease;
+	pointer-events: none;
+}
+
+.input-line .info .info-text::before {
+	content: '';
+	position: absolute;
+	width: 0;
+	height: 0;
+	border: 10px solid transparent;
+	border-left: 10px solid #fff;
+	top: 50%;
+	right: -15px;
+	transform: translateY(-50%);
+}
+
+.input-line .info:hover .info-text {
+	opacity: 1;
+	pointer-events: all;
 }
 
 #form-actions {
@@ -134,4 +192,26 @@ form input[type='password']:focus::placeholder {
 	form h1 {
 		margin: 10px 0;
 	}
+
+
+	.input-line .info .info-text {
+		width: 300px;
+		margin-left: 30px;
+		left: 0;
+		top: 50%;
+		transform: translateY(-50%);
+	}
+
+	.input-line .info .info-text::before {
+		border: 10px solid transparent;
+		border-right: 10px solid #fff;
+		top: 50%;
+		left: -15px;
+		transform: translateY(-50%);
+	}
+
+	.input-line .info:hover .info-text {
+		display: inline-block;
+	}
+
 }
