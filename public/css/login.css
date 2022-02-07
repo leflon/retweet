@@ -102,11 +102,11 @@ form input[type='password']:focus::placeholder {
 	background-color: #ffffff15;
 }
 
-#register-cta span {
+#other-action span {
 	margin-right: 5px;
 }
 
-#register-cta a {
+#other-action a {
 	color: #1D9BF0;
 	text-decoration: none;
 }
