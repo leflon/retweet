@@ -2,7 +2,6 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
-require('dotenv').config();
 /**
  * Utility class for interacting with the MySQL database.
  */
