@@ -7,7 +7,7 @@ const app = express();
 
 
 // Middleware
-app.use(cookieParser('secret'));
+app.use(cookieParser(process.env.COOKIE_SECRET));
 app.use(express.json());
 app.use(express.urlencoded({extended: true}));
 app.use(require('./middleware/auth'));
