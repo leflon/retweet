@@ -59,6 +59,17 @@ form input[type='password']:focus::placeholder {
 	color: #1D9BF0;
 }
 
+form input[type='text'].is-invalid,
+form input[type='password'].is-invalid {
+	outline: 4px solid #b61212;
+	border-color: transparent;
+}
+
+form input[type='text'].is-invalid:focus::placeholder,
+form input[type='text'].is-invalid:focus::placeholder {
+	color: #b61212;
+}
+
 .input-line {
 	position: relative;
 }
