@@ -138,6 +138,46 @@ class Account {
 		this.#db.log.info(`[${this.id}] ${field} : "${old}" -> "${value}"`);
 	}
 
+	async #editList(field, value, action) {
+		if (action === 'add') {
+			if (this[field].indexOf(value) === -1) {
+			this[field].push(value);
+			}
+			this.#db.log.info(`[${this.id}] ${field} : "${value}" added.`);
+		}
+		if (action === 'remove') {
+			const index = this[field].indexOf(value);
+			if (index != -1){
+			this[field].pos(index, 1);
+			}
+			this.#db.log.info(`[${this.id}] ${field} : "${value}" removed.`);
+		}
+	}
+
+	async addFollower(followerId) {
+		this.#editList('followers', followerId, 'add');
+	}
+
+	async removeFollower(followerId) {
+		this.#editList('followers', followerId, 'remove');
+	}
+
+	async addFollow(followId) {
+		this.#editList('follows', followId, 'add');
+	}
+
+	async removeFollow(followId) {
+		this.#editList('follows', followId, 'remove');
+	}
+
+	async addLike(tweetId) {
+		this.#editList('likes', tweetId, 'add');
+	}
+
+	async removeLike(tweetId) {
+		this.#editList('likes', tweetId, 'remove');
+	}
+
 	async generateToken(userAgent, ip) {
 		const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@$!';
 		const token = Array(32)
