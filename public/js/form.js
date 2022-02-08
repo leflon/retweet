@@ -17,7 +17,7 @@ if (MODE === 'register') {
 		} else if (inputs.email.classList.contains('is-invalid'))
 			inputs.email.classList.remove('is-invalid');
 		// Username checks
-		if (inputs.username.value.length < 3 || inputs.username.value.length > 16 || !/^[a-z \d _]+$/i.test(inputs.username.value)) {
+		if (inputs.username.value.length < 3 || inputs.username.value.length > 16 || !/^[a-z\d_]+$/i.test(inputs.username.value)) {
 			inputs.username.classList.add('is-invalid');
 			anyError = true;
 		} else if (inputs.username.classList.contains('is-invalid'))
