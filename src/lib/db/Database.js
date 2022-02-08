@@ -64,6 +64,7 @@ class Database {
 	 * Inserts an account in the database.
 	 * @param {object} data Required data to create the account.
 	 * @param {string} data.username The username of the account.
+	 * @param {string} data.email The e-mail of the account.
 	 * @param {string} data.password The clear password of the account. Will be encrypted in this function.
 	 * @returns {Account} The generated account object.
 	 */
@@ -73,12 +74,13 @@ class Database {
 		const z = n => n < 10 ? `0${n}` : `${n}`;
 		const datetime = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
 		const encrypted = await bcrypt.hash(data.password, 10);
-		await this.connection.query('INSERT INTO Account (id, username, password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
-			[id, data.username, encrypted, datetime]);
+		await this.connection.query('INSERT INTO Account (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
+			[id, data.username, data.email, encrypted, datetime]);
 		this.log.info(`[${id}] Created account ${data.username}`);
 		return new Account({
 			id,
 			username: data.username,
+			email: data.email,
 			password: encrypted,
 			created_at: d,
 			follows: [],
