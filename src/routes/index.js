@@ -40,11 +40,31 @@ router.post('/login', async (req, res) => {
 	res.redirect('/home');
 });
 
+router.post('/register', async (req, res) => {
+	const {username, password, email} = req.body;
+	let [row] = await req.app.db.connection.query('SELECT * FROM Account WHERE username = ?', [username]);
+	if (row.length !== 0)
+		return res.render('login', {mode: 'register', error: 'Nom d\'utilisateur déjà existant.'});
+
+	[row] = await req.app.db.connection.query('SELECT * FROM Account WHERE email = ?', [email]);
+	if (row.length !== 0)
+		return res.render('login', {mode: 'register', error: 'Adresse e-mail déjà utilisée.'});
+	const user = await res.app.db.addAccount({
+		username,
+		password,
+		email
+	});
+	res.user = user;
+	const token = await user.generateToken(req.get('user-agent'), req.ip);
+	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
+	res.redirect('/home?welcome');
+});
+
 router.get('/logout', (req, res) => {
 	req.app.db.connection.query('DELETE FROM auth WHERE token = ?', [req.signedCookies.auth]);
 	res.clearCookie('auth');
 	res.redirect('/login');
-})
+});
 
 router.get('/home', (req, res) => {
 	res.render('home', {username: req.user.username});
