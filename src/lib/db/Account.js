@@ -138,42 +138,79 @@ class Account {
 		this.#db.log.info(`[${this.id}] ${field} : "${old}" -> "${value}"`);
 	}
 
+	/**
+	 * Adds or remove from one of the lists in the account table.
+	 * @param {'follows' | 'followers' | 'likes'} field The list field to edit.
+	 * @param {string} value The id of the follow/follower/tweet to add/remove.
+	 * @param {'add' | 'remove'} action The action to perform with the given id. 
+	 */
 	async #editList(field, value, action) {
 		if (action === 'add') {
-			if (this[field].indexOf(value) === -1) {
-			this[field].push(value);
+			if (this[field].indexOf(value) !== -1) {
+				const err = new Error(`"${value}" already exists in ${field} for user ${this.id}.`);
+				err.name = 'AlreadyInList';
+				throw err;
 			}
+			this[field].push(value);
 			this.#db.log.info(`[${this.id}] ${field} : "${value}" added.`);
 		}
 		if (action === 'remove') {
 			const index = this[field].indexOf(value);
-			if (index != -1){
-			this[field].pos(index, 1);
+			if (index === -1){
+				const err = new Error(`"${value}" is not in ${field} for user ${this.id}.`);
+				err.name = 'NotInList';
+				throw err;
 			}
+			this[field].splice(index, 1);
 			this.#db.log.info(`[${this.id}] ${field} : "${value}" removed.`);
 		}
+		await this.#db.connection.query(`UPDATE account SET ${field} = ? WHERE id = ?`, [this[field], this.id]);
 	}
 
+	/**
+	 * Adds a follower in the followers list.
+	 * @param {string} followerId The id of the follower to add.
+	 */
 	async addFollower(followerId) {
 		this.#editList('followers', followerId, 'add');
 	}
 
+	/**
+	 * Removes a follower from the followers list.
+	 * @param {string} followerId The id of the follower to remove.
+	 */
 	async removeFollower(followerId) {
 		this.#editList('followers', followerId, 'remove');
 	}
 
+	/**
+	 * Adds a follow in the follows list.
+	 * @param {string} followId The id of the follow to add.
+	 */
 	async addFollow(followId) {
 		this.#editList('follows', followId, 'add');
 	}
 
+	/**
+	 * Removes a follow from the wollows list.
+	 * @param {string} followId The id of the follow to remove.
+	 */
 	async removeFollow(followId) {
 		this.#editList('follows', followId, 'remove');
 	}
 
+	/**
+	 * Adds a tweet in the likes list.
+	 * @param {string} tweetId The id of the tweet to add.
+	 */
 	async addLike(tweetId) {
 		this.#editList('likes', tweetId, 'add');
 	}
 
+	/**
+	 * Removes a tweet from the likes list.
+	 * @param {string} tweetId The id of the tweet to remove.
+	 */
 	async removeLike(tweetId) {
 		this.#editList('likes', tweetId, 'remove');
 	}
