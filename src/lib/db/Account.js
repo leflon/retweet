@@ -226,7 +226,7 @@ class Account {
 		}
 		this.isSuspended = true;
 		this.#db.connection.query(`UPDATE Account SET is_suspended = 1 WHERE id = ${this.id}`);
-		this.#db.log.info(`User "${this.id}" is now suspended.`);
+		this.#db.log.info(`User "${this.id}" suspended.`);
 	}
 
 	/**
@@ -240,7 +240,7 @@ class Account {
 		}
 		this.isSuspended = false;
 		this.#db.connection.query(`UPDATE Account SET is_suspended = 0 WHERE id = ${this.id}`);
-		this.#db.log.info(`User "${this.id}" is not suspended anymore.`);
+		this.#db.log.info(`User "${this.id}" unsuspended.`);
 	}
 
 	/**
@@ -254,7 +254,7 @@ class Account {
 		}
 		this.isDeleted = true;
 		this.#db.connection.query(`UPDATE Account SET is_deleted = 1 WHERE id = ${this.id}`);
-		this.#db.log.info(`User "${this.id}" is now deleted.`);
+		this.#db.log.info(`User "${this.id}" deleted.`);
 	}
 
 	async generateToken(userAgent, ip) {
