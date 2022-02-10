@@ -156,7 +156,7 @@ class Account {
 		}
 		if (action === 'remove') {
 			const index = this[field].indexOf(value);
-			if (index === -1){
+			if (index === -1) {
 				const err = new Error(`"${value}" is not in ${field} for user ${this.id}.`);
 				err.name = 'NotInList';
 				throw err;
@@ -213,6 +213,48 @@ class Account {
 	 */
 	async removeLike(tweetId) {
 		this.#editList('likes', tweetId, 'remove');
+	}
+
+	/**
+	 * Suspends this account.
+	 */
+	async suspend() {
+		if (this.isSuspended) {
+			const err = new Error(`User "${this.id}" is already suspended.`);
+			err.name = 'AlreadySuspended';
+			throw err;
+		}
+		this.isSuspended = true;
+		this.#db.connection.query(`UPDATE Account SET is_suspended = 1 WHERE id = ${this.id}`);
+		this.#db.log.info(`User "${this.id}" is now suspended.`);
+	}
+
+	/**
+	 * Unsuspends this account.
+	 */
+	async unsuspend() {
+		if (!this.isSuspended) {
+			const err = new Error(`User "${this.id}" is not suspended yet.`);
+			err.name = 'NotSuspendedYet';
+			throw err;
+		}
+		this.isSuspended = false;
+		this.#db.connection.query(`UPDATE Account SET is_suspended = 0 WHERE id = ${this.id}`);
+		this.#db.log.info(`User "${this.id}" is not suspended anymore.`);
+	}
+
+	/**
+	 * Deletes this account.
+	 */
+	async delete() {
+		if (this.isDeleted) {
+			const err = new Error(`User "${this.id}" is already deleted.`);
+			err.name = 'AlreadyDeleted';
+			throw err;
+		}
+		this.isDeleted = true;
+		this.#db.connection.query(`UPDATE Account SET is_deleted = 1 WHERE id = ${this.id}`);
+		this.#db.log.info(`User "${this.id}" is now deleted.`);
 	}
 
 	async generateToken(userAgent, ip) {
