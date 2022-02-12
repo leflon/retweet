@@ -35,7 +35,7 @@ router.post('/login', async (req, res) => {
 			mode: 'login'
 		});
 	}
-	const token = await user.generateToken(req.get('user-agent'), req.ip);
+	const token = await user.generateToken('auth', req.get('user-agent'), req.ip);
 	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
 	res.redirect('/home');
 });
@@ -55,7 +55,7 @@ router.post('/register', async (req, res) => {
 		email
 	});
 	res.user = user;
-	const token = await user.generateToken(req.get('user-agent'), req.ip);
+	const token = await user.generateToken('auth', req.get('user-agent'), req.ip);
 	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
 	res.redirect('/home?welcome');
 });

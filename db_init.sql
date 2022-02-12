@@ -64,6 +64,13 @@ CREATE TABLE `auth` (
   `ip_address` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`token`));
 
+CREATE TABLE `recover` (
+  `user_id` CHAR(16) NOT NULL,
+  `token` CHAR(32) NOT NULL,
+  `created_at` DATETIME NOT NULL,
+  PRIMARY KEY (`token`)
+)
+
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,

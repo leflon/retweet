@@ -257,18 +257,29 @@ class Account {
 		this.#db.log.info(`User "${this.id}" deleted.`);
 	}
 
-	async generateToken(userAgent, ip) {
+
+	/**
+	 * Generates an auth/password recovery token.
+	 * @param {'auth' | 'recover'} table What the token will be used for. Either persistent auth or password recovery.
+	 * @param {string} userAgent For `auth` only. The user-agent this auth token is usable with.
+	 * @param {string} ip For `auth` only. The ip this auth token is usable with.
+	 * @returns 
+	 */
+	async generateToken(table, userAgent, ip) {
 		const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@$!';
 		const token = Array(32)
 			.fill()
 			.map(() => chars[Math.floor(Math.random() * chars.length)])
 			.join('');
-		const [rows] = await this.#db.connection.query('SELECT * FROM auth WHERE token = ? ', [token]);
+		const [rows] = await this.#db.connection.query(`SELECT * FROM ${table} WHERE token = ? `, [token]);
 
 		if (rows.length !== 0)
-			return await this.generateToken();
-		await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
-		this.#db.log.info(`[${this.id}] Generated new auth token. (UA: "${userAgent}", IP: ${ip})`);
+			return await this.generateToken(table, userAgent, ip);
+		if (table === 'auth')
+			await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
+		else
+			await this.#db.connection.query('INSERT INTO recover VALUES (?, ?, NOW())', [this.id, token]);
+		this.#db.log.info(`[${this.id}] Generated new recover token.`);
 		return token;
 	}
 
