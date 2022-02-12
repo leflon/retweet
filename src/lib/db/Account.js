@@ -164,7 +164,7 @@ class Account {
 			this[field].splice(index, 1);
 			this.#db.log.info(`[${this.id}] ${field} : "${value}" removed.`);
 		}
-		await this.#db.connection.query(`UPDATE account SET ${field} = ? WHERE id = ?`, [this[field], this.id]);
+		await this.#db.connection.query(`UPDATE account SET ${field} = ? WHERE id = ?`, [JSON.stringify(this[field]), this.id]);
 	}
 
 	/**
