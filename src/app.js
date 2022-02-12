@@ -19,6 +19,8 @@ app.log = new Logger('App');
 app.db = require('./lib/db/Database');
 // Routes
 app.use('/', require('./routes/index'));
+app.use('/', require('./routes/wall')); // Related to auth (login, register, recover password)
+
 
 app.db.connect().then(() => {
 	app.log.info('Connected to database.');
