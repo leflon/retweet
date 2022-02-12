@@ -70,12 +70,9 @@ class Database {
 	 */
 	async addAccount(data) {
 		const id = await this.generateId();
-		const d = new Date();
-		const z = n => n < 10 ? `0${n}` : `${n}`;
-		const datetime = `${d.getFullYear()}-${d.getMonth() + 1}-${d.getDate()} ${z(d.getHours())}:${z(d.getMinutes())}:${z(d.getSeconds())}`;
 		const encrypted = await bcrypt.hash(data.password, 10);
-		await this.connection.query('INSERT INTO Account (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
-			[id, data.username, data.email, encrypted, datetime]);
+		await this.connection.query('INSERT INTO Account (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, NOW(), \'[]\', \'[]\', \'[]\')',
+			[id, data.username, data.email, encrypted]);
 		this.log.info(`[${id}] Created account ${data.username}`);
 		return new Account({
 			id,
