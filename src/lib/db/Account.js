@@ -225,7 +225,7 @@ class Account {
 			throw err;
 		}
 		this.isSuspended = true;
-		this.#db.connection.query(`UPDATE Account SET is_suspended = 1 WHERE id = ${this.id}`);
+		this.#db.connection.query(`UPDATE Account SET is_suspended = 1 WHERE id = ?`, [this.id]);
 		this.#db.log.info(`User "${this.id}" suspended.`);
 	}
 
@@ -239,7 +239,7 @@ class Account {
 			throw err;
 		}
 		this.isSuspended = false;
-		this.#db.connection.query(`UPDATE Account SET is_suspended = 0 WHERE id = ${this.id}`);
+		this.#db.connection.query(`UPDATE Account SET is_suspended = 0 WHERE id = ?`, [this.id]);
 		this.#db.log.info(`User "${this.id}" unsuspended.`);
 	}
 
@@ -253,7 +253,7 @@ class Account {
 			throw err;
 		}
 		this.isDeleted = true;
-		this.#db.connection.query(`UPDATE Account SET is_deleted = 1 WHERE id = ${this.id}`);
+		this.#db.connection.query(`UPDATE Account SET is_deleted = 1 WHERE id = ?`, [this.id]);
 		this.#db.log.info(`User "${this.id}" deleted.`);
 	}
 
