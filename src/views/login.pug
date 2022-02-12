@@ -32,6 +32,8 @@ html(lang='en')
 			form(action='/register', method='POST')#register-form
 				#top-logo
 				h1 S'inscrire
+				if error
+					#error #{error}
 				.input-line
 					input(type='text', name='email', placeholder='Adresse e-mail')#email
 				.input-line
