@@ -54,8 +54,10 @@ html(lang='en')
 					a(href='/login') Me connecter
 		else if mode == 'recover'
 			form(action='', method='POST')#recover-form
-				#top-logo 
+				#top-logo
 				h1 Mot de passe oublié
+				if error
+					#error #{error}
 				.input-line
 					input(type='text', name='email', placeholder='Adresse e-mail')
 				p Vous allez recevoir un e-mail contenant un lien vous permettant de réinitialiser votre mot de passe.
@@ -64,5 +66,12 @@ html(lang='en')
 				#other-action
 					span En fait c'est bon.
 					a(href='/login') Me connecter
-				
-				
+		else if mode == 'recover-confirm'
+			form#recover-confirm
+				h1 Mot de passe oublié
+				p.success Le lien de réinitialisation a bien été envoyé. Vérifiez vos e-mails, y compris votre boîte spam.
+				p 
+					b
+						| Vérifiez également l'adresse e-mail avec laquelle l'e-mail a été envoyé afin d'éviter toute tentative de vol de votre compte.
+						| Le mail est fiable seulement s'il a été envoyé par l'adresse :
+				#email noreply.retweet@gmail.com

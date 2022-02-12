@@ -76,6 +76,7 @@ form input[type='text'].is-invalid:focus::placeholder {
 
 form p {
 	text-align: center;
+	padding: 0 10px;
 }
 
 
@@ -145,6 +146,14 @@ form p {
 form#recover-form #form-actions {
 	margin: 0;
 	margin-bottom: 20px;
+}
+
+p.success {
+	color: #8eff59;
+}
+
+form#recover-confirm #email {
+	font: 17pt 'Montserrat';
 }
 
 #form-actions #recover,
