@@ -277,8 +277,10 @@ class Account {
 			return await this.generateToken(table, userAgent, ip);
 		if (table === 'auth')
 			await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
-		else
+		else {
+			await this.#db.connection.query('DELETE FROM recover WHERE user_id = ?', [this.id]);
 			await this.#db.connection.query('INSERT INTO recover VALUES (?, ?, NOW())', [this.id, token]);
+		}
 		this.#db.log.info(`[${this.id}] Generated new recover token.`);
 		return token;
 	}
