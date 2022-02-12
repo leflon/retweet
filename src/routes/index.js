@@ -103,7 +103,6 @@ router.post('/recover', async (req, res) => {
 		`
 	};
 	transporter.sendMail(mailOptions, (err, info) => {
-		console.log(err);
 		if (err) {
 			return res.render('login', {
 				error: 'Une erreur est survenue lors de l\'envoi de l\'email de récupération de mot de passe.',
