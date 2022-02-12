@@ -74,6 +74,11 @@ form input[type='text'].is-invalid:focus::placeholder {
 	position: relative;
 }
 
+form p {
+	text-align: center;
+}
+
+
 .input-line .info {
 	z-index: 5;
 	display: inline-block;
@@ -135,6 +140,11 @@ form input[type='text'].is-invalid:focus::placeholder {
 	align-items: center;
 	width: 100%;
 	margin: 20px 0;
+}
+
+form#recover-form #form-actions {
+	margin: 0;
+	margin-bottom: 20px;
 }
 
 #form-actions #recover,

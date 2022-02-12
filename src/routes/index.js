@@ -16,7 +16,7 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/recover', (req, res) => {
-	res.send('TODO');
+	res.render('login', {mode: 'recover'});
 });
 
 router.post('/login', async (req, res) => {

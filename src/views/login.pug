@@ -28,8 +28,8 @@ html(lang='en')
 				#other-action
 					span Vous n'avez pas de compte ?
 					a(href='/register') Inscrivez-vous
-		else
-			form(action='/register', method='POST')#register-form
+		else if mode == 'register'
+			form(action='', method='POST')#register-form
 				#top-logo
 				h1 S'inscrire
 				if error
@@ -52,4 +52,17 @@ html(lang='en')
 				#other-action
 					span J'ai déjà un compte.
 					a(href='/login') Me connecter
+		else if mode == 'recover'
+			form(action='', method='POST')#recover-form
+				#top-logo 
+				h1 Mot de passe oublié
+				.input-line
+					input(type='text', name='email', placeholder='Adresse e-mail')
+				p Vous allez recevoir un e-mail contenant un lien vous permettant de réinitialiser votre mot de passe.
+				#form-actions
+					input#submit(type='submit', value='Réinitialiser')
+				#other-action
+					span En fait c'est bon.
+					a(href='/login') Me connecter
+				
 				
