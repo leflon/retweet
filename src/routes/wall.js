@@ -42,6 +42,14 @@ const createTransporter = async () => {
 	return transporter;
 };
 
+const MAIL_HTML_TEMPLATE = `
+<h1 style='text-align: center;'>Retweet</h1>
+<h2>Récupération de votre mot de passe</h2>
+<p>Vous avez demandé la récupération de votre mot de passe. <i style='color: gray;'>Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.</i></p>
+<p style='font-weight: bold;text-align: center;'>Pour récupérer votre mot de passe, cliquez sur le lien ci-dessous.</p>
+<p style='text-align: center;font-size: 22pt; margin: 0 0'><a href='{{BASE_URL}}/recover?ut={{TOKEN}}'>Récupérer mon mot de passe</a></p>
+`;
+
 /* GET */
 
 router.get('/login', (req, res) => {
@@ -112,12 +120,7 @@ router.post('/recover', async (req, res) => {
 		from: `Retweet <${process.env.GMAIL_ADDRESS}>`,
 		to: email,
 		subject: `[${user.username}] Récupération de mot de passe`,
-		html: `
-			<h1>Récupération de votre mot de passe</h1>
-			<p>Vous avez demandé la récupération de votre mot de passe. Si vous n'êtes pas à l'origine de cette demande, ignorez ce message.</p>
-			<p>Pour récupérer votre mot de passe, cliquez sur le lien ci-dessous.</p>
-			<p><a href='${process.env.APP_URL}/recover?ut=${token}'>Récupérer mon mot de passe</a></p>
-		`
+		html: MAIL_HTML_TEMPLATE.replace('{{BASE_URL}}', process.env.BASE_URL).replace('{{TOKEN}}', token)
 	};
 	transporter.sendMail(mailOptions, (err, info) => {
 		if (err) {
