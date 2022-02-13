@@ -1,3 +1,5 @@
+// To-Do: refactor this shit ^^
+
 if (MODE === 'register') {
 	const form = document.getElementById('register-form');
 
@@ -33,14 +35,47 @@ if (MODE === 'register') {
 			anyError = true;
 		} else if (inputs.password.classList.contains('is-invalid'))
 			inputs.password.classList.remove('is-invalid');
-		
+
 		// Confirm password checks
 		if (inputs.password.value !== inputs.confirm.value) {
 			inputs.confirm.classList.add('is-invalid');
 			anyError = true;
 		} else if (inputs.confirm.classList.contains('is-invalid'))
 			inputs.confirm.classList.remove('is-invalid');
-		
+
+		if (anyError)
+			e.preventDefault();
+	});
+}
+
+if (MODE === 'recover-step2') {
+	const form = document.getElementById('recover-step2');
+	const inputs = {
+		password: document.getElementById('password'),
+		confirm: document.getElementById('pw-confirm'),
+	};
+	const ut = new URLSearchParams(window.location.search).get('ut');
+	form.action = `/renew-password?ut=${ut}`;
+	form.addEventListener('submit', e => {
+		let anyError = false;
+		// Password checks
+		if (inputs.password.value.length < 8 || inputs.password.value.length > 50 ||
+			/^[a-z A-Z\p{L}\p{M}\d]+$/gu.test(inputs.password.value) || // true if no symbol
+			!/\d/.test(inputs.password.value) || // true if no number
+			!/[A-Z]/.test(inputs.password.value) || // true if no capital letter
+			!/[a-z]/.test(inputs.password.value)) { // true if no lowercase letter
+			inputs.password.classList.add('is-invalid');
+			anyError = true;
+		} else if (inputs.password.classList.contains('is-invalid'))
+			inputs.password.classList.remove('is-invalid');
+
+		// Confirm password checks
+		if (inputs.password.value !== inputs.confirm.value) {
+			inputs.confirm.classList.add('is-invalid');
+			anyError = true;
+		} else if (inputs.confirm.classList.contains('is-invalid'))
+			inputs.confirm.classList.remove('is-invalid');
+
 		if (anyError)
 			e.preventDefault();
 	});

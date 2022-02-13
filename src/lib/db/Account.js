@@ -1,3 +1,5 @@
+const bcrypt = require('bcrypt');
+
 /**
  * Represents an account of the app. Contains formatted data of the account and methods to modify it in the database.
  */
@@ -108,6 +110,17 @@ class Account {
 		 * @type {boolean}
 		 */
 		this.isDeleted = sqlRow.is_deleted === 1;
+	}
+
+	/**
+	 * Sets a new password for this account.
+	 * @param {string} password The password to set.
+	 */
+	async updatePassword(password) {
+		const hash = await bcrypt.hash(password, 10);
+		await this.#db.connection.query(`UPDATE account SET password = ? WHERE id = ?`, [hash, this.id]);
+		this.encryptedPassword = hash;
+		this.#db.log.info(`[${this.id}] Password updated.`);
 	}
 
 	/**

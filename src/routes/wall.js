@@ -53,6 +53,17 @@ router.get('/register', (req, res) => {
 });
 
 router.get('/recover', async (req, res) => {
+	const {ut} = req.query;
+	if (ut) {
+		let [row] = await req.app.db.connection.query('SELECT * FROM recover WHERE token = ?', [ut]);
+		if (row.length === 0)
+			return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
+		const at = row[0].created_at;
+		const diff = Math.floor((Date.now() - at) / 1000);
+		if (diff > 300)
+			return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération a expiré. Veuillez en demander un nouveau.'});
+		return res.render('wall', {mode: 'recover-step2', token: ut});
+	}
 	res.render('wall', {mode: 'recover'});
 });
 
@@ -119,6 +130,22 @@ router.post('/recover', async (req, res) => {
 			mode: 'recover-confirm'
 		});
 	});
+});
+
+router.post('/renew-password', async (req, res) => {
+	const {ut} = req.query;
+	const {password} = req.body;
+	const [row] = await req.app.db.connection.query('SELECT * FROM recover WHERE token = ?', [ut]);
+	if (row.length === 0)
+		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
+	const at = row[0].created_at;
+	const diff = Math.floor((Date.now() - at) / 1000);
+	if (diff > 300)
+		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération a expiré. Veuillez en demander un nouveau.'});
+	const user = await req.app.db.getAccountById(row[0].user_id);
+	await user.updatePassword(password);
+	await req.app.db.connection.query('DELETE FROM recover WHERE token = ?', [ut]);
+	res.redirect('/login?newpwd');
 });
 
 router.post('/register', async (req, res) => {

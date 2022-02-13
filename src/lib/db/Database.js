@@ -48,6 +48,18 @@ class Database {
 	}
 
 	/**
+	 * Gets an account from the database by id.
+	 * @param {string} id Id of account to get.
+	 * @returns {Promise<?Account>} Account with given id. `null` if not found.
+	 **/
+	async getAccountById(id) {
+		const [rows] = await this.connection.query('SELECT * FROM account WHERE id = ?', [id]);
+		if (rows.length === 0)
+			return null;
+		return new Account(rows[0], this);
+	}
+
+	/**
 	 * Gets an account from the database by username.
 	 * @param {string} username Username of account to get.
 	 * @returns {Promise<?Account>} Account with given username. `null` if not found.

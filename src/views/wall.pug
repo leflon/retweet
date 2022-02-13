@@ -14,64 +14,83 @@ html(lang='en')
 		.title
 			img(src='/public/img/logo.svg' alt='Logo')
 			b Retweet
-		if mode == 'login'
-			form(action='', method='POST')#login-form
-				#top-logo
-				h1 Se connecter
-				if error
-					#error Nom d'utilisateur ou mot de passe invalide.
-				input(type='text', name='username', placeholder='Nom d\'utilisateur')
-				input(type='password', name='password', placeholder='Mot de passe')
-				#form-actions
-					input#submit(type='submit', value='Connexion')
-					a#recover(href='/recover') Mot de passe oublié ?
-				#other-action
-					span Vous n'avez pas de compte ?
-					a(href='/register') Inscrivez-vous
-		else if mode == 'register'
-			form(action='', method='POST')#register-form
-				#top-logo
-				h1 S'inscrire
-				if error
-					#error #{error}
-				.input-line
-					input(type='text', name='email', placeholder='Adresse e-mail')#email
-				.input-line
-					input(type='text', name='username', placeholder='Nom d\'utilisateur')#username
-					.info 
-						.info-icon ?
-						.info-text Doit faire entre 3 et 16 caractères. Ne peut contenir que des caractères alphanumériques et des underscores.
-				.input-line
-					input(type='password', name='password', placeholder='Mot de passe')#password
-					.info 
-						.info-icon ?
-						.info-text Doit faire au minimum 8 caractères, contenir une majuscule, une minuscule, un chiffre et un symbole.
-				input(type='password', name='pw-confirm', placeholder='Confirmer le mot de passe')#pw-confirm
-				#form-actions
-					input#submit(type='submit', value='Inscription')
-				#other-action
-					span J'ai déjà un compte.
-					a(href='/login') Me connecter
-		else if mode == 'recover'
-			form(action='', method='POST')#recover-form
-				#top-logo
-				h1 Mot de passe oublié
-				if error
-					#error #{error}
-				.input-line
-					input(type='text', name='email', placeholder='Adresse e-mail')
-				p Vous allez recevoir un e-mail contenant un lien vous permettant de réinitialiser votre mot de passe.
-				#form-actions
-					input#submit(type='submit', value='Réinitialiser')
-				#other-action
-					span En fait c'est bon.
-					a(href='/login') Me connecter
-		else if mode == 'recover-confirm'
-			form#recover-confirm
-				h1 Mot de passe oublié
-				p.success Le lien de réinitialisation a bien été envoyé. Vérifiez vos e-mails, y compris votre boîte spam.
-				p 
-					b
-						| Vérifiez également l'adresse e-mail avec laquelle l'e-mail a été envoyé afin d'éviter toute tentative de vol de votre compte.
-						| Le mail est fiable seulement s'il a été envoyé par l'adresse :
-				#email noreply.retweet@gmail.com
+		case mode
+			when 'login'
+				form(action='', method='POST')#login-form
+					#top-logo
+					h1 Se connecter
+					if error
+						#error Nom d'utilisateur ou mot de passe invalide.
+					input(type='text', name='username', placeholder='Nom d\'utilisateur')
+					input(type='password', name='password', placeholder='Mot de passe')
+					#form-actions
+						input#submit(type='submit', value='Connexion')
+						a#recover(href='/recover') Mot de passe oublié ?
+					#other-action
+						span Vous n'avez pas de compte ?
+						a(href='/register') Inscrivez-vous
+			when 'register'
+				form(action='', method='POST')#register-form
+					#top-logo
+					h1 S'inscrire
+					if error
+						#error #{error}
+					.input-line
+						input(type='text', name='email', placeholder='Adresse e-mail')#email
+					.input-line
+						input(type='text', name='username', placeholder='Nom d\'utilisateur')#username
+						.info 
+							.info-icon ?
+							.info-text Doit faire entre 3 et 16 caractères. Ne peut contenir que des caractères alphanumériques et des underscores.
+					.input-line
+						input(type='password', name='password', placeholder='Mot de passe')#password
+						.info 
+							.info-icon ?
+							.info-text Doit faire au minimum 8 caractères, contenir une majuscule, une minuscule, un chiffre et un symbole.
+					input(type='password', name='pw-confirm', placeholder='Confirmer le mot de passe')#pw-confirm
+					#form-actions
+						input#submit(type='submit', value='Inscription')
+					#other-action
+						span J'ai déjà un compte.
+						a(href='/login') Me connecter
+			when 'recover'
+				form(action='', method='POST')#recover-form
+					#top-logo
+					h1 Mot de passe oublié
+					if error
+						#error #{error}
+					.input-line
+						input(type='text', name='email', placeholder='Adresse e-mail')
+					p Vous allez recevoir un e-mail contenant un lien vous permettant de réinitialiser votre mot de passe.
+					#form-actions
+						input#submit(type='submit', value='Réinitialiser')
+					#other-action
+						span En fait c'est bon.
+						a(href='/login') Me connecter
+			when 'recover-confirm'
+				form#recover-confirm
+					h1 Mot de passe oublié
+					p.success Le lien de réinitialisation a bien été envoyé. Vérifiez vos e-mails, y compris votre boîte spam.
+					p 
+						b
+							| Vérifiez également l'adresse e-mail avec laquelle l'e-mail a été envoyé afin d'éviter toute tentative de vol de votre compte.
+							| Le mail est fiable seulement s'il a été envoyé par l'adresse :
+					#email noreply.retweet@gmail.com
+			when 'recover-step2'
+				form(action=`renew-password?ut=${ut}`, method='POST')#recover-step2
+					#top-logo
+					h1 Réinitialiser votre mot de passe
+					if error
+						#error #{error}
+						#form-actions
+							a#recover(href='/recover') Retour
+					else
+						.input-line
+							input(type='password', name='password', placeholder='Nouveau mot de passe')#password
+							.info 
+								.info-icon ?
+								.info-text Doit faire au minimum 8 caractères, contenir une majuscule, une minuscule, un chiffre et un symbole.
+						.input-line
+							input(type='password', name='pw-confirm', placeholder='Confirmer le  mot de passe')#pw-confirm
+						#form-actions
+							input#submit(type='submit', value='Réinitialiser')
