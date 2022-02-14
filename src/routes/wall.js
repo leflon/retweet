@@ -120,7 +120,7 @@ router.post('/recover', async (req, res) => {
 		from: `Retweet <${process.env.GMAIL_ADDRESS}>`,
 		to: email,
 		subject: `[${user.username}] Récupération de mot de passe`,
-		html: MAIL_HTML_TEMPLATE.replace('{{BASE_URL}}', process.env.BASE_URL).replace('{{TOKEN}}', token)
+		html: MAIL_HTML_TEMPLATE.replace('{{BASE_URL}}', process.env.APP_URL).replace('{{TOKEN}}', token)
 	};
 	transporter.sendMail(mailOptions, (err, info) => {
 		if (err) {
