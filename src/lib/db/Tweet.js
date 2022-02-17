@@ -1,9 +1,9 @@
 class Tweet {
     /**
-	 * Database connection.
-	 * @type {Database}
-	 */
-	#db;
+     * Database connection.
+     * @type {Database}
+     */
+    #db;
 
     constructor(sqlRow, db) {
 
@@ -66,7 +66,7 @@ class Tweet {
             throw err;
         }
         this.likes.push(userId);
-        await this.#db.connection.query(`UPDATE tweet SET likes = ${this.likes} WHERE id = ${this.id}`);
+        await this.#db.connection.query(`UPDATE tweet SET likes = ? WHERE id = ?`, [this.likes, this.id]);
         this.#db.log.info(`User ${userId} likes tweet ${this.id}.`);
     }
 
@@ -82,7 +82,7 @@ class Tweet {
             throw err;
         }
         this.likes.splice(index, 1);
-        await this.#db.connection.query(`UPDATE tweet SET likes = ${this.likes} WHERE id = ${this.id}`);
+        await this.#db.connection.query(`UPDATE tweet SET likes = ? WHERE id = ?`, [this.likes, this.id]);
         this.#db.log.info(`User ${userId} do not likes tweet ${this.id} anymore.`);
     }
 
@@ -96,7 +96,7 @@ class Tweet {
             throw err;
         }
         this.isDeleted = true;
-        await this.#db.connection.query(`UPDATE tweet SET is_deleted = 1 WHERE id = ${this.id}`);
+        await this.#db.connection.query(`UPDATE tweet SET is_deleted = 1 WHERE id = ?`, [this.id]);
         this.#db.log.info(`Tweet "${this.id}" deleted.`);
     }
 }
