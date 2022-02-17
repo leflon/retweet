@@ -86,6 +86,7 @@ class Database {
 		const encrypted = await bcrypt.hash(data.password, 10);
 		await this.connection.query('INSERT INTO Account (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
 			[id, data.username, data.email, encrypted, createdAt]);
+		await this.connection.query('INSERT INTO Id (id, created_at, type) VALUES (?,?,?)', [id, createdAt, 0])
 		this.log.info(`[${id}] Created account ${data.username}`);
 		return new Account({
 			id,
