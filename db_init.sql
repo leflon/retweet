@@ -33,26 +33,12 @@ CREATE TABLE `tweet` (
   `is_deleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `avatar` (
-  `id` CHAR(16) NOT NULL,
-  `file` VARCHAR(45) NOT NULL,
-  `user_id` CHAR(16) NOT NULL,
-  `created_at` DATETIME NOT NULL,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`));
-
-CREATE TABLE `banner` (
-  `id` CHAR(16) NOT NULL,
-  `file` VARCHAR(45) NOT NULL,
-  `user_id` CHAR(16) NOT NULL,
-  `created_at` DATETIME NOT NULL,
-  `is_deleted` TINYINT NOT NULL DEFAULT 0,
-  PRIMARY KEY (`id`));
-
 CREATE TABLE `media` (
   `id` CHAR(16) NOT NULL,
   `file` VARCHAR(45) NOT NULL,
-  `tweet_id` CHAR(16) NOT NULL,
+  `type` INT NOT NULL,
+  `user_id` CHAR(16),
+  `tweet_id` CHAR(16),
   `created_at` DATETIME NOT NULL,
   `is_deleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
@@ -69,8 +55,7 @@ CREATE TABLE `recover` (
   `user_id` CHAR(16) NOT NULL,
   `token` CHAR(32) NOT NULL,
   `created_at` DATETIME NOT NULL,
-  PRIMARY KEY (`token`)
-)
+  PRIMARY KEY (`token`));
 
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
