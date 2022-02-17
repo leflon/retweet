@@ -36,7 +36,7 @@ CREATE TABLE `tweet` (
 CREATE TABLE `media` (
   `id` CHAR(16) NOT NULL,
   `file` VARCHAR(45) NOT NULL,
-  `type` INT NOT NULL,
+  `type` INT NOT NULL, /*0 for an avatar, 1 for a banner, 2 for a tweet's media*/
   `user_id` CHAR(16),
   `tweet_id` CHAR(16),
   `created_at` DATETIME NOT NULL,
@@ -60,5 +60,5 @@ CREATE TABLE `recover` (
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,
-  `type` TINYINT NOT NULL,
+  `type` TINYINT NOT NULL, /*0 for an account, 1 for a tweet, 2 for a media.*/
   PRIMARY KEY (`id`));
