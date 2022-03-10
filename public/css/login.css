@@ -66,6 +66,11 @@ form #error {
 	transform: translateY(0);
 }
 
+input.is-invalid {
+	outline: 4px solid #b61212;
+	border-color: transparent;
+}
+
 
 .input-line {
 	position: relative;
