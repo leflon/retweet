@@ -5,7 +5,7 @@ class Tweet {
      */
     #db;
 
-    constructor(sqlRow, db) {
+    constructor(sqlRow, dbd) {
 
         this.#db = db;
         /**
@@ -33,6 +33,10 @@ class Tweet {
          * @type {Date}
          */
         this.createdAt = new Date(sqlRow.created_at);
+        /**
+         * @type {?string}
+         */
+        this.repliesTo = sqlRow.replies_to;
         /**
          * Ids of the accounts that liked this tweet.
          * @type {string[]}
@@ -67,23 +71,23 @@ class Tweet {
         }
         this.likes.push(userId);
         await this.#db.connection.query(`UPDATE tweet SET likes = ? WHERE id = ?`, [this.likes, this.id]);
-        this.#db.log.info(`User ${userId} likes tweet ${this.id}.`);
+        this.#db.log.info(`Added like from ${userId} on tweet ${this.id}.`);
     }
 
     /**
-     * Remove a like from the tweet.
+     * Removes a like from the tweet.
      * @param {string} userId The id of the user who unlikes this tweet.
      */
     async removeLike(userId) {
         index = this.likes.indexOf(userId);
         if (index === -1) {
-            const err = new Error(`User "${userId}" do not likes this tweet.`);
+            const err = new Error(`User "${userId}" does not like this tweet.`);
             err.name = 'NotLiked';
             throw err;
         }
         this.likes.splice(index, 1);
         await this.#db.connection.query(`UPDATE tweet SET likes = ? WHERE id = ?`, [this.likes, this.id]);
-        this.#db.log.info(`User ${userId} do not likes tweet ${this.id} anymore.`);
+        this.#db.log.info(`Removed like from ${userId} on tweet ${this.id}.`);
     }
 
     /**
@@ -98,5 +102,36 @@ class Tweet {
         this.isDeleted = true;
         await this.#db.connection.query(`UPDATE tweet SET is_deleted = 1 WHERE id = ?`, [this.id]);
         this.#db.log.info(`Tweet "${this.id}" deleted.`);
+    }
+
+    /**
+     * Adds from one of the lists ine the account table.
+     * @param {'replies' | 'retweets'} field The list to edit.
+     * @param {string} tweetId The id of the tweet to add.
+     */
+    async #editList(field, tweetId) {
+        this[field].push(tweetId);
+        await this.#db.connection.query(`UPDATE tweet SET ${field} = ? WHERE id = ?`, [this[field], this.id]);
+        if (field === 'replies')
+            this.#db.log.info(`Added reply to Tweet "${this.id}".`);
+        else
+            this.#db.log.info(`Added retweet to Tweet "${this.id}".`);
+
+    }
+
+    /**
+     * Adds a tweet to replies.
+     * @param {string} tweetId The id of the tweet to add.
+     */
+    async addReply(tweetId) {
+        this.#editList('replies', tweetId);
+    }
+
+    /**
+     * Adds a tweet to retweets.
+     * @param {string} tweetId The id of the tweet to add.
+     */
+    async addRetweet(tweetId) {
+        this.#editList('retweets', tweetId);
     }
 }

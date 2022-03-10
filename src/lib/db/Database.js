@@ -2,6 +2,7 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
+const tweet = require('./Tweet');
 /**
  * Utility class for interacting with the MySQL database.
  */
@@ -86,7 +87,7 @@ class Database {
 		const encrypted = await bcrypt.hash(data.password, 10);
 		await this.connection.query('INSERT INTO Account (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
 			[id, data.username, data.email, encrypted, createdAt]);
-		await this.connection.query('INSERT INTO Id (id, created_at, type) VALUES (?,?,?)', [id, createdAt, 0])
+		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 0]);
 		this.log.info(`[${id}] Created account ${data.username}`);
 		return new Account({
 			id,
@@ -97,6 +98,30 @@ class Database {
 			follows: [],
 			followers: [],
 			likes: []
+		}, this);
+	}
+
+	/**
+	 * Inserts a Tweet in the database.
+	 * @param {object} data 
+	 */
+	async addTweet(data) {
+		const id = await this.generateId();
+		const createdAt = new Date();
+		this.log.info(`Created tweet ${id}`);
+		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
+		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
+			[id, data.content, data.author_id, data.media_id, createdAt, data.repliesTo]);
+		return new Tweet({
+			id,
+			content: data.content,
+			author_id: data.authorId,
+			media_id: data.mediaId,
+			created_at: createdAt,
+			replies_to: repliesTo,
+			likes: [],
+			replies: [],
+			retweets: []
 		}, this);
 	}
 }
