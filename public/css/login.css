@@ -42,7 +42,7 @@ form #error {
 	font-size: 0.8rem;
 	top: 8px;
 	transform: translateY(0);
-	left: 10px;
+	left: 8px;
 	color: #555;
 	transition: all .3s ease;
 	pointer-events: none;
