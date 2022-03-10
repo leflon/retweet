@@ -19,8 +19,11 @@ form #error {
 	margin-bottom: 10px;
 }
 
-form input[type='text'],
-form input[type='password'] {
+.text-input {
+	position: relative;
+}
+
+.text-input input {
 	font: 1.3rem 'Roboto';
 	margin: 6px 0;
 	width: auto;
@@ -34,41 +37,35 @@ form input[type='password'] {
 	transition: outline .1s linear;
 }
 
-form input[type='text']::placeholder,
-form input[type='password']::placeholder {
+.text-input .input-placeholder {
 	position: absolute;
-	top: 50%;
-	transform: translateY(-50%);
+	font-size: 0.8rem;
+	top: 8px;
+	transform: translateY(0);
+	left: 10px;
 	color: #555;
-	font-size: 1.1rem;
-	transition: .3s ease;
+	transition: all .3s ease;
+	pointer-events: none;
 }
 
-form input[type='text']:focus,
-form input[type='password']:focus {
+.text-input input:focus {
 	outline: 4px solid #1D9BF0;
 	border-color: transparent;
 }
 
-form input[type='text']:focus::placeholder,
-form input[type='password']:focus::placeholder {
-	position: absolute;
-	font-size: 0.75rem;
-	top: 1px;
-	transform: translateY(0);
+.text-input input:placeholder-shown~.input-placeholder {
+	top: 50%;
+	transform: translateY(-50%);
+	font: 1.1rem 'Roboto';
+}
+
+.text-input input:focus~.input-placeholder {
 	color: #1D9BF0;
+	font-size: 0.8rem;
+	top: 8px;
+	transform: translateY(0);
 }
 
-form input[type='text'].is-invalid,
-form input[type='password'].is-invalid {
-	outline: 4px solid #b61212;
-	border-color: transparent;
-}
-
-form input[type='text'].is-invalid:focus::placeholder,
-form input[type='text'].is-invalid:focus::placeholder {
-	color: #b61212;
-}
 
 .input-line {
 	position: relative;
@@ -84,6 +81,7 @@ form p {
 	z-index: 5;
 	display: inline-block;
 	position: absolute;
+	right: -30px;
 	top: 50%;
 	transform: translateY(-50%);
 	margin-left: 10px;
