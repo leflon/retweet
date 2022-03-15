@@ -2,7 +2,7 @@ const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
-const tweet = require('./Tweet');
+const Tweet = require('./Tweet');
 /**
  * Utility class for interacting with the MySQL database.
  */
@@ -116,18 +116,18 @@ class Database {
 		this.log.info(`Created tweet ${id}`);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
 		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
-			[id, data.content, data.author_id, data.media_id, createdAt, data.repliesTo]);
-		return new Tweet({
+			[id, data.content, data.authorId, data.mediaId, createdAt, data.repliesTo]);
+		return new Tweet(this,{
 			id,
 			content: data.content,
 			author_id: data.authorId,
 			media_id: data.mediaId,
 			created_at: createdAt,
-			replies_to: repliesTo,
+			replies_to: data.repliesTo,
 			likes: [],
 			replies: [],
 			retweets: []
-		}, this);
+		});
 	}
 }
 
