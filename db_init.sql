@@ -22,7 +22,7 @@ CREATE TABLE `account` (
 
 CREATE TABLE `tweet` (
   `id` CHAR(16) NOT NULL,
-  `content` VARCHAR(45) NOT NULL,
+  `content` VARCHAR(280) NOT NULL,
   `author_id` CHAR(16) NOT NULL,
   `media_id` CHAR(16) NULL,
   `created_at` DATETIME NOT NULL,
