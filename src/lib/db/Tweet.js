@@ -1,3 +1,6 @@
+/**
+ * Represents a Tweet.
+ */
 class Tweet {
     /**
      * Database connection.
@@ -5,7 +8,7 @@ class Tweet {
      */
     #db;
 
-    constructor(sqlRow, dbd) {
+    constructor(db, sqlRow) {
 
         this.#db = db;
         /**
@@ -135,3 +138,4 @@ class Tweet {
         this.#editList('retweets', tweetId);
     }
 }
+module.exports = Tweet;
