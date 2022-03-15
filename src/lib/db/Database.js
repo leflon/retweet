@@ -106,8 +106,8 @@ class Database {
 	 * @param {object} data Required data to create the tweet.
 	 * @param {string} data.content The content of the tweet.
 	 * @param {string} data.authorId The id of the author of the tweet.
-	 * @param {string} data.mediaId The id of the media attached to the tweet.
-	 * @param {string} data.repliesTo The id of the tweet to which this tweet replies.
+	 * @param {?string} data.mediaId The id of the media attached to the tweet.
+	 * @param {?string} data.repliesTo The id of the tweet to which this tweet replies.
 	 * @returns {Tweet} The generated tweet object.
 	 */
 	async addTweet(data) {
