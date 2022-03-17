@@ -1,12 +1,13 @@
+const path = require('path');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
 const Tweet = require('./Tweet');
 
-let {readFile, writeFile} = require('fs')
+let {rename} = require('fs')
 const {promisify} = require('util')
-readFile = promisify(readFile);
+rename = promisify(rename);
 
 /**
  * Utility class for interacting with the MySQL database.
@@ -136,20 +137,23 @@ class Database {
 	}
 
 	async addMedia(path, data) {
-		const result = await readFile(path);
-		/* newPath = chemin de l'image dans le dossier media*/
 		id = await this.generateId();
 		createdAt = new Date();
-		/*log*/
-
 		const dbType = (data.type === 'tweet') ? 2 : (data.type === 'banner') ? 1 : 0;
+
+		const newPath = path.join(__dirname, '../../..', 'media', id)
+		await rename(path, newPath);
+
+		this.log.info(`Saved media ${id}`);
+		
 		if (data.type === 'tweet')
 			await this.connect.query('INSERT INTO Media VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
 		else
 			await this.connect.query('INSERT INTO Media VALUES (?, ?, ?, ?, NULL, ?, 0)', [id, newPath, type, data.id, createdAt]);
 
-
 		await this.connection.query('INSERT INTO Id VALUES (?, ?, 2)', [id, createdAt]);
+
+		return id;
 	}
 }
 
