@@ -1,12 +1,12 @@
-const path = require('path');
+const {join} = require('path');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const Account = require('./Account');
 const Tweet = require('./Tweet');
 
-let {rename} = require('fs')
-const {promisify} = require('util')
+let {rename} = require('fs');
+const {promisify} = require('util');
 rename = promisify(rename);
 
 /**
@@ -123,7 +123,7 @@ class Database {
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
 		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
 			[id, data.content, data.authorId, data.mediaId, createdAt, data.repliesTo]);
-		return new Tweet(this,{
+		return new Tweet(this, {
 			id,
 			content: data.content,
 			author_id: data.authorId,
@@ -137,19 +137,19 @@ class Database {
 	}
 
 	async addMedia(path, data) {
-		id = await this.generateId();
-		createdAt = new Date();
+		const id = await this.generateId();
+		const createdAt = new Date();
 		const dbType = (data.type === 'tweet') ? 2 : (data.type === 'banner') ? 1 : 0;
 
-		const newPath = path.join(__dirname, '../../..', 'media', id)
+		const newPath = join(__dirname, '../../..', 'media', id + '.png');
 		await rename(path, newPath);
 
 		this.log.info(`Saved media ${id}`);
-		
+
 		if (data.type === 'tweet')
-			await this.connect.query('INSERT INTO Media VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
+			await this.connection.query('INSERT INTO Media VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
 		else
-			await this.connect.query('INSERT INTO Media VALUES (?, ?, ?, ?, NULL, ?, 0)', [id, newPath, type, data.id, createdAt]);
+			await this.connection.query('INSERT INTO Media VALUES (?, ?, ?, ?, NULL, ?, 0)', [id, newPath, dbType, data.id, createdAt]);
 
 		await this.connection.query('INSERT INTO Id VALUES (?, ?, 2)', [id, createdAt]);
 

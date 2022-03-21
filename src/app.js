@@ -1,10 +1,11 @@
 require('dotenv').config(); // Populates process.env with values set in .env
 const express = require('express');
 const cookieParser = require('cookie-parser');
+const multer = require('multer');
 const path = require('path');
 const Logger = require('./lib/misc/Logger');
 const app = express();
-
+const upload = multer({dest: './uploads'});
 
 // Middleware
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -20,6 +21,12 @@ app.db = require('./lib/db/Database');
 // Routes
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/wall')); // Related to auth (login, register, recover password)
+
+app.post('/test', upload.single('media'), async (req, res) => {
+	console.log(req.file);
+	const result = await app.db.addMedia(req.file.path, {type: 'tweet', id: req.user.id});
+	res.send('ok ' + result);
+});
 
 
 app.db.connect().then(() => {

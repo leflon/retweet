@@ -7,4 +7,7 @@ html(lang='en')
 		title Home - Retweet
 	body 
 		h1 Welcome to Retweet, #{username}
+		form(action="/test", method='POST',enctype="multipart/form-data")
+			input(type='file',name='media')
+			input(type='submit', value='Upload')
 		a(href='/logout') Logout
