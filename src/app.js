@@ -22,13 +22,6 @@ app.db = require('./lib/db/Database');
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/wall')); // Related to auth (login, register, recover password)
 
-app.post('/test', upload.single('media'), async (req, res) => {
-	console.log(req.file);
-	const result = await app.db.addMedia(req.file.path, {type: 'tweet', id: req.user.id});
-	res.send('ok ' + result);
-});
-
-
 app.db.connect().then(() => {
 	app.log.info('Connected to database.');
 	app.listen(process.env.PORT || 3000, () => app.log.info(`Listening on :${process.env.PORT || 3000}`));
