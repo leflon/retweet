@@ -48,6 +48,7 @@ class Database {
 			.fill()
 			.map(() => chars[Math.floor(Math.random() * chars.length)])
 			.join('');
+		// Checks if the id is already in the database.
 		const [rows] = await this.connection.query('SELECT * FROM id WHERE id = ? ', [id]);
 		if (rows.length !== 0)
 			return await this.generateId();
@@ -73,10 +74,16 @@ class Database {
 	 **/
 	async getAccount(username) {
 		const [rows] = await this.connection.query('SELECT * FROM account WHERE username= ? ', [username]);
-		if (rows.length === 0) {
+		if (rows.length === 0)
 			return null;
-		}
 		return new Account(rows[0], this);
+	}
+
+	async getTweet(id) {
+		const [rows] = await this.connection.query('SELECT * FROM tweet WHERE id = ?', [id]);
+		if (rows.length === 0)
+			return null;
+		return new Tweet(rows[0], this);
 	}
 
 	/**
@@ -123,7 +130,7 @@ class Database {
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
 		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
 			[id, data.content, data.authorId, data.mediaId, createdAt, data.repliesTo]);
-		return new Tweet(this, {
+		return new Tweet({
 			id,
 			content: data.content,
 			author_id: data.authorId,
@@ -133,19 +140,16 @@ class Database {
 			likes: [],
 			replies: [],
 			retweets: []
-		});
+		}, this);
 	}
 
 	async addMedia(path, data) {
 		const id = await this.generateId();
 		const createdAt = new Date();
 		const dbType = (data.type === 'tweet') ? 2 : (data.type === 'banner') ? 1 : 0;
-
 		const newPath = join(__dirname, '../../..', 'media', id + '.png');
 		await rename(path, newPath);
-
 		this.log.info(`Saved media ${id}`);
-
 		if (data.type === 'tweet')
 			await this.connection.query('INSERT INTO Media VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
 		else

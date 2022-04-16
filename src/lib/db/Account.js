@@ -1,4 +1,5 @@
 const bcrypt = require('bcrypt');
+const Tweet = require('./Tweet');
 
 /**
  * Represents an account of the app. Contains formatted data of the account and methods to modify it in the database.
@@ -289,7 +290,6 @@ class Account {
 		if (rows.length !== 0)
 			return await this.generateToken(table, userAgent, ip);
 		if (table === 'auth') {
-
 			await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
 			this.#db.log.info(`[${this.id}] Generated new auth token.`);
 		} else {
@@ -298,6 +298,24 @@ class Account {
 			this.#db.log.info(`[${this.id}] Generated new recover token.`);
 		}
 		return token;
+	}
+
+	/**
+	 * Gets the tweet to display on the user's homepage. 
+	 * Includes tweets from the user's followers and the user's themself.
+	 */
+	async getTimeline() {
+		// The query returns follows in this form: [[{follows: [...]}]]. We use nested destructuring to directly get the follows array.
+		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM Account WHERE Account.id = ?`, [this.id]);
+		follows.push(this.id); // To include the user's own tweets in the timeline.
+		const [woaw] = await this.#db.connection.query(
+			'SELECT * FROM Tweet WHERE Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate fixes a weird bug
+			+ '(SELECT id FROM JSON_TABLE(' // Converts the follows JSON list into a table
+			+ `'${JSON.stringify(follows)}',`
+			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
+			+ ' as follows) AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC'
+		);
+		return woaw.map(t => new Tweet(t, this.#db)); // Converts each raw tweet object into a Tweet instance.
 	}
 
 }

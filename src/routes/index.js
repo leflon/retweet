@@ -6,8 +6,12 @@ const router = Router();
 router.get('/', (req, res) => {
 	res.redirect('/home');
 });
-router.get('/home', (req, res) => {
-	res.render('home', {username: req.user.username});
+router.get('/home', async (req, res) => {
+	const timeline = await req.user.getTimeline();
+	for (const tweet of timeline) {
+		await tweet.fetchAuthor();
+	}
+	res.render('home', {tweets: timeline});
 });
 
 module.exports = router;

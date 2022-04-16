@@ -8,7 +8,7 @@ class Tweet {
      */
     #db;
 
-    constructor(db, sqlRow) {
+    constructor(sqlRow, db) {
 
         this.#db = db;
         /**
@@ -21,6 +21,12 @@ class Tweet {
          * @type {string}
          */
         this.content = sqlRow.content;
+        /**
+         * Author of the tweet.
+         * Must be fetched manually.
+         * @type {?Account}
+         */
+        this.author = undefined;
         /**
          * Id of the tweet's author.
          * @type {string}
@@ -60,6 +66,13 @@ class Tweet {
          * @type {boolean}
          */
         this.isDeleted = sqlRow.is_deleted === 1;
+    }
+
+    /**
+     * Fetches the Account instance corresponding to the author of this tweet.
+     */
+    async fetchAuthor() {
+        this.author = await this.#db.getAccountById(this.authorId);
     }
 
     /**
