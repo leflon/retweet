@@ -4,7 +4,34 @@ html(lang='en')
 		meta(charset='UTF-8')
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		script(src='/public/js/home.js', defer)
 		title Home - Retweet
 	body 
 		h1 Welcome to Retweet, #{username}
+		form(action='/api/tweets/add', method='post', enctype='multipart/form-data')
+			input(type='text', name='content')
+			input(type='file', name='media', accept='image/jpeg,image/png')
+			input(type='hidden', name='author', value=`${user.id}`)
+			input(type='submit', value='Tweet')
+		each tw in tweets
+			.tweet(style='border: 1px solid red;margin: 3px 0;')
+				button.tweet-action(tweet=`${tw.id}`, action='delete').delete Delete
+				if tw.retweeter
+					.ref #{tw.retweeter.displayName || tw.retweeter.username} a retweeté
+				.left
+					if tw.author.avatarId
+						img(src='/public/' + tw.author.avatarId + '.jpg')
+					else
+						img(src='/public/img/default_avatar.jpg', width='40px')
+				.tweet-heading 
+					.tweet-author
+						.tweet-author-display #{tw.author.displayName}
+						.tweet-author-user @#{tw.author.username}
+				p #{tw.content}
+				if tw.mediaId
+					img(src='/public/' + tw.mediaId + '.jpg', width='200px')
+				.tweet-footer
+					button.tweet-action.reply(tweet=`${tw.id}`, action='reply') Replies #{tw.replies.length}
+					button.tweet-action.retweet(tweet=`${tw.id}`, action='retweet', undo=`${tw.retweets.includes(user.id)}`) Retweets #{tw.retweets.length}
+					button.tweet-action.like(tweet=`${tw.id}`, action='like', undo=`${tw.likes.includes(user.id)}`) Likes #{tw.likes.length}
 		a(href='/logout') Logout

@@ -6,6 +6,7 @@ module.exports = async function(req, res, next) {
 		req.path.startsWith('/renew-password') ||
 		req.path.startsWith('/recover'))
 		return next();
+
 	if (req.path === '/login' && req.signedCookies.auth)
 		return res.redirect('/home');
 	if (!req.signedCookies.auth && req.path !== '/login')

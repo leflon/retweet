@@ -14,6 +14,7 @@ app.use(express.urlencoded({extended: true}));
 app.use(require('./middleware/auth'));
 app.use(require('./middleware/render'));
 app.use('/public', express.static(path.join(__dirname, '..', 'public')));
+app.use('/public', express.static(path.join(__dirname, '..', 'media')));
 // App variables
 app.set('view engine', 'pug');
 app.set('views', path.join(__dirname, 'views'));

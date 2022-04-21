@@ -9,7 +9,7 @@
 	"private": true,
 	"scripts": {
 		"start": "node src/app.js",
-		"dev": "nodemon -e js,pug -L"
+		"dev": "nodemon -e js -L"
 	},
 	"dependencies": {
 		"bcrypt": "^5.0.1",

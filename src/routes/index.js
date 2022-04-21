@@ -7,11 +7,20 @@ router.get('/', (req, res) => {
 	res.redirect('/home');
 });
 router.get('/home', async (req, res) => {
-	const timeline = await req.user.getTimeline();
-	for (const tweet of timeline) {
+	const tweets = await req.user.getTimeline();
+	for (const i in tweets) {
+		const tweet = tweets[i];
 		await tweet.fetchAuthor();
+		if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
+			const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
+			if (original) {
+				original.retweeter = tweet.author;
+				await original.fetchAuthor();
+				tweets[i] = original;
+			}
+		}
 	}
-	res.render('home', {tweets: timeline});
+	res.render('home', {tweets});
 });
 
 module.exports = router;

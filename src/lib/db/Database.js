@@ -121,10 +121,11 @@ class Database {
 	 * @param {string} data.authorId The id of the author of the tweet.
 	 * @param {?string} data.mediaId The id of the media attached to the tweet.
 	 * @param {?string} data.repliesTo The id of the tweet to which this tweet replies.
+	 * @param {?string} data.id The id of the tweet, if generated beforehand.
 	 * @returns {Tweet} The generated tweet object.
 	 */
 	async addTweet(data) {
-		const id = await this.generateId();
+		const id = data.id || await this.generateId();
 		const createdAt = new Date();
 		this.log.info(`Created tweet ${id}`);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
@@ -147,7 +148,7 @@ class Database {
 		const id = await this.generateId();
 		const createdAt = new Date();
 		const dbType = (data.type === 'tweet') ? 2 : (data.type === 'banner') ? 1 : 0;
-		const newPath = join(__dirname, '../../..', 'media', id + '.png');
+		const newPath = join(__dirname, '../../..', 'media', id + '.jpg');
 		await rename(path, newPath);
 		this.log.info(`Saved media ${id}`);
 		if (data.type === 'tweet')
