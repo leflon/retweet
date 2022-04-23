@@ -21,7 +21,7 @@ module.exports = async function(req, res, next) {
 		return res.redirect('/login');
 	}
 	let row = result[0];
-	if (req.get('user-agent') !== row.user_agent || req.ip !== row.ip_address) {
+	if (req.get('user-agent') !== row.user_agent && req.ip !== row.ip_address) {
 		res.clearCookie('auth');
 		await db.connection.query('DELETE FROM auth WHERE token = ?', [req.signedCookies.auth]);
 		return res.redirect('/login');
