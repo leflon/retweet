@@ -78,9 +78,9 @@ for (const btn of actionButtons) {
 
 const tweetTimes = document.querySelectorAll('.tweet-time');
 
-	for (const elm of tweetTimes) {
-		const date = new Date(elm.getAttribute('date'));
-		moment.locale('fr');
-		elm.innerText = '• ' + moment(date).fromNow().replace('il y a', '');
-		elm.setAttribute('title', moment(date).format('LLLL'));
-	}
+for (const elm of tweetTimes) {
+	const date = new Date(elm.getAttribute('date'));
+	moment.locale('fr');
+	elm.innerText = '• ' + moment(date).fromNow().replace('il y a', '');
+	elm.setAttribute('title', moment(date).format('LLLL'));
+}
