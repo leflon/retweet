@@ -45,9 +45,9 @@ async function actionButtonListener({target}) {
 			target.classList.toggle('active');
 		}
 		if (undo)
-			document.querySelector(`.retweet#${tweet}`).remove();
+			document.querySelector(`.retweet[id='${tweet}']`).remove();
 		else {
-			const base = document.querySelector(`.tweet#${tweet}`);
+			const base = document.querySelector(`.tweet[id='${tweet}']`);
 			const clone = base.cloneNode(true);
 			clone.classList.add('retweet');
 			const ref = clone.querySelector('.ref') || document.createElement('a');
