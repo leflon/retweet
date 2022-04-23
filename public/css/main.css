@@ -28,3 +28,7 @@ html, body {
 .title img::selection {
 	background: transparent;
 }
+
+i {
+    pointer-events: none;
+} 

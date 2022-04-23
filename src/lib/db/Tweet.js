@@ -109,11 +109,8 @@ class Tweet {
 	 * Deletes this tweet.
 	 */
 	async delete() {
-		if (this.isDeleted) {
-			const err = new Error(`Tweet "${this.id}" is already deleted.`);
-			err.name = 'AlreadyDeleted';
-			throw err;
-		}
+		if (this.isDeleted)
+			return;
 		this.isDeleted = true;
 		
 		await this.#db.connection.query(`UPDATE tweet SET is_deleted = 1 WHERE id = ?`, [this.id]);

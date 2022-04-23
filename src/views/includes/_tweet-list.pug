@@ -1,0 +1,5 @@
+include _tweet
+mixin tweet-list(id)
+	.tweet-list(id=`${id}`)
+		each tw in tweets
+			+tweet(tw)

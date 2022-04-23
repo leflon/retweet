@@ -1,0 +1,17 @@
+#home-center {
+	width: 600px;
+	margin: 0 auto;
+	border-left: 1px solid #38444d;
+	border-right: 1px solid #38444d;
+}
+
+#home-center #home-title {
+	font-size: 20pt;
+	font-weight: bold;
+	color: #fff;
+	padding: 15px;
+	position: sticky;
+	top: 0;
+	backdrop-filter: blur(10px);
+	z-index: 10;
+}

@@ -1,0 +1,163 @@
+.tweet {
+	box-sizing: border-box;
+	width: 100%;
+	position: relative;
+	border-bottom: 1px solid #38444d;
+	display: flex;
+	flex-direction: row;
+	padding: 10px;
+}
+
+.tweet .delete {
+	color: #616d75;
+	top: 5px;
+	right: 5px;
+	font-size: 14pt;
+	position: absolute;
+	cursor: pointer;
+	transition: .15s ease;
+}
+
+.tweet .delete:hover {
+	color: #f53b3b;
+}
+
+.tweet .ref {
+	position: relative;
+	color: #616d75;
+	font-size: 10pt;
+	text-decoration: none;
+}
+
+.tweet .ref i {
+	margin-right: 5px;
+}
+
+.tweet .ref:hover {
+	text-decoration: underline;
+}
+
+.tweet .left {
+	padding-right: 10px;
+}
+.tweet .left .avatar {
+	width: 48px;
+	height: 48px;
+	border-radius: 50%;
+}
+
+.tweet .right {
+	position: relative;
+	width: calc(100% - 58px);
+}
+
+.tweet .right .tweet-heading {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+}
+
+.tweet .right .tweet-heading .tweet-author-displayname {
+	color: #fff;
+	text-decoration: none;
+	margin-right: 5px;
+}
+.tweet .right .tweet-heading .tweet-author-displayname:hover {
+	text-decoration: underline;
+}
+
+.tweet .right .tweet-heading .tweet-author-username {
+	color: #616d75;
+	margin-right: 5px;
+}
+
+.tweet .right .tweet-heading .tweet-time {
+	color: #616d75;
+}
+
+.tweet .right .tweet-content {
+	position: relative;
+	width: 100%;
+	margin: 5px 0;
+	word-wrap: break-word;
+	white-space: pre-wrap;
+}
+
+.tweet .right .tweet-media {
+	width: 100%;
+	max-height: 300px;
+	object-fit: cover;
+	border-radius: 8px;
+	cursor: pointer;
+}
+
+.tweet .right .tweet-media-fullscreen-container .tweet-media-fullscreen-close {
+	display: none;
+}
+
+.tweet.fullscreen .tweet-media-fullscreen-container {
+	position: fixed;
+	z-index: 999;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	background-color: rgba(0, 0, 0, 0.8);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.tweet.fullscreen .tweet-media-fullscreen-container .tweet-media {
+	width: auto;
+	height: auto;
+	max-width: 90%;
+	max-height: 90%;
+	object-fit: contain;
+	border-radius: 0;
+	cursor: default;
+}
+
+.tweet.fullscreen .tweet-media-fullscreen-container .tweet-media-fullscreen-close {
+	display: block;
+	position: absolute;
+	top: 20px;
+	right: 20px;
+	color: #fff;
+	font-size: 20pt;
+	padding: 10px;
+	cursor: pointer;
+}
+
+.tweet-footer {
+	display: flex;
+	flex-direction: row;
+	align-items: center;
+	justify-content: space-between;
+	width: 70%;
+	margin-top: 5px;
+}
+
+.tweet-footer .tweet-action {
+	cursor: pointer;
+	transition: color .15s ease;
+}
+
+.tweet-footer .tweet-action i {
+	position: relative;
+	display: inline-flex;
+	justify-content: center;
+	align-items: center;
+	margin-right: 4px;
+	z-index: 1;
+	border-radius: 50%;
+	width: 30px;
+	height: 30px;
+	transition: background-color .15s ease;
+}
+.tweet-footer .tweet-action.retweet:hover, .tweet-footer .tweet-action.retweet.active { color: #00ba7c; }
+.tweet-footer .tweet-action.retweet:hover i { background-color: #00ba7c25; }
+.tweet-footer .tweet-action.like:hover, .tweet-footer .tweet-action.like.active { color: #f91880;}
+.tweet-footer .tweet-action.like:hover i { background-color: #f9188025;}
+.tweet-footer .tweet-action.reply:hover, .tweet-footer .tweet-action.reply.active { color: #1d9bf0; }
+.tweet-footer .tweet-action.reply:hover i { background-color: #1d9bf025; }

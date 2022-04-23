@@ -37,7 +37,7 @@ router.get('/tweets/like/:id', async (req, res) => {
 	if (tweet.likes.includes(req.user.id))
 		return res.status(400).send({message: 'You have already liked this tweet.'});
 	await tweet.addLike(req.user.id);
-	return res.status(200).send({likes: tweet.likes.length});
+	return res.status(200).send({count: tweet.likes.length});
 });
 
 router.get('/tweets/unlike/:id', async (req, res) => {
@@ -47,7 +47,7 @@ router.get('/tweets/unlike/:id', async (req, res) => {
 	if (!tweet.likes.includes(req.user.id))
 		return res.status(400).send({message: 'You have not already liked this tweet.'});
 	tweet.removeLike(req.user.id);
-	return res.status(200).send({likes: tweet.likes.length});
+	return res.status(200).send({count: tweet.likes.length});
 });
 
 router.get('/tweets/retweet/:id', async (req, res) => {
@@ -62,7 +62,7 @@ router.get('/tweets/retweet/:id', async (req, res) => {
 		authorId: req.user.id
 	});
 	await tweet.addRetweet(req.user.id);
-	return res.status(200).send({retweets: tweet.retweets.length});
+	return res.status(200).send({count: tweet.retweets.length});
 });
 
 router.get('/tweets/unretweet/:id', async (req, res) => {
@@ -72,7 +72,7 @@ router.get('/tweets/unretweet/:id', async (req, res) => {
 	if (!tweet.retweets.includes(req.user.id))
 		return res.status(400).send({message: 'You have not already retweeted this tweet.'});
 
-	const [[{id}]] = await req.app.db.connection.query('SELECT id FROM Tweet WHERE content LIKE ? AND author_id = ?', [`%//RT:${req.params.id}%`, req.user.id]);
+	const [[{id}]] = await req.app.db.connection.query('SELECT id FROM Tweet WHERE content LIKE ? AND author_id = ? AND is_deleted = 0', [`%//RT:${req.params.id}%`, req.user.id]);
 	res.redirect(`/api/tweets/delete/${id}?unretweet`);
 });
 
@@ -87,7 +87,7 @@ router.get('/tweets/delete/:id', async (req, res) => {
 		await original?.removeRetweet(req.user.id);
 		if ('unretweet' in req.query) {
 			await tweet.delete();
-			return res.send({retweets: original.retweets.length});
+			return res.send({count: original.retweets.length});
 		}
 	}
 	if (tweet.retweets.length)
@@ -95,6 +95,43 @@ router.get('/tweets/delete/:id', async (req, res) => {
 
 	await tweet.delete();
 	return res.send({deleted: true});
+});
+
+router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner'}]), async (req, res) => {
+	const {name, bio, location, website} = req.body;
+	const user = await req.app.db.getAccountById(req.params.id);
+	if (!user)
+		return res.status(400).send({message: 'This user does not exist.'});
+	if (user.id !== req.user.id && !req.user.isAdmin)
+		return res.status(403).send('You don\'t have the permission to edit this user.');
+	if (name.length > 50)
+		return res.status(400).send({message: 'Name is too long.'});
+	if (bio.length > 200)
+		return res.status(400).send({message: 'Bio is too long.'});
+	if (location.length > 50)
+		return res.status(400).send({message: 'Location is too long.'});
+	if (website.length > 50)
+		return res.status(400).send({message: 'Website is too long.'});
+	if (req.files.avatar) {
+		const avatarId = await req.app.db.addMedia(join(__dirname, '../../', req.files.avatar[0].path), {
+			id: await req.app.db.generateId(),
+			type: 'avatar'
+		});
+		user.avatarId = avatarId;
+	}
+	if (req.files.banner) {
+		const bannerId = await req.app.db.addMedia(join(__dirname, '../../', req.files.banner[0].path), {
+			id: await req.app.db.generateId(),
+			type: 'banner'
+		});
+		user.bannerId = bannerId;
+	}
+	user.displayName = name || user.displayName;
+	user.bio = bio || user.bio;
+	user.location = location || user.location;
+	user.website = website || user.website;
+	await user.save();
+	return res.redirect(`/profile/${user.username}`);
 });
 
 module.exports = router;

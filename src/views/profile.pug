@@ -1,0 +1,21 @@
+doctype html
+html
+	head
+		meta(charset='UTF-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		script(src='/public/js/home.js', defer)
+		title Home - Retweet
+	body 
+		h1 Welcome to Retweet, #{username}
+		h2 Profile of #{profile.username}
+		if user.id == profile.id 
+			form(action=`/api/profile/edit/${user.id}`, method='post', enctype='multipart/form-data')
+				input(type='text', name='name', value=`${profile.displayName || ''}`)
+				input(type='file', name='avatar', accept='image/jpeg,image/png')
+				input(type='file', name='banner', accept='image/jpeg,image/png')
+				input(type='text', name='bio', value=`${profile.bio || ''}`)
+				input(type='text', name='website', value=`${profile.website || ''}`)
+				input(type='text', name='location', value=`${profile.location || ''}`)
+				input(type='submit', value='Edit')
+		a(href='/logout') Logout

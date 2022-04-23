@@ -124,151 +124,27 @@ class Account {
 		this.#db.log.info(`[${this.id}] Password updated.`);
 	}
 
-	/**
-	 * Sets a text based profile field.
-	 * @param { 'bio' | 'displayName' | 'location' | 'website'} field The field to set. 
-	 * @param {string} value The value to assign to the field.
-	 */
-	async setProfileField(field, value) {
-		if (!['bio', 'displayName', 'location', 'website'].includes(field)) {
-			const err = new Error(`${field} is not a valid profile field`);
-			err.name = 'InvalidProfileField';
-			throw err;
-		}
-		const sqlCol = field.replace(/([A-Z])/g, (_, p1) => `_${p1.toLowerCase()}`); // Formats field name to snake case for the SQL query.
-		if (typeof value !== 'string' || value === '') {
-			const err = new Error(`${field} must be a non-empty string.`);
-			err.name = 'InvalidProfileField';
-			throw err;
-		}
-		if (value.length > Account.#limitations[field]) {
-			const err = new Error(`${field} must be ${Account.#limitations[field]} characters long or shorter.`);
-			err.name = 'ProfileFieldTooLong';
-			throw err;
-		}
-		await this.#db.connection.query(`UPDATE account SET ${sqlCol} = ? WHERE id = ?`, [value, this.id]);
-		const old = this[field];
-		this[field] = value;
-		this.#db.log.info(`[${this.id}] ${field} : "${old}" -> "${value}"`);
-	}
-
-	/**
-	 * Adds or remove from one of the lists in the account table.
-	 * @param {'follows' | 'followers' | 'likes'} field The list field to edit.
-	 * @param {string} value The id of the follow/follower/tweet to add/remove.
-	 * @param {'add' | 'remove'} action The action to perform with the given id. 
-	 */
-	async #editList(field, value, action) {
-		if (action === 'add') {
-			if (this[field].indexOf(value) !== -1) {
-				const err = new Error(`"${value}" already exists in ${field} for user ${this.id}.`);
-				err.name = 'AlreadyInList';
-				throw err;
-			}
-			this[field].push(value);
-			this.#db.log.info(`[${this.id}] ${field} : "${value}" added.`);
-		}
-		if (action === 'remove') {
-			const index = this[field].indexOf(value);
-			if (index === -1) {
-				const err = new Error(`"${value}" is not in ${field} for user ${this.id}.`);
-				err.name = 'NotInList';
-				throw err;
-			}
-			this[field].splice(index, 1);
-			this.#db.log.info(`[${this.id}] ${field} : "${value}" removed.`);
-		}
-		await this.#db.connection.query(`UPDATE account SET ${field} = ? WHERE id = ?`, [JSON.stringify(this[field]), this.id]);
-	}
-
-	/**
-	 * Adds a follower in the followers list.
-	 * @param {string} followerId The id of the follower to add.
-	 */
-	async addFollower(followerId) {
-		this.#editList('followers', followerId, 'add');
-	}
-
-	/**
-	 * Removes a follower from the followers list.
-	 * @param {string} followerId The id of the follower to remove.
-	 */
-	async removeFollower(followerId) {
-		this.#editList('followers', followerId, 'remove');
-	}
-
-	/**
-	 * Adds a follow in the follows list.
-	 * @param {string} followId The id of the follow to add.
-	 */
-	async addFollow(followId) {
-		this.#editList('follows', followId, 'add');
-	}
-
-	/**
-	 * Removes a follow from the wollows list.
-	 * @param {string} followId The id of the follow to remove.
-	 */
-	async removeFollow(followId) {
-		this.#editList('follows', followId, 'remove');
-	}
-
-	/**
-	 * Adds a tweet in the likes list.
-	 * @param {string} tweetId The id of the tweet to add.
-	 */
-	async addLike(tweetId) {
-		this.#editList('likes', tweetId, 'add');
-	}
-
-	/**
-	 * Removes a tweet from the likes list.
-	 * @param {string} tweetId The id of the tweet to remove.
-	 */
-	async removeLike(tweetId) {
-		this.#editList('likes', tweetId, 'remove');
-	}
-
-	/**
-	 * Suspends this account.
-	 */
-	async suspend() {
-		if (this.isSuspended) {
-			const err = new Error(`User "${this.id}" is already suspended.`);
-			err.name = 'AlreadySuspended';
-			throw err;
-		}
-		this.isSuspended = true;
-		this.#db.connection.query(`UPDATE Account SET is_suspended = 1 WHERE id = ?`, [this.id]);
-		this.#db.log.info(`User "${this.id}" suspended.`);
-	}
-
-	/**
-	 * Unsuspends this account.
-	 */
-	async unsuspend() {
-		if (!this.isSuspended) {
-			const err = new Error(`User "${this.id}" is not suspended yet.`);
-			err.name = 'NotSuspendedYet';
-			throw err;
-		}
-		this.isSuspended = false;
-		this.#db.connection.query(`UPDATE Account SET is_suspended = 0 WHERE id = ?`, [this.id]);
-		this.#db.log.info(`User "${this.id}" unsuspended.`);
-	}
-
-	/**
-	 * Deletes this account.
-	 */
-	async delete() {
-		if (this.isDeleted) {
-			const err = new Error(`User "${this.id}" is already deleted.`);
-			err.name = 'AlreadyDeleted';
-			throw err;
-		}
-		this.isDeleted = true;
-		this.#db.connection.query(`UPDATE Account SET is_deleted = 1 WHERE id = ?`, [this.id]);
-		this.#db.log.info(`User "${this.id}" deleted.`);
+	async save() {
+		await this.#db.connection.query(
+			`UPDATE account SET 
+				display_name = ?,
+				avatar_id = ?,
+				banner_id = ?,
+				bio = ?,
+				website = ?,
+				location = ?
+			WHERE id = ?`,
+			[
+				this.displayName,
+				this.avatarId,
+				this.bannerId,
+				this.bio,
+				this.website,
+				this.location,
+				this.id
+			]
+		);
+		this.#db.log.info(`[${this.id}] Profile updated.`);
 	}
 
 
@@ -316,6 +192,11 @@ class Account {
 			+ ' as follows) AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC'
 		);
 		return woaw.map(t => new Tweet(t, this.#db)); // Converts each raw tweet object into a Tweet instance.
+	}
+
+	async getTweets() {
+		const [tweets] = await this.#db.connection.query(`SELECT * FROM Tweet WHERE Tweet.author_id = ? AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC`, [this.id]);
+		return tweets.map(t => new Tweet(t, this.#db));
 	}
 
 }
