@@ -29,8 +29,8 @@ html
 				#profile-heading-username #{profile.displayName || '@' + profile.username}
 				#profile-heading-tweets #{tweets.length} tweets
 			#profile
-				img(src=`/public/${profile.bannerId}.jpg`).profile-banner
-				img(src=`/public/${profile.avatarId}.jpg`).profile-avatar
+				img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`).profile-banner
+				img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`).profile-avatar
 				#profile-text
 					if profile.displayName
 						#profile-display-name #{profile.displayName}

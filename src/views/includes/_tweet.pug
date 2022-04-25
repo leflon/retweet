@@ -2,10 +2,7 @@ mixin tweet(tw)
 	.tweet(id=`${tw.id}`, class=`${tw.retweeter ? 'retweet' : ''}`)
 		.left
 			a(href=`/profile/${tw.author.username}`) 
-				if tw.author.avatarId
-					img.avatar(src='/public/' + tw.author.avatarId + '.jpg')
-				else
-					img.avatar(src='/public/img/default_avatar.jpg')
+				img.avatar(src=`/public/${tw.author.avatarId || 'default_avatar'}.jpg`)
 		.right
 			if tw.retweeter 
 				a.ref(href=`/profile/${tw.retweeter.username}`) 
