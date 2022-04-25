@@ -1,14 +1,20 @@
+include includes/_tweet-list
 doctype html
 html
 	head
+		include includes/_head
 		meta(charset='UTF-8')
 		meta(http-equiv='X-UA-Compatible', content='IE=edge')
 		meta(name='viewport', content='width=device-width, initial-scale=1.0')
-		script(src='/public/js/home.js', defer)
-		title Home - Retweet
+		link(rel='stylesheet', href='/public/css/profile.css')
+		link(rel='stylesheet', href='/public/css/tweet.css')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment-with-locales.min.js')
+		script(src='/public/js/profile.js', defer)
+		script(src='/public/js/tweet.js', defer)
+		script.
+			const PROFILE = !{JSON.stringify(profile || {})};
+		title #{profile.displayName || '@' + profile.username} - Retweet
 	body 
-		h1 Welcome to Retweet, #{username}
-		h2 Profile of #{profile.username}
 		if user.id == profile.id 
 			form(action=`/api/profile/edit/${user.id}`, method='post', enctype='multipart/form-data')
 				input(type='text', name='name', value=`${profile.displayName || ''}`)
@@ -18,4 +24,36 @@ html
 				input(type='text', name='website', value=`${profile.website || ''}`)
 				input(type='text', name='location', value=`${profile.location || ''}`)
 				input(type='submit', value='Edit')
-		a(href='/logout') Logout
+		.page-center
+			.page-title 
+				#profile-heading-username #{profile.displayName || '@' + profile.username}
+				#profile-heading-tweets #{tweets.length} tweets
+			#profile
+				img(src=`/public/${profile.bannerId}.jpg`).profile-banner
+				img(src=`/public/${profile.avatarId}.jpg`).profile-avatar
+				#profile-text
+					if profile.displayName
+						#profile-display-name #{profile.displayName}
+					#profile-username @#{profile.username}
+					if profile.bio
+						#profile-bio #{profile.bio}
+					#profile-misc-infos
+						if profile.location
+							.profile-misc#location
+								i.fa-solid.fa-location-dot
+								span #{profile.location}
+						if profile.website
+							a(href=`${profile.website}`).profile-misc#website
+								i.fa-solid.fa-link
+								span #{profile.website}
+					#profile-created-at
+						i.fa-regular.fa-calendar
+						span(date=`${profile.createdAt}`)
+					#profile-stats
+						.profile-stat#follows
+							span.counter #{profile.follows.length}
+							span abonnements
+						.profile-stat#followers 
+							span.counter #{profile.followers.length}
+							span abonnés
+				+tweet-list('profile-tweets')

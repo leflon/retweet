@@ -46,7 +46,7 @@ async function actionButtonListener({target}) {
 		}
 		if (undo)
 			document.querySelector(`.retweet[id='${tweet}']`).remove();
-		else {
+		else if (!PROFILE || PROFILE.id === USER.id){
 			const base = document.querySelector(`.tweet[id='${tweet}']`);
 			const clone = base.cloneNode(true);
 			clone.classList.add('retweet');
@@ -59,7 +59,7 @@ async function actionButtonListener({target}) {
 			clone.querySelector('.tweet-action.reply').addEventListener('click', actionButtonListener);
 			clone.querySelector('.tweet-action.retweet').addEventListener('click', actionButtonListener);
 			clone.querySelector('.tweet-action.like').addEventListener('click', actionButtonListener);
-			document.querySelector('#home-timeline')?.insertAdjacentElement('afterbegin', clone);
+			document.querySelector('.tweet-list')?.insertAdjacentElement('afterbegin', clone);
 		}
 	}
 

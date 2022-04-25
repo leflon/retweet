@@ -6,7 +6,7 @@ for (const form of document.querySelectorAll('form.new-tweet')) {
 		if (content.length > 0 && content.length <= 280)
 			form.submit();
 		else
-			alert('Tweet must be between 1 and 280 characters.');
+			alert(' 1 <= N <= 280');
 	});
 	form.querySelector('input[type=\'file\']').addEventListener('change', e => {
 		const file = e.target.files[0];

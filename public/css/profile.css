@@ -1,0 +1,87 @@
+.page-title {
+	flex-direction: column;
+}
+
+.page-title #profile-heading-tweets {
+	font: 11pt Arial;
+	color: #616d75;
+}
+
+#profile {
+	position: relative;
+	width: 100%;
+}
+
+.profile-banner {
+	width: 100%;
+	height: 200px;
+	object-fit: cover;
+}
+
+.profile-avatar {
+	width: 130px;
+	height: 130px;
+	border-radius: 50%;
+	border: 4px solid #151b29;
+	margin-top: -65px;
+	margin-left: 20px;
+}
+
+#profile-text {
+	padding: 15px;
+}
+
+#profile-display-name {
+	font: 18pt Arial;
+}
+
+#profile-username {
+	font: 12pt Arial;
+	color: #616d75;
+}
+
+#profile-bio {
+	margin: 20px 0;
+}
+
+#profile-misc-infos {
+	display: flex;
+	flex-direction: row;
+}
+
+#profile-misc-infos .profile-misc {
+	margin-right: 5px;
+	color: #616d75;
+}
+
+#profile-misc-infos .profile-misc i {
+	margin-right: 10px;
+}
+
+#profile-created-at {
+	color: #616d75;
+}
+
+#profile-created-at i {
+	margin-right: 10px;
+}
+
+#profile-stats {
+	margin: 10px 0;
+	display: flex;
+	flex-direction: row;
+}
+
+#profile-stats .profile-stat {
+	margin-right: 20px;
+	color: #616d75;
+}
+
+#profile-stats .profile-stat .counter {
+	margin-right: 5px;
+	color: #fff;
+}
+
+#profile-tweets {
+	border-top: 1px solid #38444d;
+}

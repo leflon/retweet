@@ -28,7 +28,19 @@ router.get('/profile/:username', async (req, res) => {
 	if (!user)
 		return res.render('profile', {unknown: true});
 	const tweets = await user.getTweets();
-	res.render('profile', {profile: user});
+	for (const i in tweets) {
+		const tweet = tweets[i];
+		await tweet.fetchAuthor();
+		if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
+			const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
+			if (original) {
+				original.retweeter = tweet.author;
+				await original.fetchAuthor();
+				tweets[i] = original;
+			}
+		}
+	}
+	res.render('profile', {profile: user, tweets});
 });
 
 module.exports = router;
