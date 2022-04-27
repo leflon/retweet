@@ -15,25 +15,46 @@ html
 			const PROFILE = !{JSON.stringify(profile || {})};
 		title #{profile.displayName || '@' + profile.username} - Retweet
 	body 
-		if user.id == profile.id 
-			form(action=`/api/profile/edit/${user.id}`, method='post', enctype='multipart/form-data')
-				input(type='text', name='name', value=`${profile.displayName || ''}`)
-				input(type='file', name='avatar', accept='image/jpeg,image/png')
-				input(type='file', name='banner', accept='image/jpeg,image/png')
-				input(type='text', name='bio', value=`${profile.bio || ''}`)
-				input(type='text', name='website', value=`${profile.website || ''}`)
-				input(type='text', name='location', value=`${profile.location || ''}`)
-				input(type='submit', value='Edit')
+		if user.id == profile.id
+			#profile-editor-container
+				#profile-editor
+					#profile-editor-title-bar
+						#profile-editor-close 
+							i.fa-solid.fa-close
+						#profile-editor-title Éditer le profil
+						#profile-editor-save Enregistrer
+					form(action=`/api/profile/edit/${user.id}`, method='post', enctype='multipart/form-data')
+						label(for='banner')
+							div.profile-banner
+								img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
+						label(for='avatar')
+							div.profile-avatar
+								img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
+						input#avatar(type='file', name='avatar', accept='image/jpeg,image/png')
+						input#banner(type='file', name='banner', accept='image/jpeg,image/png')
+						.input-container(placeholder='Nom',limit='50')
+							input(type='text', name='name', value=`${profile.displayName || ''}`)
+						.input-container(placeholder='Bio', limit='160')
+							div#bio-editor(contentEditable) #{profile.bio}
+						input(type='hidden', name='bio')
+						.input-container(placeholder='Site Internet', limit='100')
+							input(type='text', name='website', value=`${profile.website || ''}`)
+						.input-container(placeholder='Localisation', limit='30')
+							input(type='text', name='location', value=`${profile.location || ''}`)
 		.page-center
 			.page-title 
 				#profile-heading-username #{profile.displayName || '@' + profile.username}
 				#profile-heading-tweets #{tweets.length} tweets
 			#profile
-				img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`).profile-banner
-				img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`).profile-avatar
+				div.profile-banner
+					img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
+				div.profile-avatar
+					img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
+				if user.id == profile.id
+					#open-profile-editor Éditer le profil
 				#profile-text
 					if profile.displayName
-						#profile-display-name #{profile.displayName}
+						#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}
 					#profile-username @#{profile.username}
 					if profile.bio
 						#profile-bio #{profile.bio}
@@ -56,4 +77,4 @@ html
 						.profile-stat#followers 
 							span.counter #{profile.followers.length}
 							span abonnés
-				+tweet-list('profile-tweets')
+			+tweet-list('profile-tweets')
