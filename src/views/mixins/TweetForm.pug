@@ -1,0 +1,14 @@
+include TextInput
+
+mixin TweetForm(repliesTo)
+	form.tweet-form(action='/api/tweets/add', method='post', enctype='multipart/form-data')
+		.flex-input
+			a(href=`/profile/${user.username}`) 
+				img.avatar(src=`/public/${user.avatarId}.jpg`)
+			+TextInput('content', false, true, 'Quoi de neuf ?', 280)
+		.media-preview-container
+		input#media(type='file', name='media', accept='image/jpeg,image/png')
+		label(for='media').fa-regular.fa-image.icon-button
+		if repliesTo 
+			input(type='hidden', name='repliesTo', value=repliesTo)
+		input(type='submit', value='Tweeter').button

@@ -1,0 +1,59 @@
+.tweet-form {
+	position: relative;
+	width: 100%;
+	margin: 0 auto;
+	padding: 10px 0;
+	border-bottom: 1px solid #38444d;
+	box-sizing: border-box;
+}
+.tweet-form .flex-input {
+	display: flex;
+	flex-direction: row;
+}
+
+.tweet-form .flex-input img {
+	width: 48px;
+    height: 48px;
+    border-radius: 50%;
+	object-fit: cover;
+	margin-left: 10px;
+	margin-top: 10px;
+}
+
+.tweet-form .text-input {
+	width: calc(100% - 58px)
+}
+
+.tweet-form .text-input .textarea {
+	border: none !important;
+	outline: none !important;
+}
+
+.tweet-form .content:empty:before {
+	content: 'Quoi de neuf ?';
+	color: #616d75;
+}
+
+.tweet-form .media-preview-container img {
+	margin-left: 58px;
+	max-width: calc(100% - 58px);
+	max-height: 600px;
+	object-fit: cover;
+	margin-bottom: 8px;
+	border-radius: 8px;
+}
+
+.tweet-form input[type='file'] {
+	display: none;
+}
+
+.tweet-form label[for='media'] {
+	margin-left: 58px;
+}
+
+.tweet-form input[type='submit']	{
+	position: absolute;
+	bottom: 0;
+	right: 10px;
+	transition: .15s ease;
+}

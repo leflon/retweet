@@ -2,29 +2,24 @@
 	box-sizing: border-box;
 	width: 100%;
 	position: relative;
-	border-bottom: 1px solid #38444d;
+	border-bottom: 1px solid var(--light-grey);
 	display: flex;
 	flex-direction: row;
 	padding: 10px;
 }
 
 .tweet .delete {
-	color: #616d75;
 	top: 5px;
 	right: 5px;
 	font-size: 14pt;
 	position: absolute;
 	cursor: pointer;
 	transition: .15s ease;
+	--icon-color: #f53b3b;
 }
-
-.tweet .delete:hover {
-	color: #f53b3b;
-}
-
 .tweet .ref {
 	position: relative;
-	color: #616d75;
+	color: var(--lighter-grey);
 	font-size: 10pt;
 	text-decoration: none;
 }

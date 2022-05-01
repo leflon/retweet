@@ -1,0 +1,16 @@
+mixin TextInput(name, password, textarea, placeholder, limit, value)
+	.text-input(limit=limit)
+		if limit
+			.limit-indicator #{value ? value.length : 0} / #{limit}
+		if textarea
+			div.textarea(contentEditable='true', data-name=name) #{value}
+			input(name=name, id=name, type='hidden', value=value)
+			.text-input-placeholder #{placeholder}
+		else
+			input(name=name, id=name, type=`${password ? 'password' : 'text'}`, value=value, placeholder=' ')
+			.text-input-placeholder #{placeholder}
+			if password
+				.text-input-eye
+					i.fa-solid.fa-eye.text-input-eye-open
+					i.fa-solid.fa-eye-slash.text-input-eye-closed
+				

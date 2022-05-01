@@ -1,39 +1,35 @@
 @import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@500;800&family=Roboto&display=swap');
 
+:root {
+	--main-blue: #1D9BF0;
+	--main-white: #fafafa;
+	--light-grey: #38444d;
+	--lighter-grey: #616d75;
+	--bg-blue: #151b29;
+}
+
 html, body {
 	margin: 0;
 	padding: 0;
-	font-family: 'Roboto', sans-serif;
-	font-size: 16px;
-	color: #fafafa;
-	background-color: #151b29;
+	font: 12pt 'Roboto';
+	color: var(--main-white);
+	background-color: var(--bg-blue);
 }
 
-.title {
-	font-size: 2.5rem;
-	font-family: 'Montserrat';
-	font-weight: 800;
-	margin-bottom: 1rem;
-	display: flex;
-	align-items: center;
-	justify-content: center;
-	padding: 20px 0;
+a {
+	text-decoration: none;
+	color: var(--main-blue);
 }
 
-.title img {
-	margin-right: 10px;
-	width: 64px;
-	pointer-events: none;
-}
-.title img::selection {
-	background: transparent;
+a:hover {
+	text-decoration: underline;
 }
 
 .page-center {
 	width: 600px;
 	margin: 0 auto;
-	border-left: 1px solid #38444d;
-	border-right: 1px solid #38444d;
+	border-left: 1px solid var(--light-grey);
+	border-right: 1px solid var(--light-grey);
 }
 
 .page-center .page-title {
@@ -44,8 +40,7 @@ html, body {
 	align-items: start;
 	justify-content: center;
 	padding: 0 20px;
-	font-size: 15pt;
-	font-weight: bold;
+	font: bold 16pt 'Montserrat';
 	color: #fff;
 	position: sticky;
 	top: 0;
@@ -54,6 +49,70 @@ html, body {
 	z-index: 10;
 }
 
-i {
-    pointer-events: none;
-} 
+.page-center .page-title .page-subtitle {
+	font: 10pt 'Roboto';
+	color: var(--lighter-grey);
+}
+
+
+.icon-button {
+	position: relative;
+	font-size: 16pt;
+	cursor: pointer;
+	transition: color .15s ease;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.icon-button:before {
+	position: relative;
+	z-index: 1;
+}
+
+.icon-button:after {
+	content: '';
+	z-index: 0;
+	position: absolute;
+	width: 100%;
+	padding-top: 100%;
+	top: 0;
+	left: 0;
+	background-color: var(--icon-color, var(--main-blue));
+	opacity: 0;
+	transform: scale(1.75);
+	border-radius: 50%;
+	transition: opacity .15s ease;
+}
+
+.icon-button:hover {
+	color: var(--icon-color, var(--main-blue));
+}
+
+.icon-button:hover:after {
+	opacity: .2;
+}
+
+.button {
+	box-sizing: border-box;
+	padding: 8px 12px;
+	background-color: var(--button-color, var(--main-blue));
+	color: #fff;
+	font: bold 12pt 'Montserrat';
+	text-align: center;
+	outline: none;
+	border: none;
+	border-radius: 10em;
+	cursor: pointer;
+	text-decoration: none;
+}
+
+.button.alt {
+	background-color: transparent;
+	border: 1px solid var(--light-grey);
+	transition: background-color .15s ease;
+}
+
+.button.alt:hover {
+	background-color: #ffffff20;
+}

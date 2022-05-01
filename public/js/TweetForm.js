@@ -1,8 +1,7 @@
-for (const form of document.querySelectorAll('form.new-tweet')) {
+for (const form of document.querySelectorAll('form.tweet-form')) {
 	form.addEventListener('submit', e => {
 		e.preventDefault();
-		const content = form.querySelector('.content').innerText;
-		form.querySelector('input[name=\'content\']').value = content;
+		const content = form.querySelector('input[name=\'content\']').value;
 		if (content.length > 0 && content.length <= 280)
 			form.submit();
 		else

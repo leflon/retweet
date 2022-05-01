@@ -9,4 +9,4 @@ link(rel='stylesheet',
 	referrerpolicy='no-referrer')
 // Adds the logged in user data in the client's JS context
 script.
-	const USER = !{JSON.stringify(user || {})};
+	window.USER = !{JSON.stringify(user || {})};

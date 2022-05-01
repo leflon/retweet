@@ -12,34 +12,14 @@ if (USER.id === PROFILE.id) {
 
 	const form = editContainer.querySelector('form');
 	const sendButton = editContainer.querySelector('#profile-editor-save');
-
-	const inputContainers = document.querySelectorAll('.input-container');
-	for (const elm of inputContainers) {
-		const input = elm.querySelector('input') || elm.querySelector('div[contentEditable]');
-		const limit = parseInt(elm.getAttribute('limit'));
-		const limitIndicator = document.createElement('div');
-		limitIndicator.className = 'limit-indicator';
-		elm.appendChild(limitIndicator);
-		input.addEventListener('input', e => {
-			let content = e.target.value || e.target.innerText;
-			limitIndicator.innerText = `${content.length} / ${limit}`;
-			if (content.length > limit)
-				elm.classList.add('invalid');
-			else
-				elm.classList.remove('invalid');
-		});
-	}
+	const inputContainers = form.querySelectorAll('.text-input');
 	sendButton.addEventListener('click', () => {
 		for (const elm of inputContainers) {
-			const input = elm.querySelector('input') || elm.querySelector('div[contentEditable]');
+			const input = elm.querySelector('input');
 			const limit = parseInt(elm.getAttribute('limit'));
-			const content = input.value || input.innerText;
+			const content = input.value;
 			if (content.length > limit)
 				return;
-			if (input.id === 'bio-editor') {
-				const sentField = form.querySelector('input[name=\'bio\']');
-				sentField.value = content;
-			}
 			if (input.name === 'website' && !/^(http|https):\/\//.test(content)) {
 				input.value = `https://${content}`;
 			}
@@ -52,9 +32,7 @@ if (USER.id === PROFILE.id) {
 		console.log(e);
 		const file = e.target.files[0];
 		const img = form.querySelector(`.profile-${e.target.id} img`);
-		console.log(img);
 		if (file) {
-			console.log('alors');
 			const reader = new FileReader();
 			reader.addEventListener('load', () => {
 				img.src = reader.result;

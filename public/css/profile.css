@@ -2,17 +2,6 @@
 	flex-direction: column;
 }
 
-.page-title #profile-heading-username {
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
-	width: 100%;
-}
-.page-title #profile-heading-tweets {
-	font: 11pt Arial;
-	color: #616d75;
-}
-
 #profile {
 	position: relative;
 	width: 100%;
@@ -47,15 +36,6 @@
 	position: absolute;
 	right: 15px;
 	top: 220px;
-	border: 1px solid #616d75;
-	border-radius: 10em;
-	padding: 8px 18px;
-	cursor: pointer;
-	transition: background-color .15s ease;
-}
-
-#open-profile-editor:hover {
-	background-color: #ffffff20;
 }
 
 #profile-text {
@@ -63,19 +43,22 @@
 }
 
 #profile-display-name {
-	font: 18pt Arial;
+	font: bold 18pt 'Montserrat';
 	text-overflow: ellipsis;
 	overflow: hidden;
 	white-space: nowrap;
 }
 
 #profile-username {
-	font: 12pt Arial;
+	font: 12pt 'Montserrat';
 	color: #616d75;
 }
 
 #profile-bio {
+	width: 100%;
 	margin-top: 20px;
+	white-space: pre-wrap;
+	word-wrap: break-word;
 }
 
 #profile-misc-infos {
@@ -90,7 +73,7 @@
 }
 
 #profile-misc-infos .profile-misc i {
-	margin-right: 10px;
+	margin-right: 5px;
 }
 
 #profile-created-at {
@@ -171,17 +154,14 @@
 
 #profile-editor #profile-editor-title-bar #profile-editor-title {
 	margin-left: 10px;
+	font: bold 14pt 'Montserrat';
 }
 
 #profile-editor #profile-editor-title-bar #profile-editor-save {
-	background: #fff;
-	color: #151b29;
-	padding: 5px 10px;
-	border-radius: 10em;
-	font-size: 14pt;
+	--button-color: #ffffff;
+	color: #000000;
 	position: absolute;
 	right: 10px;
-	cursor: pointer;
 }
 
 #profile-editor .profile-banner:after,
@@ -215,55 +195,7 @@
 	display: none;
 }
 
-#profile-editor form input[type='text'],
-#profile-editor form div#bio-editor {
-	box-sizing: border-box;
-	display: block;
-	width: 100%;
-	padding: 10px 5px;
-	background: none;
-	border: 1px solid #616d75;
-	border-radius: 3px;
-	padding-top: 25px;
-	color: #fff;
-	font-size: 12pt;
-}
-#profile-editor form .input-container {
-	margin: 10px 5%;
+#profile-editor form .text-input {
 	width: 90%;
-	position: relative;
-}
-#profile-editor form .input-container::before {
-	content: attr(placeholder);
-	position: absolute;
-	top: 2px;
-	left: 5px;
-	font-size: 10pt;
-	color: #616d75;
-}
-
-#profile-editor form .input-container .limit-indicator {
-	position: absolute;
-	top: 3px;
-	right: 5px;
-	color: #616d75;
-	font-size: 10pt;
-}
-
-#profile-editor form .input-container.invalid .limit-indicator{
-	 color: #b61212;
-}
-
-#profile-editor form .input-container.invalid input {
-	outline-color: #b61212;
-}
-
-#profile-editor form .input-container input:focus ~ .input-container:after {
-	color: red;
-}
-
-#profile-editor form input:focus,
-#profile-editor form #bio-editor:focus {
-	border-color: transparent;
-	outline: 2px solid #1D9BF0;
+	margin: 10px auto;
 }

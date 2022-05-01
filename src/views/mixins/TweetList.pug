@@ -1,0 +1,5 @@
+include Tweet
+mixin TweetList(id)
+	.tweet-list(id=id)
+		each tw in tweets
+			+Tweet(tw)

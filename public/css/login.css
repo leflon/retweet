@@ -9,8 +9,28 @@ form #top-logo {
 	display: none;
 }
 
+#page-header {
+	font-size: 2.5rem;
+	font-family: 'Montserrat';
+	font-weight: 800;
+	margin-bottom: 1rem;
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	padding: 20px 0;
+}
+
+#page-header img {
+	margin-right: 10px;
+	width: 64px;
+	pointer-events: none;
+}
+#page-header img::selection {
+	background: transparent;
+}
+
 form h1 {
-	font: 500 2.5rem 'Montserrat';
+	font: bold 26pt 'Montserrat';
 	text-align: center;
 }
 
@@ -19,52 +39,6 @@ form #error {
 	margin-bottom: 10px;
 }
 
-.text-input {
-	position: relative;
-}
-
-.text-input input {
-	font: 1.3rem 'Roboto';
-	margin: 6px 0;
-	width: auto;
-	appearance: none;
-	border: 1px solid #555;
-	color: #fff;
-	padding: 14px 6px;
-	border-radius: 8px;
-	background: transparent;
-	outline: 0px solid transparent;
-	transition: outline .1s linear;
-}
-
-.text-input .input-placeholder {
-	position: absolute;
-	font-size: 0.8rem;
-	top: 8px;
-	transform: translateY(0);
-	left: 8px;
-	color: #555;
-	transition: all .3s ease;
-	pointer-events: none;
-}
-
-.text-input input:focus {
-	outline: 4px solid #1D9BF0;
-	border-color: transparent;
-}
-
-.text-input input:placeholder-shown~.input-placeholder {
-	top: 50%;
-	transform: translateY(-50%);
-	font: 1.1rem 'Roboto';
-}
-
-.text-input input:focus~.input-placeholder {
-	color: #1D9BF0;
-	font-size: 0.8rem;
-	top: 8px;
-	transform: translateY(0);
-}
 
 input.is-invalid {
 	outline: 4px solid #b61212;
@@ -162,24 +136,8 @@ form#recover-confirm #email {
 #form-actions #recover,
 #form-actions #submit {
 	margin: 10px 0;
-	width: 200px;
-	padding: 10px 20px;
-	border-radius: 10em;
-	display: block;
-	box-sizing: content-box;
-	text-align: center;
-	font: 500 1.1rem 'Montserrat';
-	cursor: pointer;
-}
-
-#form-actions #submit {
-	border: none;
-	background-color: #fff;
-	transition: .3s ease;
-}
-
-#form-actions #submit:hover {
-	background-color: #ddd;
+	width: 300px;
+	padding: 10px 0;
 }
 
 #form-actions #recover {

@@ -106,11 +106,11 @@ router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner
 		return res.status(403).send('You don\'t have the permission to edit this user.');
 	if (name.length > 50)
 		return res.status(400).send({message: 'Name is too long.'});
-	if (bio.length > 200)
+	if (bio.length > 160)
 		return res.status(400).send({message: 'Bio is too long.'});
-	if (location.length > 50)
+	if (location.length > 30)
 		return res.status(400).send({message: 'Location is too long.'});
-	if (website.length > 50)
+	if (website.length > 100)
 		return res.status(400).send({message: 'Website is too long.'});
 	if (req.files.avatar) {
 		const avatarId = await req.app.db.addMedia(join(__dirname, '../../', req.files.avatar[0].path), {
@@ -126,10 +126,10 @@ router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner
 		});
 		user.bannerId = bannerId;
 	}
-	user.displayName = name || user.displayName;
-	user.bio = bio || user.bio;
-	user.location = location || user.location;
-	user.website = website || user.website;
+	user.displayName = name;
+	user.bio = bio;
+	user.location = location;
+	user.website = website;
 	await user.save();
 	return res.redirect(`/profile/${user.username}`);
 });

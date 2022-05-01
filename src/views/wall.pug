@@ -1,16 +1,18 @@
+include mixins/TextInput
 doctype html
 html
 	head
-		include includes/_head
+		include _head
 		link(rel='stylesheet', href='/public/css/main.css')
 		link(rel='stylesheet', href='/public/css/login.css')
+		link(rel='stylesheet', href='/public/css/TextInput.css')
 		script. 
 			const MODE = '#{mode}';
-		script(src='/public/js/inputs.js',defer)
+		script(src='/public/js/TextInput.js',defer)
 		script(src='/public/js/wall.js',defer)
 		title Login - Retweet
 	body 
-		.title
+		#page-header
 			img(src='/public/img/logo.svg' alt='Logo')
 			b Retweet
 		case mode
@@ -20,11 +22,11 @@ html
 					h1 Se connecter
 					if error
 						#error Nom d'utilisateur ou mot de passe invalide.
-					input(type='text', name='username', placeholder='Nom d\'utilisateur')
-					input(type='password', name='password', placeholder='Mot de passe')
+					+TextInput('username', false, false, 'Nom d\'utilisateur')
+					+TextInput('password', true, false, placeholder='Mot de passe')
 					#form-actions
-						input#submit(type='submit', value='Connexion')
-						a#recover(href='/recover') Mot de passe oublié ?
+						input#submit.button(type='submit', value='Connexion')
+						a#recover.button.alt(href='/recover') Mot de passe oublié ?
 					#other-action
 						span Vous n'avez pas de compte ?
 						a(href='/register') Inscrivez-vous
@@ -35,20 +37,21 @@ html
 					if error
 						#error #{error}
 					.input-line
-						input(type='text', name='email', placeholder='Adresse e-mail')#email
+						+TextInput('email', false, false, 'Adresse e-mail')
 					.input-line
-						input(type='text', name='username', placeholder='Nom d\'utilisateur')#username
+						+TextInput('username', false, false, 'Nom d\'utilisateur')
 						.info 
 							.info-icon ?
 							.info-text Doit faire entre 3 et 16 caractères. Ne peut contenir que des caractères alphanumériques et des underscores.
 					.input-line
-						input(type='password', name='password', placeholder='Mot de passe')#password
+						+TextInput('password', true, false, 'Mot de passe')
 						.info 
 							.info-icon ?
 							.info-text Doit faire au minimum 8 caractères, contenir une majuscule, une minuscule, un chiffre et un symbole.
-					input(type='password', name='pw-confirm', placeholder='Confirmer le mot de passe')#pw-confirm
+					.input-line
+						+TextInput('pw-confirm', true, false, 'Confirmer le mot de passe')
 					#form-actions
-						input#submit(type='submit', value='Inscription')
+						input#submit.button(type='submit', value='Inscription')
 					#other-action
 						span J'ai déjà un compte.
 						a(href='/login') Me connecter
@@ -59,10 +62,10 @@ html
 					if error
 						#error #{error}
 					.input-line
-						input(type='text', name='email', placeholder='Adresse e-mail')
+						+TextInput('email', false, false, 'Adresse e-mail')
 					p Vous allez recevoir un e-mail contenant un lien vous permettant de réinitialiser votre mot de passe.
 					#form-actions
-						input#submit(type='submit', value='Réinitialiser')
+						input#submit.button(type='submit', value='Réinitialiser')
 					#other-action
 						span En fait c'est bon.
 						a(href='/login') Me connecter
@@ -85,11 +88,11 @@ html
 							a#recover(href='/recover') Retour
 					else
 						.input-line
-							input(type='password', name='password', placeholder='Nouveau mot de passe')#password
+							+TextInput('password', true, false, 'Nouveau mot de passe')
 							.info 
 								.info-icon ?
 								.info-text Doit faire au minimum 8 caractères, contenir une majuscule, une minuscule, un chiffre et un symbole.
 						.input-line
-							input(type='password', name='pw-confirm', placeholder='Confirmer le  mot de passe')#pw-confirm
+							+TextInput('password', true, false, 'Confirmer le mot de passe')
 						#form-actions
 							input#submit(type='submit', value='Réinitialiser')

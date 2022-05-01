@@ -46,7 +46,7 @@ async function actionButtonListener({target}) {
 		}
 		if (undo)
 			document.querySelector(`.retweet[id='${tweet}']`).remove();
-		else if (!PROFILE || PROFILE.id === USER.id){
+		else if (!('PROFILE' in window) || PROFILE.id === USER.id){
 			const base = document.querySelector(`.tweet[id='${tweet}']`);
 			const clone = base.cloneNode(true);
 			clone.classList.add('retweet');

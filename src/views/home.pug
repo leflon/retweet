@@ -1,19 +1,21 @@
-include includes/_tweet-list
-include includes/_new-tweet
+include mixins/TweetList
+include mixins/TweetForm
 doctype html
 html
 	head
-		include includes/_head
+		include _head
 		script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment-with-locales.min.js')
 		script(src='/public/js/tweet.js', defer)
-		script(src='/public/js/form.js', defer)
+		script(src='/public/js/TextInput.js', defer)
+		script(src='/public/js/TweetForm.js', defer)
 		link(rel='stylesheet', href='/public/css/home.css')
-		link(rel='stylesheet', href='/public/css/tweet.css')
-		link(rel='stylesheet', href='/public/css/new-tweet.css')
+		link(rel='stylesheet', href='/public/css/Tweet.css')
+		link(rel='stylesheet', href='/public/css/TweetForm.css')
+		link(rel='stylesheet', href='/public/css/TextInput.css')
 		title Home - Retweet
 	body 
 		.page-center
 			.page-title Accueil
-			+new-tweet
-			+tweet-list('home-timeline')
+			+TweetForm
+			+TweetList('home-timeline')
 		a(href='/logout') Logout
