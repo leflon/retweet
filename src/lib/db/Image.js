@@ -1,4 +1,4 @@
-class Media {
+class Image {
 	/**
 	 * Database connection.
 	 * @type {Database}
@@ -8,53 +8,51 @@ class Media {
 	constructor(sqlRow, db) {
 		this.#db = db;
 		/**
-		 * id of the media.
+		 * Id de l'image.
 		 * @type {string}
 		 */
 		this.id = sqlRow.id;
 		/**
-		 * Path to the media's file.
+		 * Chemin vers le fichier.
 		 * @type {string}
 		 */
 		this.file = sqlRow.file;
 		/**
-		 * Type of the tweet : 0 for an avatar, 1 for a banner, 2 for a tweet's media.
+		 * Type d'image : 0 pour un avatar, 1 pour une bannière, 2 pour une image de tweet.
 		 * @type {integer}
 		 */
 		this.type = sqlRow.type;
 		/**
-		 * Id of the user. Only for avatars and banners.
+		 * Id de l'utilisateur, si cette image est un avatar ou une bannière.
 		 * @type {string}
 		 */
 		this.userId = sqlRow.user_id || null;
 		/**
-		 * Id of the tweet. Only for a tweet's media.
+		 * Id du tweet, si cette image est une image de tweet.
 		 * @type {string}
 		 */
 		this.tweetId = sqlRow.tweet_id || null;
 		/**
-		 * Date of birth of this media.
+		 * Date de création de l'image
 		 * @type {Date}
 		 */
 		this.createdAt = new Date(sqlRow.created_at);
 		/**
-		 * Whether this media is deleted.
+		 * Si cette image a été supprimée.
 		 * @type {boolean}
 		 */
 		this.isDeleted = sqlRow.is_deleted;
 	}
 
 	/**
-	 * Deletes this media.
+	 * Supprime l'image.
+	 * @returns {Promise<void>}
 	 */
 	async delete() {
-		if (this.isDeleted) {
-			const err = new Error(`Media "${this.id}" is already deleted`);
-			err.name = 'AlreadyDeleted';
-			throw err;
-		}
+		if (this.isDeleted)
+			return;
 		this.isDeleted = true
-		await this.#db.connection.query(`UPDATE media SET is_deleted = 1 WHERE id = ?`, [this.id]);
-		this.#db.log.info(`Media "${this.id}" deleted.`);
+		await this.#db.connection.query(`UPDATE Image SET is_deleted = 1 WHERE id = ?`, [this.id]);
+		this.#db.log.info(`Image "${this.id}" supprimée.`);
 	}
 }

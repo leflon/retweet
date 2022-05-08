@@ -2,7 +2,7 @@ const {join} = require('path');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
-const User = require('./Use
+const User = require('./User');
 const Tweet = require('./Tweet');
 
 let {rename} = require('fs');
@@ -10,24 +10,24 @@ const {promisify} = require('util');
 rename = promisify(rename);
 
 /**
- * Utility class for interacting with the MySQL database.
+ * Classe utilitaire pour les intéractions avec la base de données.
  */
 class Database {
 	/**
-	 * @param {string} host Hostname of the database.
-	 * @param {string} user User to connect to the database with.
-	 * @param {string} password Password of the given user.
+	 * @param {string} host Nom d'hôte de la base de données.
+	 * @param {string} user Utilisateur de base données.
+	 * @param {string} password Mot de passe de l'utilisateur.
 	 */
 	constructor(host, user, password) {
 		this.host = host;
 		this.user = user;
 		this.password = password;
 		this.connection = null;
-		this.log = new Logger('Database');
+		this.log = new Logger('Base de données');
 	}
 
 	/**
-	 * Connects to the database.
+	 * Se connecte à la base de données.
 	 */
 	async connect() {
 		this.connection = await mysql.createConnection({
@@ -39,7 +39,7 @@ class Database {
 	}
 
 	/**
-	 * Generates an id not already in the database.
+	 * Génère un id unique pour une nouvelle entrée dans la base de données.
 	 * @returns {Promise<string>} Generated id.
 	 */
 	async generateId() {
@@ -48,7 +48,7 @@ class Database {
 			.fill()
 			.map(() => chars[Math.floor(Math.random() * chars.length)])
 			.join('');
-		// Checks if the id is already in the database.
+		// Vérifie si l'id existe déjà, si oui, en génère un autre récursivement.
 		const [rows] = await this.connection.query('SELECT * FROM id WHERE id = ? ', [id]);
 		if (rows.length !== 0)
 			return await this.generateId();
@@ -56,9 +56,9 @@ class Database {
 	}
 
 	/**
-	 * Gets a user from the database by id.
-	 * @param {string} id Id of user to get.
-	 * @returns {Promise<?User>} User with given id. `null` if not found.
+	 * Récupère un utilisateur par son id.
+	 * @param {string} id Id de l'utilisateur.
+	 * @returns {Promise<?User>} Utilisateur trouvé ou `null`.
 	 **/
 	async getUserById(id) {
 		const [rows] = await this.connection.query('SELECT * FROM user WHERE id = ?', [id]);
@@ -68,9 +68,9 @@ class Database {
 	}
 
 	/**
-	 * Gets an user from the database by username.
-	 * @param {string} username Username of user to get.
-	 * @returns {Promise<?User>} User with given username. `null` if not found.
+	 * Récupère un utilisateur par son nom d'utilisateur.
+	 * @param {string} username Nom de l'utilisateur.
+	 * @returns {Promise<?User>} Utilisateur trouvé ou `null`.
 	 **/
 	async getUser(username) {
 		const [rows] = await this.connection.query('SELECT * FROM user WHERE username= ? ', [username]);
@@ -79,6 +79,11 @@ class Database {
 		return new User(rows[0], this);
 	}
 
+	/**
+	 * Récupère un tweet par son id.
+	 * @param {string} id Id du tweet za récupérer. 
+	 * @returns {Promise<?Tweet>} Tweet trouvé ou `null`.
+	 */
 	async getTweet(id) {
 		const [rows] = await this.connection.query('SELECT * FROM tweet WHERE id = ?', [id]);
 		if (rows.length === 0)
@@ -87,12 +92,12 @@ class Database {
 	}
 
 	/**
-	 * Inserts a User in the database.
-	 * @param {object} data Required data to create the user.
-	 * @param {string} data.username The username of the user.
-	 * @param {string} data.email The e-mail of the user.
-	 * @param {string} data.password The clear password of the user. Will be encrypted in this function.
-	 * @returns {User} The generated user object.
+	 * Insère un utilisateur dans la base de données.
+	 * @param {object} data Donnés requises lors de la création de l'utilisateur.
+	 * @param {string} data.username Nom d'utilisateur.
+	 * @param {string} data.email Adresse email.
+	 * @param {string} data.password Mot de passe, en clair.
+	 * @returns {Promise<User>} L'utilisateur créé.
 	 */
 	async addUser(data) {
 		const id = await this.generateId();
@@ -115,14 +120,14 @@ class Database {
 	}
 
 	/**
-	 * Inserts a Tweet in the database.
-	 * @param {object} data Required data to create the tweet.
-	 * @param {string} data.content The content of the tweet.
-	 * @param {string} data.authorId The id of the author of the tweet.
-	 * @param {?string} data.mediaId The id of the media attached to the tweet.
-	 * @param {?string} data.repliesTo The id of the tweet to which this tweet replies.
-	 * @param {?string} data.id The id of the tweet, if generated beforehand.
-	 * @returns {Tweet} The generated tweet object.
+	 * Insère un tweet dans la base de données.
+	 * @param {object} data Données du tweet lors de sa création
+	 * @param {string} data.content Contenu du tweet.
+	 * @param {string} data.authorId Id de l'auteur.
+	 * @param {?string} data.imageId Id de l'image du tweet.
+	 * @param {?string} data.repliesTo Id du tweet auquel ce tweet répond.
+	 * @param {?string} data.id L'id du tweet, si généré au préalable (en cas de tweet avec image).
+	 * @returns {Promise<Tweet>} Le tweet généré.
 	 */
 	async addTweet(data) {
 		const id = data.id || await this.generateId();
@@ -130,12 +135,12 @@ class Database {
 		this.log.info(`Created tweet ${id}`);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
 		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
-			[id, data.content, data.authorId, data.mediaId, createdAt, data.repliesTo]);
+			[id, data.content, data.authorId, data.imageId, createdAt, data.repliesTo]);
 		return new Tweet({
 			id,
 			content: data.content,
 			author_id: data.authorId,
-			media_id: data.mediaId,
+			image_id: data.imageId,
 			created_at: createdAt,
 			replies_to: data.repliesTo,
 			likes: [],
@@ -144,17 +149,25 @@ class Database {
 		}, this);
 	}
 
-	async addMedia(path, data) {
+	/**
+	 * Ajoute une image en base de données et dans l'arborescence.
+	 * @param {string} path Chemin vers le fichier. 
+	 * @param {object} data Données liées à l'image.
+	 * @param {string} data.id Id de l'utilisateur ou du tweet lié à l'image.
+	 * @param {string} data.type Type de l'image : Avatar, Banniére, ou Image de tweet.
+	 * @returns {Promise<string>} Id de l'image.
+	 */
+	async addImage(path, data) {
 		const id = await this.generateId();
 		const createdAt = new Date();
 		const dbType = (data.type === 'tweet') ? 2 : (data.type === 'banner') ? 1 : 0;
 		const newPath = join(__dirname, '../../..', 'media', id + '.jpg');
 		await rename(path, newPath);
-		this.log.info(`Saved media ${id}`);
+		this.log.info(`Saved image ${id}`);
 		if (data.type === 'tweet')
-			await this.connection.query('INSERT INTO Media VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
+			await this.connection.query('INSERT INTO Image VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
 		else
-			await this.connection.query('INSERT INTO Media VALUES (?, ?, ?, ?, NULL, ?, 0)', [id, newPath, dbType, data.id, createdAt]);
+			await this.connection.query('INSERT INTO Image VALUES (?, ?, ?, ?, NULL, ?, 0)', [id, newPath, dbType, data.id, createdAt]);
 
 		await this.connection.query('INSERT INTO Id VALUES (?, ?, 2)', [id, createdAt]);
 

@@ -34,7 +34,7 @@
 	color: #616d75;
 }
 
-.tweet-form .media-preview-container img {
+.tweet-form .image-preview-container img {
 	margin-left: 58px;
 	max-width: calc(100% - 58px);
 	max-height: 600px;
@@ -47,7 +47,7 @@
 	display: none;
 }
 
-.tweet-form label[for='media'] {
+.tweet-form label[for='image'] {
 	margin-left: 58px;
 }
 

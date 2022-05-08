@@ -1,4 +1,4 @@
-/* Run these SQL queries to create the tables required for this app. */
+/* Exécuter ces rquêtes SQL initialise les relations nécéssaires à l'application. */
 
 CREATE TABLE `user` (
   `id` char(16) NOT NULL,
@@ -24,7 +24,7 @@ CREATE TABLE `tweet` (
   `id` CHAR(16) NOT NULL,
   `content` VARCHAR(280) NOT NULL,
   `author_id` CHAR(16) NOT NULL,
-  `media_id` CHAR(16) NULL,
+  `image_id` CHAR(16) NULL,
   `created_at` DATETIME NOT NULL,
   `replies_to` CHAR(16),
   `likes` JSON NOT NULL,
@@ -33,10 +33,10 @@ CREATE TABLE `tweet` (
   `is_deleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `media` (
+CREATE TABLE `image` (
   `id` CHAR(16) NOT NULL,
   `file` VARCHAR(300) NOT NULL,
-  `type` INT NOT NULL, /*0 for an avatar, 1 for a banner, 2 for a tweet's media*/
+  `type` INT NOT NULL,
   `user_id` CHAR(16),
   `tweet_id` CHAR(16),
   `created_at` DATETIME NOT NULL,
@@ -60,5 +60,5 @@ CREATE TABLE `recover` (
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,
-  `type` TINYINT NOT NULL, /*0 for a user, 1 for a tweet, 2 for a media.*/
+  `type` TINYINT NOT NULL,
   PRIMARY KEY (`id`));

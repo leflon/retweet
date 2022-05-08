@@ -1,12 +1,9 @@
 const bcrypt = require('bcrypt');
 const Tweet = require('./Tweet');
 
-/**
- * Represents a user of the app. Contains formatted data of the user and methods to modify it in the database.
- */
 class User {
 	/**
-	 * Database connection.
+	 * Connexion à la base de données.
 	 * @type {Database}
 	 */
 	#db;
@@ -14,111 +11,111 @@ class User {
 
 		this.#db = db;
 		/**
-		 * Id of this user.
+		 * Id de l'utilisateur.
 		 * @type {string}
 		 */
 		this.id = sqlRow.id;
 		/**
-		 * username of this user. Unique to each user.
+		 * Nom d'utilisateur, unique à chaque utilisateur.
 		 * @type {string}
 		 */
 		this.username = sqlRow.username;
 		/**
-		 * Display name of this user. Falls back to username in the UI if not set.
+		 * Nom d'affichage de l'utilisateur.
 		 * @type {?string}
 		 */
 		this.displayName = sqlRow.display_name || null;
 		/**
-		 * Email address of this user.
+		 * Adresse e-mail de l'utilisateur.
 		 * @type {string}
 		 */
 		this.email = sqlRow.email;
 		/**
-		 * Password of this user. Encrypted with bcrypt.
+		 * Mot de passe encrypté de l'utilisateur.
 		 * @type {string}
 		 */
 		this.encryptedPassword = sqlRow.password;
 		/**
-		 * Date of birth of this user.
+		 * Date de création du compte.
 		 * @type {Date}
 		 */
 		this.createdAt = new Date(sqlRow.created_at);
 		/**
-		 * Id of the user's profile picture. Falls back to default profile picture in the UI if not set.
+		 * Id de l'avatar de l'utilisateur.
 		 * @type {?string}
 		 */
 		this.avatarId = sqlRow.avatar_id || null;
 		/**
-		 * Id of the user's banner. Falls back to default banner in the UI if not set.
+		 * Id de la bannière de l'utilisateur.
 		 * @type {?string}
 		 */
 		this.bannerId = sqlRow.banner_id || null;
 		/**
-		 * Bio of this user.
+		 * Bio de l'utilisateur.
 		 * @type {?string}
 		 */
 		this.bio = sqlRow.bio || null;
 		/**
-		 * Website of this user.
+		 * Site internet de l'utilisateur.
 		 * @type {?string}
 		 */
 		this.website = sqlRow.website || null;
 
 		/**
-		 * Location of this user. Not a real location, but rather a string set by the user.
+		 * Localisation (définie manuellement) de l'utilisateur.
 		 * @type {?string}
 		 */
 		this.location = sqlRow.location || null;
 		/**
-		 * List of the ids of the users this user follows.
+		 * Liste des Id des utilisateurs suivis par cet utilisateur.
 		 * @type {string[]}
 		 */
 		this.follows = sqlRow.follows;
 		/**
-		 * List of the ids of the followers of this user.
+		 * Liste des Id des utilisateurs suivant cet utilisateur.
 		 * @type {string[]}
 		 */
 		this.followers = sqlRow.followers;
 		/**
-		 * List of the ids of the tweets this user has liked.
+		 * Liste des Id des tweets aimés par cet utilisateur.
 		 * @type {string[]}
 		 */
 		this.likes = sqlRow.likes;
 		/**
-		 * Whether this user is an admin. Can only be set directly on the database.
+		 * Si cet utilisateur est un administrateur. Défini manuellement dans la base de données.
 		 * @type {boolean}
 		 */
 		this.isAdmin = sqlRow.is_admin === 1;
 		/**
-		 * Whether this user is suspended. A suspended user cannot login.
+		 * Si cet utilisateur est suspendu. Dans ce cas, il ne peut pas se connecter.
 		 * @type {boolean}
 		 */
 		this.isSuspended = sqlRow.is_suspended === 1;
 		/**
-		 * Whether this user is deleted. A deleted user cannot be recovered and is deleted permanently from the database after 90 days.
+		 * Si cet utilisateur a supprimé son compte. Le cas échéant, ce compte reste en base de données à titre d'archive.
 		 * @type {boolean}
 		 */
 		this.isDeleted = sqlRow.is_deleted === 1;
 	}
 
 	/**
-	 * Sets a new password for this user.
-	 * @param {string} password The password to set.
+	 * Change le mot de passe de l'utilisateur.
+	 * @param {string} password Le nouveau mot de passe, en clair.
 	 */
 	async updatePassword(password) {
 		const hash = await bcrypt.hash(password, 10);
 		await this.#db.connection.query(`UPDATE user SET password = ? WHERE id = ?`, [hash, this.id]);
 		this.encryptedPassword = hash;
-		this.#db.log.info(`[${this.id}] Password updated.`);
+		this.#db.log.info(`[${this.id}] Mot de passe mis à jour.`);
 	}
 
 	/**
-	 * Saves to the database the changes made to this user.
+	 * Sauvegarde en base de données toute modification autorisée apportée à l'utilisateur.
 	 */
 	async save() {
 		await this.#db.connection.query(
 			`UPDATE user SET 
-				display_name = ?,
+			display_name = ?,
 				avatar_id = ?,
 				banner_id = ?,
 				bio = ?,
@@ -127,7 +124,7 @@ class User {
 				follows = ?,
 				followers = ?,
 				likes = ?
-			WHERE id = ?`,
+				WHERE id = ?`,
 			[
 				this.displayName,
 				this.avatarId,
@@ -141,15 +138,15 @@ class User {
 				this.id
 			]
 		);
-		this.#db.log.info(`[${this.id}] Profile updated.`);
+		this.#db.log.info(`[${this.id}] Informations mises à jour.`);
 	}
 
 
 	/**
-	 * Generates an auth/password recovery token.
-	 * @param {'auth' | 'recover'} table What the token will be used for. Either persistent auth or password recovery.
-	 * @param {string} userAgent For `auth` only. The user-agent this auth token is usable with.
-	 * @param {string} ip For `auth` only. The ip this auth token is usable with.
+	 * Génère un token d'authentification ou de récupération de mot de passe.
+	 * @param {'auth' | 'recover'} table Type de token à générer.
+	 * @param {string} userAgent L'user-agent lié au token (pour un token auth).
+	 * @param {string} ip L'ip liée au token (pour un token auth).
 	 */
 	async generateToken(table, userAgent, ip) {
 		const chars = '0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ@$!';
@@ -163,35 +160,36 @@ class User {
 			return await this.generateToken(table, userAgent, ip);
 		if (table === 'auth') {
 			await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
-			this.#db.log.info(`[${this.id}] Generated new auth token.`);
+			this.#db.log.info(`[${this.id}] Token d'authentification généré.`);
 		} else {
 			await this.#db.connection.query('DELETE FROM recover WHERE user_id = ?', [this.id]);
 			await this.#db.connection.query('INSERT INTO recover VALUES (?, ?, NOW())', [this.id, token]);
-			this.#db.log.info(`[${this.id}] Generated new recover token.`);
+			this.#db.log.info(`[${this.id}] Token de récupération généré.`);
 		}
 		return token;
 	}
 
 	/**
-	 * Gets the tweet to display on the user's homepage. 
-	 * Includes tweets from the user's followers and the user's themself.
+	 * Récupère les tweets à afficher sur la timeline de l'utilisateur.
+	 * Cela inclue les tweets des comptes suivis, leurs retweets, ainsi que ceux de l'utilisateur lui-même.
 	 */
 	async getTimeline() {
-		// The query returns follows in this form: [[{follows: [...]}]]. We use nested destructuring to directly get the follows array.
+		// La requête renvoie un objet de cette forme : [[{follows: [...]}]]. 
+		// On utilise des destructurations imbriquées pour récupérer le tableau simple des comptes suivis.
 		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM user WHERE user.id = ?`, [this.id]);
-		follows.push(this.id); // To include the user's own tweets in the timeline.
+		follows.push(this.id); // Inclue l'utilisateur lui-même dans les comptes dont les tweets sont récupérés.
 		const [woaw] = await this.#db.connection.query(
-			'SELECT * FROM Tweet WHERE Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate fixes a weird bug
-			+ '(SELECT id FROM JSON_TABLE(' // Converts the follows JSON list into a table
+			'SELECT * FROM Tweet WHERE Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
+			+ '(SELECT id FROM JSON_TABLE(' // Convertis la liste JSON en table SQL
 			+ `'${JSON.stringify(follows)}',`
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
 			+ ' as follows) AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC'
 		);
-		return woaw.map(t => new Tweet(t, this.#db)); // Converts each raw tweet object into a Tweet instance.
+		return woaw.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
 	}
 
 	/**
-	 * Gets the non-deleted tweets sent by this user in chronological order.
+	 * Récupère les tweets envoyés par l'utilisateur.
 	 * @returns {Promise<Tweet[]>}
 	 */
 	async getTweets() {

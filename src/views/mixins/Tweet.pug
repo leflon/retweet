@@ -15,11 +15,11 @@ mixin Tweet(tw)
 					.tweet-author-username @#{tw.author.username}
 					.tweet-time(date=`${tw.createdAt}`)
 			.tweet-content #{tw.content}
-			if tw.mediaId
-				.tweet-media-fullscreen-container
-					.tweet-media-fullscreen-close
+			if tw.imageId
+				.tweet-image-fullscreen-container
+					.tweet-image-fullscreen-close
 						i.fa-solid.fa-xmark
-					img.tweet-media(src='/public/' + tw.mediaId + '.jpg')
+					img.tweet-image(src='/public/' + tw.imageId + '.jpg')
 			.tweet-footer
 				.tweet-action.reply(tweet=`${tw.id}`, action='reply') 
 					i.fa-regular.fa-comment

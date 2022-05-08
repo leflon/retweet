@@ -9,9 +9,9 @@ mixin TweetForm(repliesTo)
 				else
 					img.avatar(src=`/public/default_avatar.jpg`)
 			+TextInput('content', false, true, 'Quoi de neuf ?', 280)
-		.media-preview-container
-		input#media(type='file', name='media', accept='image/jpeg,image/png')
-		label(for='media').fa-regular.fa-image.icon-button
+		.image-preview-container
+		input#image(type='file', name='image', accept='image/jpeg,image/png')
+		label(for='image').fa-regular.fa-image.icon-button
 		if repliesTo 
 			input(type='hidden', name='repliesTo', value=repliesTo)
 		input(type='submit', value='Tweeter').button

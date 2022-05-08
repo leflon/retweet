@@ -1,12 +1,12 @@
 const tweets = document.querySelectorAll('.tweet');
 for (const tw of tweets) {
 	tw.addEventListener('click', e => {
-		if (e.target.className === 'tweet-media') {
+		if (e.target.className === 'tweet-image') {
 			tw.classList.add('fullscreen');
 		}
 	});
 
-	const fullscreenClose = tw.querySelector('.tweet-media-fullscreen-close');
+	const fullscreenClose = tw.querySelector('.tweet-image-fullscreen-close');
 	if (fullscreenClose) {
 		fullscreenClose.addEventListener('click', e => {
 			tw.classList.remove('fullscreen');

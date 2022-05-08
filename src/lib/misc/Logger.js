@@ -1,27 +1,28 @@
 const colors = require('colors/safe');
 /**
- * Utility class for logging.
+ * Classe utilitaire pour mettre en forme les messages de log.
  */
 class Logger {
 	/**
-	 * @param {string} name The name of the logger. 
+	 * @param {string} name Nom de ce Logger. 
 	 */
 	constructor(name) {
 		if (typeof name !== 'string' || name.length === 0) {
-			throw new Error('Logger name must be a non-empty string.');
+			throw new Error('Le nom du Logger doit être une chaîne de caractères non-vide.');
 		}
 		this.name = name;
 	}
 
 	/**
-	 * Prints a message to the console with desired formatting.
-	 * @param {'INFO' | 'WARN' | 'ERROR' | 'DEBUG'} type The type of log message.
-	 * @param {any[]} content The content of the log message.
+	 * Affiche un message de log avec la mise en forme demandée.
+	 * @param {'INFO' | 'WARN' | 'ERROR' | 'DEBUG'} type Type de log.
+	 * @param {any[]} content Contenu du message.
 	 */
 	#print(type, ...content) {
-		const color = colors[Logger.#colors[type]]; // Gets the appropriate color function from the colors module.
+		const color = colors[Logger.#colors[type]]; // Obtient la couleur associée au type de log.
 		if (type === 'DEBUG') {
-			// We use process.stdout.write instead of console.log to avoid the newline character.
+			// process.stdout.write évite le retour à la ligne.
+			// Si un objet doit être affiché, on veut le contrôler à la main.
 			process.stdout.write(`${new Date().toISOString()} [${this.name}] ${color(type)} : `);
 			for (const arg of content) {
 				if (typeof arg === 'object')
@@ -38,32 +39,32 @@ class Logger {
 	}
 
 	/**
-	 * Logs an info message.
-	 * @param {string[]} content The content of the log message.
+	 * Log un message de type INFO.
+	 * @param {string[]} content Contenu du message.
 	 */
 	info(...content) {
 		this.#print('INFO', ...content);
 	}
 
 	/**
-	 * Logs a warn message.
-	 * @param {string[]} content The content of the log message.
+	 * Log un message de type WARN.
+	 * @param {string[]} content Contenu du message.
 	 */
 	warn(...content) {
 		this.#print('WARN', ...content);
 	}
 
 	/**
-	 * Logs an error message.
-	 * @param {string[]} content The content of the log message.
+	 * Log un message de type ERROR.
+	 * @param {string[]} content Contenu du message.
 	 */
 	error(...content) {
 		this.#print('ERROR', ...content);
 	}
 
 	/**
-	 * Logs a debug  message. Will not be printed unless `NODE_ENV` is set to `development`.
-	 * @param {any[]} content The content of the log message.
+	 * Log un message de type DEBUG. Affiché uniquement si `NODE_ENV` est `development`.
+	 * @param {any[]} content Contenu du message.
 	 */
 	debug(...content) {
 		if (process.env.NODE_ENV != 'development') {
@@ -72,13 +73,14 @@ class Logger {
 	}
 
 	/**
-	 * Alias for console.log
-	 * @param  {string[]} content The content of the log message.
+	 * Alias pour console.log
+	 * @param  {string[]} content Contenu du message.
 	 */
 	raw(...content) {
 		console.log(...content);
 	}
 
+	// Couleurs associées aux types de log, pour le module `colors`.
 	static #colors = {
 		INFO: 'cyan',
 		WARN: 'yellow',

@@ -83,7 +83,7 @@
 	white-space: pre-wrap;
 }
 
-.tweet .right .tweet-media {
+.tweet .right .tweet-image {
 	width: 100%;
 	max-height: 300px;
 	object-fit: cover;
@@ -91,11 +91,11 @@
 	cursor: pointer;
 }
 
-.tweet .right .tweet-media-fullscreen-container .tweet-media-fullscreen-close {
+.tweet .right .tweet-image-fullscreen-container .tweet-image-fullscreen-close {
 	display: none;
 }
 
-.tweet.fullscreen .tweet-media-fullscreen-container {
+.tweet.fullscreen .tweet-image-fullscreen-container {
 	position: fixed;
 	z-index: 999;
 	top: 0;
@@ -108,7 +108,7 @@
 	align-items: center;
 }
 
-.tweet.fullscreen .tweet-media-fullscreen-container .tweet-media {
+.tweet.fullscreen .tweet-image-fullscreen-container .tweet-image {
 	width: auto;
 	height: auto;
 	max-width: 90%;
@@ -118,7 +118,7 @@
 	cursor: default;
 }
 
-.tweet.fullscreen .tweet-media-fullscreen-container .tweet-media-fullscreen-close {
+.tweet.fullscreen .tweet-image-fullscreen-container .tweet-image-fullscreen-close {
 	display: block;
 	position: absolute;
 	top: 20px;

@@ -9,7 +9,7 @@ for (const form of document.querySelectorAll('form.tweet-form')) {
 	});
 	form.querySelector('input[type=\'file\']').addEventListener('change', e => {
 		const file = e.target.files[0];
-		const container = form.querySelector('.media-preview-container'); 
+		const container = form.querySelector('.image-preview-container'); 
 		container.innerHTML = '';
 		if (file) {
 			const reader = new FileReader();
