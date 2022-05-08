@@ -2,7 +2,7 @@ const {join} = require('path');
 const bcrypt = require('bcrypt');
 const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
-const Account = require('./Account');
+const User = require('./Use
 const Tweet = require('./Tweet');
 
 let {rename} = require('fs');
@@ -56,27 +56,27 @@ class Database {
 	}
 
 	/**
-	 * Gets an account from the database by id.
-	 * @param {string} id Id of account to get.
-	 * @returns {Promise<?Account>} Account with given id. `null` if not found.
+	 * Gets a user from the database by id.
+	 * @param {string} id Id of user to get.
+	 * @returns {Promise<?User>} User with given id. `null` if not found.
 	 **/
-	async getAccountById(id) {
-		const [rows] = await this.connection.query('SELECT * FROM account WHERE id = ?', [id]);
+	async getUserById(id) {
+		const [rows] = await this.connection.query('SELECT * FROM user WHERE id = ?', [id]);
 		if (rows.length === 0)
 			return null;
-		return new Account(rows[0], this);
+		return new User(rows[0], this);
 	}
 
 	/**
-	 * Gets an account from the database by username.
-	 * @param {string} username Username of account to get.
-	 * @returns {Promise<?Account>} Account with given username. `null` if not found.
+	 * Gets an user from the database by username.
+	 * @param {string} username Username of user to get.
+	 * @returns {Promise<?User>} User with given username. `null` if not found.
 	 **/
-	async getAccount(username) {
-		const [rows] = await this.connection.query('SELECT * FROM account WHERE username= ? ', [username]);
+	async getUser(username) {
+		const [rows] = await this.connection.query('SELECT * FROM user WHERE username= ? ', [username]);
 		if (rows.length === 0)
 			return null;
-		return new Account(rows[0], this);
+		return new User(rows[0], this);
 	}
 
 	async getTweet(id) {
@@ -87,22 +87,22 @@ class Database {
 	}
 
 	/**
-	 * Inserts an account in the database.
-	 * @param {object} data Required data to create the account.
-	 * @param {string} data.username The username of the account.
-	 * @param {string} data.email The e-mail of the account.
-	 * @param {string} data.password The clear password of the account. Will be encrypted in this function.
-	 * @returns {Account} The generated account object.
+	 * Inserts a User in the database.
+	 * @param {object} data Required data to create the user.
+	 * @param {string} data.username The username of the user.
+	 * @param {string} data.email The e-mail of the user.
+	 * @param {string} data.password The clear password of the user. Will be encrypted in this function.
+	 * @returns {User} The generated user object.
 	 */
-	async addAccount(data) {
+	async addUser(data) {
 		const id = await this.generateId();
 		const createdAt = new Date();
 		const encrypted = await bcrypt.hash(data.password, 10);
-		await this.connection.query('INSERT INTO Account (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
+		await this.connection.query('INSERT INTO User (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
 			[id, data.username, data.email, encrypted, createdAt]);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 0]);
-		this.log.info(`[${id}] Created account ${data.username}`);
-		return new Account({
+		this.log.info(`[${id}] Created user ${data.username}`);
+		return new User({
 			id,
 			username: data.username,
 			email: data.email,

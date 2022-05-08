@@ -1,6 +1,6 @@
 /* Run these SQL queries to create the tables required for this app. */
 
-CREATE TABLE `account` (
+CREATE TABLE `user` (
   `id` char(16) NOT NULL,
   `username` varchar(16) NOT NULL,
   `display_name` varchar(50) DEFAULT NULL,
@@ -60,5 +60,5 @@ CREATE TABLE `recover` (
 CREATE TABLE `id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,
-  `type` TINYINT NOT NULL, /*0 for an account, 1 for a tweet, 2 for a media.*/
+  `type` TINYINT NOT NULL, /*0 for a user, 1 for a tweet, 2 for a media.*/
   PRIMARY KEY (`id`));

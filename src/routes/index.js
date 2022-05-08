@@ -24,7 +24,7 @@ router.get('/home', async (req, res) => {
 });
 
 router.get('/profile/:username', async (req, res) => {
-	const user = await req.app.db.getAccount(req.params.username);
+	const user = await req.app.db.getUser(req.params.username);
 	if (!user)
 		return res.render('profile', {unknown: true});
 	const tweets = await user.getTweets();

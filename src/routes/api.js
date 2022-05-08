@@ -100,7 +100,7 @@ router.get('/tweets/delete/:id', async (req, res) => {
 
 router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner'}]), async (req, res) => {
 	const {name, bio, location, website} = req.body;
-	const user = await req.app.db.getAccountById(req.params.id);
+	const user = await req.app.db.getUserById(req.params.id);
 	if (!user)
 		return res.status(400).send({message: 'This user does not exist.'});
 	if (user.id !== req.user.id && !req.user.isAdmin)
@@ -136,7 +136,7 @@ router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner
 });
 
 router.get('/follow/:id', async (req, res) => {
-	const user = await req.app.db.getAccountById(req.params.id);
+	const user = await req.app.db.getUserById(req.params.id);
 	if (!user)
 		return res.status(400).send({message: 'This user does not exist.'});
 	if (user.id === req.user.id)
@@ -152,7 +152,7 @@ router.get('/follow/:id', async (req, res) => {
 
 router.get('/unfollow/:id', async (req, res) => {
 	console.log(req.params.id);
-	const user = await req.app.db.getAccountById(req.params.id);
+	const user = await req.app.db.getUserById(req.params.id);
 	if (!user)
 		return res.status(400).send({message: 'This user does not exist.'});
 	if (user.id === req.user.id)

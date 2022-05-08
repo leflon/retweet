@@ -29,8 +29,8 @@ app.db.connect().then(() => {
 	app.log.info('Connected to database.');
 	app.listen(process.env.PORT || 3000, () => app.log.info(`Listening on :${process.env.PORT || 3000}`));
 
-	app.db.getAccount('hickatheworld').then(account => {
-		account.getTimeline();
+	app.db.getUser('hickatheworld').then(user => {
+		user.getTimeline();
 	});
 
 });

@@ -38,7 +38,7 @@ class Media {
 		 */
 		this.createdAt = new Date(sqlRow.created_at);
 		/**
-		 * Whether this account is deleted.
+		 * Whether this media is deleted.
 		 * @type {boolean}
 		 */
 		this.isDeleted = sqlRow.is_deleted;

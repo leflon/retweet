@@ -1,5 +1,5 @@
 const {Router} = require('express');
-const Account = require('../lib/db/Account');
+const User = require('../lib/db/User');
 const bcrypt = require('bcrypt');
 const nodemailer = require('nodemailer');
 const {google} = require('googleapis');
@@ -85,14 +85,14 @@ router.get('/logout', (req, res) => {
 
 router.post('/login', async (req, res) => {
 	const {username, password} = req.body;
-	const [result] = await req.app.db.connection.query('SELECT * FROM account WHERE username = ?', [username]);
+	const [result] = await req.app.db.connection.query('SELECT * FROM user WHERE username = ?', [username]);
 	if (result.length === 0) {
 		return res.render('wall', {
 			error: true,
 			mode: 'login'
 		});
 	}
-	const user = new Account(result[0], req.app.db);
+	const user = new User(result[0], req.app.db);
 	if (!await bcrypt.compare(password, user.encryptedPassword)) {
 		return res.render('wall', {
 			error: true,
@@ -106,14 +106,14 @@ router.post('/login', async (req, res) => {
 
 router.post('/recover', async (req, res) => {
 	const {email} = req.body;
-	const [result] = await req.app.db.connection.query('SELECT * FROM account WHERE email = ?', [email]);
+	const [result] = await req.app.db.connection.query('SELECT * FROM user WHERE email = ?', [email]);
 	if (result.length === 0) {
 		return res.render('wall', {
 			error: 'Aucun compte ne correspond à cette adresse email.',
 			mode: 'recover'
 		});
 	}
-	const user = new Account(result[0], req.app.db);
+	const user = new User(result[0], req.app.db);
 	const token = await user.generateToken('recover');
 	const transporter = await createTransporter();
 	const mailOptions = {
@@ -145,7 +145,7 @@ router.post('/renew-password', async (req, res) => {
 	const diff = Math.floor((Date.now() - at) / 1000);
 	if (diff > 300)
 		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération a expiré. Veuillez en demander un nouveau.'});
-	const user = await req.app.db.getAccountById(row[0].user_id);
+	const user = await req.app.db.getUserById(row[0].user_id);
 	await user.updatePassword(password);
 	await req.app.db.connection.query('DELETE FROM recover WHERE token = ?', [ut]);
 	res.redirect('/login?newpwd');
@@ -153,14 +153,14 @@ router.post('/renew-password', async (req, res) => {
 
 router.post('/register', async (req, res) => {
 	const {username, password, email} = req.body;
-	let [row] = await req.app.db.connection.query('SELECT * FROM Account WHERE username = ?', [username]);
+	let [row] = await req.app.db.connection.query('SELECT * FROM User WHERE username = ?', [username]);
 	if (row.length !== 0)
 		return res.render('wall', {mode: 'register', error: 'Nom d\'utilisateur déjà existant.'});
 
-	[row] = await req.app.db.connection.query('SELECT * FROM Account WHERE email = ?', [email]);
+	[row] = await req.app.db.connection.query('SELECT * FROM User WHERE email = ?', [email]);
 	if (row.length !== 0)
 		return res.render('wall', {mode: 'register', error: 'Adresse e-mail déjà utilisée.'});
-	const user = await res.app.db.addAccount({
+	const user = await res.app.db.addUser({
 		username,
 		password,
 		email

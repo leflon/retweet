@@ -24,7 +24,7 @@ class Tweet {
 		/**
 		 * Author of the tweet.
 		 * Must be fetched manually.
-		 * @type {?Account}
+		 * @type {?User}
 		 */
 		this.author = undefined;
 		/**
@@ -47,7 +47,7 @@ class Tweet {
 		 */
 		this.repliesTo = sqlRow.replies_to;
 		/**
-		 * Ids of the accounts that liked this tweet.
+		 * Ids of the users that liked this tweet.
 		 * @type {string[]}
 		 */
 		this.likes = sqlRow.likes;
@@ -69,10 +69,10 @@ class Tweet {
 	}
 
 	/**
-	 * Fetches the Account instance corresponding to the author of this tweet.
+	 * Fetches the User instance corresponding to the author of this tweet.
 	 */
 	async fetchAuthor() {
-		this.author = await this.#db.getAccountById(this.authorId);
+		this.author = await this.#db.getUserById(this.authorId);
 	}
 
 	/**
@@ -118,7 +118,7 @@ class Tweet {
 	}
 
 	/**
-	 * Adds from one of the lists ine the account table.
+	 * Adds from one of the lists ine the user table.
 	 * @param {'replies' | 'retweets'} field The list to edit.
 	 * @param {string} id The id of the entity to add/remove.
 	 */

@@ -1,4 +1,4 @@
-const Account = require('../lib/db/Account');
+const User = require('../lib/db/User');
 
 module.exports = async function(req, res, next) {
 	if (req.path.startsWith('/public') ||
@@ -26,8 +26,8 @@ module.exports = async function(req, res, next) {
 		await db.connection.query('DELETE FROM auth WHERE token = ?', [req.signedCookies.auth]);
 		return res.redirect('/login');
 	}
-	[row] = await db.connection.query('SELECT * FROM account WHERE id = ?', [row.user_id]);
-	const user = new Account(row[0], db);
+	[row] = await db.connection.query('SELECT * FROM User WHERE id = ?', [row.user_id]);
+	const user = new User(row[0], db);
 	req.user = user;
 	next();
 };
