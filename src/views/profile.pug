@@ -48,6 +48,10 @@ html
 					img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
 				if user.id == profile.id
 					.button.alt#open-profile-editor Éditer le profil
+				else if user.follows.includes(profile.id)
+					.button.alt#follow-toggle(action='unfollow') Suivi
+				else
+					.button#follow-toggle(action='follow') Suivre
 				#profile-text
 					if profile.displayName
 						#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}

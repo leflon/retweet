@@ -1,6 +1,7 @@
 const {Router} = require('express');
 const {join} = require('path');
 const multer = require('multer');
+const res = require('express/lib/response');
 const upload = multer({dest: 'uploads/'});
 
 const router = Router();
@@ -132,6 +133,37 @@ router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner
 	user.website = website;
 	await user.save();
 	return res.redirect(`/profile/${user.username}`);
+});
+
+router.get('/follow/:id', async (req, res) => {
+	const user = await req.app.db.getAccountById(req.params.id);
+	if (!user)
+		return res.status(400).send({message: 'This user does not exist.'});
+	if (user.id === req.user.id)
+		return res.status(400).send({message: 'You cannot follow yourself.'});
+	if (user.followers.includes(req.user.id))
+		return res.status(400).send({message: 'You already follow this user.'});
+	user.followers.push(req.user.id);
+	req.user.follows.push(user.id);
+	await user.save();
+	await req.user.save();
+	return res.send({followed: true});
+});
+
+router.get('/unfollow/:id', async (req, res) => {
+	console.log(req.params.id);
+	const user = await req.app.db.getAccountById(req.params.id);
+	if (!user)
+		return res.status(400).send({message: 'This user does not exist.'});
+	if (user.id === req.user.id)
+		return res.status(400).send({message: 'You cannot unfollow yourself.'});
+	if (!user.followers.includes(req.user.id))
+		return res.status(400).send({message: 'You don\'t follow this user.'});
+	user.followers = user.followers.filter(id => id !== req.user.id);
+	req.user.follows = req.user.follows.filter( id => id !== user.id);
+	await user.save();
+	await req.user.save();
+	return res.send({unfollowed: true});
 });
 
 module.exports = router;

@@ -4,3 +4,4 @@ yarn-error.log
 .env
 uploads
 media
+.DS_Store

@@ -42,4 +42,25 @@ if (USER.id === PROFILE.id) {
 	};
 	avatarInput.addEventListener('change', onChange);
 	bannerInput.addEventListener('change', onChange);
+} else {
+	const followToggle = document.querySelector('#follow-toggle');
+	followToggle.addEventListener('click', async () => {
+		const id = PROFILE.id;
+		const action = followToggle.getAttribute('action');
+		await fetch(`/api/${action}/${id}`);
+		followToggle.setAttribute('action', action === 'follow' ? 'unfollow' : 'follow');
+		followToggle.innerText = action === 'follow' ? 'Suivre' : 'Suivi';
+		followToggle.classList.toggle('alt');
+	});
+	followToggle.addEventListener('mouseenter', () => {
+		const action = followToggle.getAttribute('action');
+		if (action === 'unfollow')
+			followToggle.innerText = 'Ne plus suivre';
+	});
+	followToggle.addEventListener('mouseleave', () => {
+		const action = followToggle.getAttribute('action');
+		if (action === 'unfollow')
+			followToggle.innerText = 'Suivi';
+	});
+
 }

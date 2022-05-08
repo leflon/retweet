@@ -132,7 +132,10 @@ class Account {
 				banner_id = ?,
 				bio = ?,
 				website = ?,
-				location = ?
+				location = ?,
+				follows = ?,
+				followers = ?,
+				likes = ?
 			WHERE id = ?`,
 			[
 				this.displayName,
@@ -141,6 +144,9 @@ class Account {
 				this.bio,
 				this.website,
 				this.location,
+				JSON.stringify(this.follows),
+				JSON.stringify(this.followers),
+				JSON.stringify(this.likes),
 				this.id
 			]
 		);

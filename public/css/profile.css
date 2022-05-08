@@ -32,7 +32,8 @@
 	overflow: hidden;
 }
 
-#open-profile-editor {
+#open-profile-editor,
+#follow-toggle {
 	position: absolute;
 	right: 15px;
 	top: 220px;
