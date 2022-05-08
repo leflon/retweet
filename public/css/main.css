@@ -116,3 +116,14 @@ a:hover {
 .button.alt:hover {
 	background-color: #ffffff20;
 }
+
+.tweet-list.empty {
+	border-bottom: 1px solid var(--light-grey);
+	display: flex;
+	text-align: center;
+	justify-content: center;
+	align-items: center;
+	padding: 20px 0;
+	font: bold 20pt 'Montserrat';
+	color: var(--light-grey);
+}

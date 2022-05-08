@@ -18,13 +18,16 @@ for (const tw of tweets) {
 const actionButtons = document.querySelectorAll('.tweet-action');
 
 async function actionButtonListener({target}) {
+	console.log('putani');
 	const tweet = target.getAttribute('tweet');
 	const action = target.getAttribute('action');
 	const undo = target.getAttribute('undo') === 'true';
 	let res;
+	console.log(target);
 	if (action === 'like') {
 		res = await fetch(`/api/tweets/${undo ? 'unlike' : 'like'}/${tweet}`);
 		res = await res.json();
+		console.log(res);
 		const targets = document.querySelectorAll(`.tweet-action.like[tweet='${tweet}']`);
 		for (const target of targets) {
 			target.querySelector('i').classList.toggle('fa-solid');

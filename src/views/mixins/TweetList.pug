@@ -1,5 +1,8 @@
 include Tweet
 mixin TweetList(id)
-	.tweet-list(id=id)
-		each tw in tweets
-			+Tweet(tw)
+		if tweets.length
+			.tweet-list(id=id)
+				each tw in tweets
+					+Tweet(tw)
+		else
+			.tweet-list.empty(id=id) Rien.

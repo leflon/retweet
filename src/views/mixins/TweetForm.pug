@@ -3,8 +3,11 @@ include TextInput
 mixin TweetForm(repliesTo)
 	form.tweet-form(action='/api/tweets/add', method='post', enctype='multipart/form-data')
 		.flex-input
-			a(href=`/profile/${user.username}`) 
-				img.avatar(src=`/public/${user.avatarId}.jpg`)
+			a(href=`/profile/${user.username}`)
+				if user.avatarId
+					img.avatar(src=`/public/${user.avatarId}.jpg`)
+				else
+					img.avatar(src=`/public/default_avatar.jpg`)
 			+TextInput('content', false, true, 'Quoi de neuf ?', 280)
 		.media-preview-container
 		input#media(type='file', name='media', accept='image/jpeg,image/png')
