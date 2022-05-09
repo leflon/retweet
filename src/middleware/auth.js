@@ -33,6 +33,7 @@ module.exports = async function(req, res, next) {
 		await db.connection.query('DELETE FROM auth WHERE token = ?', [req.signedCookies.auth]);
 		return res.redirect('/login');
 	}
+	// L'utilisateur étant bien connecté, on ajoute ses informations à la requête.
 	[row] = await db.connection.query('SELECT * FROM User WHERE id = ?', [row.user_id]);
 	const user = new User(row[0], db);
 	req.user = user;

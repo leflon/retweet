@@ -106,8 +106,10 @@ class Database {
 		await this.connection.query('INSERT INTO User (id, username, email,  password, created_at, follows, followers, likes) VALUES (?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\')',
 			[id, data.username, data.email, encrypted, createdAt]);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 0]);
-		this.log.info(`[${id}] Created user ${data.username}`);
+		this.log.info(`[${id}] Compte de ${data.username} créé`);
 		return new User({
+			// Le constructeur User attend un objet brut sorti de la base de données.
+			// On le simule ici.
 			id,
 			username: data.username,
 			email: data.email,
@@ -132,11 +134,12 @@ class Database {
 	async addTweet(data) {
 		const id = data.id || await this.generateId();
 		const createdAt = new Date();
-		this.log.info(`Created tweet ${id}`);
+		this.log.info(`Tweet ${id} créé`);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
 		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
 			[id, data.content, data.authorId, data.imageId, createdAt, data.repliesTo]);
 		return new Tweet({
+			// Même procédé que pour addUser
 			id,
 			content: data.content,
 			author_id: data.authorId,
@@ -162,15 +165,14 @@ class Database {
 		const createdAt = new Date();
 		const dbType = (data.type === 'tweet') ? 2 : (data.type === 'banner') ? 1 : 0;
 		const newPath = join(__dirname, '../../..', 'media', id + '.jpg');
+		// rename déplace le fichier dans le dossier media.
 		await rename(path, newPath);
-		this.log.info(`Saved image ${id}`);
+		this.log.info(`Image ${id} sauvegardée.`);
 		if (data.type === 'tweet')
 			await this.connection.query('INSERT INTO Image VALUES (?, ?, 2, NULL, ?, ?, 0)', [id, newPath, data.id, createdAt]);
 		else
 			await this.connection.query('INSERT INTO Image VALUES (?, ?, ?, ?, NULL, ?, 0)', [id, newPath, dbType, data.id, createdAt]);
-
 		await this.connection.query('INSERT INTO Id VALUES (?, ?, 2)', [id, createdAt]);
-
 		return id;
 	}
 }

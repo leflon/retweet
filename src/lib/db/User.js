@@ -155,7 +155,7 @@ class User {
 			.map(() => chars[Math.floor(Math.random() * chars.length)])
 			.join('');
 		const [rows] = await this.#db.connection.query(`SELECT * FROM ${table} WHERE token = ? `, [token]);
-
+		// Si le token existe déjà, on en génère un autre récursivement.
 		if (rows.length !== 0)
 			return await this.generateToken(table, userAgent, ip);
 		if (table === 'auth') {
@@ -178,14 +178,14 @@ class User {
 		// On utilise des destructurations imbriquées pour récupérer le tableau simple des comptes suivis.
 		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM user WHERE user.id = ?`, [this.id]);
 		follows.push(this.id); // Inclue l'utilisateur lui-même dans les comptes dont les tweets sont récupérés.
-		const [woaw] = await this.#db.connection.query(
+		const [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
 			+ '(SELECT id FROM JSON_TABLE(' // Convertis la liste JSON en table SQL
 			+ `'${JSON.stringify(follows)}',`
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
 			+ ' as follows) AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC'
 		);
-		return woaw.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
+		return tweets.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
 	}
 
 	/**
@@ -202,6 +202,7 @@ class User {
 	 * @returns ]{Promise<Tweet[]>}
 	 */
 	async getLikes() {
+		// Même destructuration que pour getTimeline().
 		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ?`, [this.id]);
 		const [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange

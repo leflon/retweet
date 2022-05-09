@@ -70,6 +70,8 @@ class Tweet {
 	 * @returns {Promise<void>}
 	 */
 	async fetchAuthor() {
+		// La récupération des données de l'auteur étant asynchrone, 
+		// On ne peut l'effectuer dans le constructeur.
 		this.author = await this.#db.getUserById(this.authorId);
 	}
 
