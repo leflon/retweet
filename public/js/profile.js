@@ -64,3 +64,18 @@ if (USER.id === PROFILE.id) {
 	});
 
 }
+
+const defaultList = document.querySelector('#profile-tweets');
+defaultList.classList.add('visible');
+
+const listSelectors = document.querySelectorAll('#profile-tweet-list-selector .select');
+
+for (const elm of listSelectors) {
+	elm.addEventListener('click', () => {
+		const list = elm.id
+		document.querySelector(`.tweet-list#profile-${list}`).classList.add('visible');
+		document.querySelector(`.tweet-list:not(#profile-${list})`).classList.remove('visible');
+		elm.classList.add('selected');
+		document.querySelector(`.select:not(#${elm.id})`).classList.remove('selected');
+	});
+}

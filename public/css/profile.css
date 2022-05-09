@@ -101,7 +101,7 @@
 	color: #fff;
 }
 
-#profile-tweets {
+#profile-tweets, #profile-likes {
 	border-top: 1px solid #38444d;
 }
 
@@ -199,4 +199,44 @@
 #profile-editor form .text-input {
 	width: 90%;
 	margin: 10px auto;
+}
+
+#profile-tweet-list-selector {
+	border-top: 1px solid var(--light-grey);
+	display: flex;
+	flex-direction: row;
+}
+
+#profile-tweet-list-selector .select {
+	position: relative;
+	padding: 15px 10px;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	flex-grow: 1;
+	font: bold 14pt 'Montserrat';
+	cursor: pointer;
+	transition: .15s ease;
+}
+
+#profile-tweet-list-selector .select:hover {
+	background: #ffffff08;
+}
+
+#profile-tweet-list-selector .select.selected::after {
+	content: '';
+	position: absolute;
+	bottom: 0;
+	width: 50%;
+	left: 25%;
+	height: 3px;
+	background: var(--main-blue);
+}
+
+.tweet-list {
+	display: none;
+}
+
+.tweet-list.visible {
+	display: block;
 }

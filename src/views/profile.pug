@@ -77,4 +77,8 @@ html
 						.profile-stat#followers 
 							span.counter #{profile.followers.length}
 							span abonnés
-			+TweetList('profile-tweets')
+			#profile-tweet-list-selector
+				.select.selected#tweets Tweets
+				.select#likes Aimés
+			+TweetList(tweets, 'profile-tweets')
+			+TweetList(likes, 'profile-likes')

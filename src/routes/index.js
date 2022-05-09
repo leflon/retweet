@@ -28,6 +28,10 @@ router.get('/profile/:username', async (req, res) => {
 	if (!user)
 		return res.render('profile', {unknown: true});
 	const tweets = await user.getTweets();
+	const likes = await user.getLikes();
+	// Convertis les potentiels retweets en tweets classiques avec un attribut retweeter
+	// On n'effectue pas cette opération, l'application est faite de telle sorte que
+	// Un tweet correspondant à un retweet ne peut être liké, le tweet original est liké à la place.
 	for (const i in tweets) {
 		const tweet = tweets[i];
 		await tweet.fetchAuthor();
@@ -40,7 +44,11 @@ router.get('/profile/:username', async (req, res) => {
 			}
 		}
 	}
-	res.render('profile', {profile: user, tweets});
+	// On n'oublie pas cependant de récupérer les auteurs des tweets aimés.
+	for (const tweet of likes) {
+		await tweet.fetchAuthor();
+	}
+	res.render('profile', {profile: user, tweets, likes});
 });
 
 module.exports = router;

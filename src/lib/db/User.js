@@ -197,5 +197,23 @@ class User {
 		return tweets.map(t => new Tweet(t, this.#db));
 	}
 
+	/**
+	 * Récupère les tweets aimés par cet utilisateur.
+	 * @returns ]{Promise<Tweet[]>}
+	 */
+	async getLikes() {
+		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ?`, [this.id]);
+		const [tweets] = await this.#db.connection.query(
+			'SELECT * FROM Tweet WHERE Tweet.id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
+			+ '(SELECT id FROM JSON_TABLE('
+			+ `'${JSON.stringify(likes)}',`
+			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
+			+ ' as likes) AND Tweet.is_deleted = 0 '
+			// On ordonne ces tweets en fonction de quand ils ont été aimés par l'utilisateur.
+			+ `ORDER BY FIELD(Tweet.id, ${likes.reverse().map(t => `"${t}"`).join(', ')})` // `reverse` afin d'avoir les tweets aimés les plus récemment en premier.
+		);
+		return tweets.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
+	}
+
 }
 module.exports = User;
