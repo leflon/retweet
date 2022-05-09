@@ -38,6 +38,8 @@ router.get('/tweets/like/:id', async (req, res) => {
 	if (tweet.likes.includes(req.user.id))
 		return res.status(400).send({message: 'Vous aimez déjà ce tweet.'});
 	tweet.likes.push(req.user.id);
+	req.user.likes.push(tweet.id);
+	await req.user.save();
 	await tweet.save();
 	return res.status(200).send({count: tweet.likes.length});
 });
@@ -49,6 +51,8 @@ router.get('/tweets/unlike/:id', async (req, res) => {
 	if (!tweet.likes.includes(req.user.id))
 		return res.status(400).send({message: 'Vous n\'aimez pas ce tweet.'});
 	tweet.likes = tweet.likes.filter(id => id !== req.user.id);
+	req.user.likes = req.user.likes.filter(id => id !== tweet.id);
+	await req.user.save();
 	await tweet.save();
 	return res.status(200).send({count: tweet.likes.length});
 });
