@@ -1,5 +1,5 @@
 mixin TextInput(name, password, textarea, placeholder, limit, value)
-	.text-input(limit=limit)
+	.text-input(limit=limit, id=`text-input-${name}`)
 		if limit
 			.limit-indicator #{value ? value.length : 0} / #{limit}
 		if textarea

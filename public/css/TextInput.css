@@ -96,6 +96,7 @@
 }
 .text-input.invalid input {
 	outline-color: #b61212 !important;
+	border-color: #b61212 !important;
 }
 
 .text-input.invalid .text-input-placeholder {
