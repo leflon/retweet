@@ -183,7 +183,9 @@ class User {
 			+ '(SELECT id FROM JSON_TABLE(' // Convertis la liste JSON en table SQL
 			+ `'${JSON.stringify(follows)}',`
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
-			+ ' as follows) AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC'
+			+ ' as follows) AND Tweet.is_deleted = 0'
+			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses aux tweets dans la timeline
+			+ ' ORDER BY Tweet.created_at DESC'
 		);
 		return tweets.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
 	}

@@ -78,5 +78,7 @@ for (const elm of tweetTimes) {
 	const date = new Date(elm.getAttribute('date'));
 	moment.locale('fr');
 	elm.innerText = '• ' + moment(date).fromNow().replace('il y a', '');
+	if (elm.innerText === '• un jour')
+		elm.innerText = '• hier';
 	elm.setAttribute('title', moment(date).format('LLLL'));
 }
