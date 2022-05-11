@@ -4,6 +4,11 @@ for (const tw of tweets) {
 		if (e.target.className === 'tweet-image') {
 			tw.classList.add('fullscreen');
 		}
+		// Si on clique sur une zone inactive du tweet, on est redirigé vers la page complète du tweet.
+		// On le fait seulement si le tweet n'est pas déjà affiché en pleine largeur.
+		if (!tw.classList.contains('full') && ['left', 'right', 'tweet-heading', 'tweet-content', 'tweet-footer'].includes(e.target.className)) {
+			location.href = `/tweet/${tw.id}`;
+		}
 	});
 
 	const fullscreenClose = tw.querySelector('.tweet-image-fullscreen-close');
@@ -64,6 +69,10 @@ async function actionButtonListener({target}) {
 			clone.querySelector('.tweet-action.like').addEventListener('click', actionButtonListener);
 			document.querySelector('.tweet-list')?.insertAdjacentElement('afterbegin', clone);
 		}
+	}
+
+	if (action === 'reply') {
+		location.href = `/tweet/${tweet}`;
 	}
 
 	if (action === 'delete') {
