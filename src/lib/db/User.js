@@ -199,11 +199,13 @@ class User {
 
 	/**
 	 * Récupère les tweets aimés par cet utilisateur.
-	 * @returns ]{Promise<Tweet[]>}
+	 * @returns {Promise<Tweet[]>}
 	 */
 	async getLikes() {
 		// Même destructuration que pour getTimeline().
 		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ?`, [this.id]);
+		if (likes.length === 0)
+			return [];
 		const [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
 			+ '(SELECT id FROM JSON_TABLE('

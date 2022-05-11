@@ -8,14 +8,18 @@ html
 		script(src='/public/js/Tweet.js', defer)
 		script(src='/public/js/TextInput.js', defer)
 		script(src='/public/js/TweetForm.js', defer)
+		script(src='/public/js/tweet-view.js', defer)
 		link(rel='stylesheet', href='/public/css/home.css')
 		link(rel='stylesheet', href='/public/css/Tweet.css')
 		link(rel='stylesheet', href='/public/css/TweetForm.css')
 		link(rel='stylesheet', href='/public/css/TextInput.css')
-		title Home - Retweet
+		title Tweet - Retweet
 	body 
 		.page-center
-			.page-title Accueil
-			+TweetForm('Quoi de neuf ?')
-			+TweetList(tweets, 'home-timeline')
+			.page-title Tweet
+			for o of origins
+				+Tweet(o, false)
+			+Tweet(tweet, true, origins[origins.length - 1])
+			+TweetForm(`Répondre à @${tweet.author.username}`, tweet.id)
+			+TweetList(replies, 'tweet-replies')
 		a(href='/logout') Logout

@@ -34,6 +34,39 @@ router.get('/home', async (req, res) => {
 	res.render('home', {tweets});
 });
 
+router.get('/tweet/:id', async (req, res) => {
+	const tweet = await req.app.db.getTweet(req.params.id);
+	if (!tweet) {
+		return res.status(404).send('Tweet not found.');
+	}
+	await tweet.fetchAuthor();
+	let origins = [];
+	let current = tweet;
+	while (current?.repliesTo) {
+		const origin = await req.app.db.getTweet(current.repliesTo);
+		if (origin) {
+			await origin.fetchAuthor();
+			origins.push(origin);
+		}
+		current = origin;
+		// Si le tweet d'origine n'est pas trouvé
+		// La boucle s'arrêtera car current?.repliesTo est undefined.
+	}
+	// On reverse afin d'avoir la plus ancienne référence en premier.
+	// On pourra donc afficher du plus vieux tweet jusqu'au tweet actuel
+	origins = origins.reverse();
+
+	const replies = [];
+	for (const id of tweet.replies) {
+		const reply = await req.app.db.getTweet(id);
+		if (reply) {
+			await reply.fetchAuthor();
+			replies.push(reply);
+		}
+	}
+	res.render('tweet-view', {tweet, origins, replies});
+});
+
 /**
  * GET /profile/:username
  * Affiche le profil d'un utilisateur.

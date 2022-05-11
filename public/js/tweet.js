@@ -10,7 +10,7 @@ for (const tw of tweets) {
 			location.href = `/tweet/${tw.id}`;
 		}
 	});
-
+	// Affichage en plein écran de l'image du tweet
 	const fullscreenClose = tw.querySelector('.tweet-image-fullscreen-close');
 	if (fullscreenClose) {
 		fullscreenClose.addEventListener('click', e => {
@@ -20,21 +20,20 @@ for (const tw of tweets) {
 }
 
 
+// Boutons d'action (j'aime, retweet, réponse, suppression)
 const actionButtons = document.querySelectorAll('.tweet-action');
 
 async function actionButtonListener({target}) {
-	console.log('putani');
-	const tweet = target.getAttribute('tweet');
-	const action = target.getAttribute('action');
-	const undo = target.getAttribute('undo') === 'true';
+	const tweet = target.getAttribute('tweet'); // id du tweet concerné
+	const action = target.getAttribute('action'); // action à exécuter
+	const undo = target.getAttribute('undo') === 'true'; // s'il faut annuler une action (eg. ne plus aimer, ne plus retweeter)
 	let res;
-	console.log(target);
 	if (action === 'like') {
 		res = await fetch(`/api/tweets/${undo ? 'unlike' : 'like'}/${tweet}`);
 		res = await res.json();
-		console.log(res);
 		const targets = document.querySelectorAll(`.tweet-action.like[tweet='${tweet}']`);
 		for (const target of targets) {
+			// On met à jour le style du bouton et la valeur du compteur.
 			target.querySelector('i').classList.toggle('fa-solid');
 			target.querySelector('i').classList.toggle('fa-regular');
 			target.setAttribute('undo', !undo);
@@ -48,26 +47,10 @@ async function actionButtonListener({target}) {
 		res = await res.json();
 		const targets = document.querySelectorAll(`.tweet-action.retweet[tweet='${tweet}']`);
 		for (const target of targets) {
+			// On met à jour le style du bouton et la valeur du compteur.
 			target.setAttribute('undo', !undo);
 			target.querySelector('.count').innerText = res.count;
 			target.classList.toggle('active');
-		}
-		if (undo)
-			document.querySelector(`.retweet[id='${tweet}']`).remove();
-		else if (!('PROFILE' in window) || PROFILE.id === USER.id){
-			const base = document.querySelector(`.tweet[id='${tweet}']`);
-			const clone = base.cloneNode(true);
-			clone.classList.add('retweet');
-			const ref = clone.querySelector('.ref') || document.createElement('a');
-			ref.href = `/profile/${USER.username}`;
-			ref.className = 'ref';
-			ref.innerHTML = `<i class="fa-solid fa-retweet"></i><span>${USER.displayName || `@${USER.username}`} a retweeté</span>`;
-			clone.querySelector('.right').insertAdjacentElement('afterbegin', ref);
-			clone.querySelector('.tweet-action.delete')?.addEventListener('click', actionButtonListener);
-			clone.querySelector('.tweet-action.reply').addEventListener('click', actionButtonListener);
-			clone.querySelector('.tweet-action.retweet').addEventListener('click', actionButtonListener);
-			clone.querySelector('.tweet-action.like').addEventListener('click', actionButtonListener);
-			document.querySelector('.tweet-list')?.insertAdjacentElement('afterbegin', clone);
 		}
 	}
 
@@ -84,12 +67,13 @@ async function actionButtonListener({target}) {
 	}
 }
 
+// Affectation des listeners aux boutons d'action
 for (const btn of actionButtons) {
 	btn.addEventListener('click', actionButtonListener);
 }
 
+// Mise en forme avec moment.js de la date d'envoi de chaque tweet
 const tweetTimes = document.querySelectorAll('.tweet-time');
-
 for (const elm of tweetTimes) {
 	const date = new Date(elm.getAttribute('date'));
 	moment.locale('fr');

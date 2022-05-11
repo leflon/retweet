@@ -4,9 +4,10 @@ createdAt.innerText = `A rejoint Retweet en ${moment(createdAt.getAttribute('dat
 
 if (USER.id === PROFILE.id) {
 	const editContainer = document.getElementById('profile-editor-container');
+
+	// Ouverture / Fermeture de l'éditeur de profil.
 	const openBtn = document.getElementById('open-profile-editor');
 	openBtn.addEventListener('click', () => editContainer.classList.add('visible'));
-
 	closeBtn = editContainer.querySelector('#profile-editor-close');
 	closeBtn.addEventListener('click', () => editContainer.classList.remove('visible'));
 
@@ -14,18 +15,22 @@ if (USER.id === PROFILE.id) {
 	const sendButton = editContainer.querySelector('#profile-editor-save');
 	const inputContainers = form.querySelectorAll('.text-input');
 	sendButton.addEventListener('click', () => {
+		// Vérification des longueurs des champs du profil.
 		for (const elm of inputContainers) {
 			const input = elm.querySelector('input');
 			const limit = parseInt(elm.getAttribute('limit'));
 			const content = input.value;
 			if (content.length > limit)
 				return;
+			// Ajout aussi du préfixe http au site internet si besoin.
 			if (input.name === 'website' && !/^(http|https):\/\//.test(content)) {
 				input.value = `https://${content}`;
 			}
 		}
 		form.submit();
 	});
+
+	// Affichage de l'avatar/bannière renseignée par l'utilisateur.
 	const avatarInput = form.querySelector('input#avatar');
 	const bannerInput = form.querySelector('input#banner');
 	const onChange = e => {
@@ -42,7 +47,8 @@ if (USER.id === PROFILE.id) {
 	};
 	avatarInput.addEventListener('change', onChange);
 	bannerInput.addEventListener('change', onChange);
-} else {
+} else { // Le profil visité n'est pas celui de l'utilisateur connecté.
+		// On affiche alors le bouton servant à suivre l'utilisateur dont on consulte le profil.
 	const followToggle = document.querySelector('#follow-toggle');
 	followToggle.addEventListener('click', async () => {
 		const id = PROFILE.id;

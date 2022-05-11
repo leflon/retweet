@@ -1,6 +1,6 @@
 include TextInput
 
-mixin TweetForm(repliesTo)
+mixin TweetForm(placeholder, repliesTo)
 	form.tweet-form(action='/api/tweets/add', method='post', enctype='multipart/form-data')
 		.flex-input
 			a(href=`/profile/${user.username}`)
@@ -8,7 +8,7 @@ mixin TweetForm(repliesTo)
 					img.avatar(src=`/public/${user.avatarId}.jpg`)
 				else
 					img.avatar(src=`/public/default_avatar.jpg`)
-			+TextInput('content', false, true, 'Quoi de neuf ?', 280)
+			+TextInput('content', false, true, placeholder, 280)
 		.image-preview-container
 		input#image(type='file', name='image', accept='image/jpeg,image/png')
 		label(for='image').fa-regular.fa-image.icon-button
