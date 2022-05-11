@@ -170,8 +170,6 @@
 	color: var(--lighter-grey)
 }
 
-
-
 .tweet-footer {
 	display: flex;
 	flex-direction: row;
@@ -188,6 +186,10 @@
 
 .tweet-action .count {
 	pointer-events: none;
+}
+
+.tweet.full .tweet-action .count {
+	display: none;
 }
 
 .tweet-footer .tweet-action i {

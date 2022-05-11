@@ -37,16 +37,13 @@ mixin Tweet(tw, full, ref)
 			.tweet-footer
 				.tweet-action.reply(tweet=`${tw.id}`, action='reply') 
 					i.fa-regular.fa-comment
-					if !full
-						span.count #{tw.replies.length}
+					span.count #{tw.replies.length}
 				.tweet-action.retweet(tweet=`${tw.id}`, action='retweet', undo=`${tw.retweets.includes(user.id)}`, class=`${tw.retweets.includes(user.id) ? 'active' : ''}`) 
 					i.fa-solid.fa-retweet
-					if !full
-						span.count #{tw.retweets.length}
+					span.count #{tw.retweets.length}
 				.tweet-action.like(tweet=`${tw.id}`, action='like', undo=`${tw.likes.includes(user.id)}`, class=`${tw.likes.includes(user.id) ? 'active' : ''}`) 
 					if tw.likes.includes(user.id)
 						i.fa-solid.fa-heart
 					else
 						i.fa-regular.fa-heart
-					if !full
-						span.count #{tw.likes.length}
+					span.count #{tw.likes.length}
