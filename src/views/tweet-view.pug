@@ -18,7 +18,11 @@ html
 		.page-center
 			.page-title Tweet
 			for o of origins
-				+Tweet(o, false)
+				if o.notFound
+					.not-found-tweet 
+						.not-found-message Ce tweet a été supprimé.
+				else
+					+Tweet(o, false)
 			+Tweet(tweet, true)
 			+TweetForm(`Répondre à @${tweet.author.username}`, tweet.id)
 			+TweetList(replies, 'tweet-replies')

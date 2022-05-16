@@ -183,7 +183,8 @@ class User {
 			+ '(SELECT id FROM JSON_TABLE(' // Convertis la liste JSON en table SQL
 			+ `'${JSON.stringify(follows)}',`
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
-			+ ' as follows) AND Tweet.is_deleted = 0'
+			+ ' as follows)'
+			+ (!this.isAdmin ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses aux tweets dans la timeline
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
@@ -194,10 +195,10 @@ class User {
 	 * Récupère les tweets envoyés par l'utilisateur.
 	 * @returns {Promise<Tweet[]>}
 	 */
-	async getTweets() {
+	async getTweets(includeDeleted = false) {
 		const [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.author_id = ?'
-			+ ' AND Tweet.is_deleted = 0'
+			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses dans la liste des tweets envoyés par l'utilisateur sur son profil
 			+ ' ORDER BY Tweet.created_at DESC',
 			[this.id]);
@@ -208,7 +209,7 @@ class User {
 	 * Récupère les tweets aimés par cet utilisateur.
 	 * @returns {Promise<Tweet[]>}
 	 */
-	async getLikes() {
+	async getLikes(includeDeleted = false) {
 		// Même destructuration que pour getTimeline().
 		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ? `, [this.id]);
 		if (likes.length === 0)
@@ -218,7 +219,8 @@ class User {
 			+ '(SELECT id FROM JSON_TABLE('
 			+ `'${JSON.stringify(likes)}', `
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
-			+ ' as likes) AND Tweet.is_deleted = 0 '
+			+ ' as likes)'
+			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
 			// On ordonne ces tweets en fonction de quand ils ont été aimés par l'utilisateur.
 			+ `ORDER BY FIELD(Tweet.id, ${likes.reverse().map(t => `"${t}"`).join(', ')})` // `reverse` afin d'avoir les tweets aimés les plus récemment en premier.
 		);

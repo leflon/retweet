@@ -21,7 +21,9 @@ for (const tw of tweets) {
 
 
 // Boutons d'action (j'aime, retweet, réponse, suppression)
-const actionButtons = document.querySelectorAll('.tweet-action');
+// On ne prend que ceux appartenant à des tweets non supprimés.
+// Car on ne peut pas effectuer d'action sur des tweets supprimés.
+const actionButtons = document.querySelectorAll('.tweet:not(.deleted) .tweet-action');
 
 async function actionButtonListener({target}) {
 	const tweet = target.getAttribute('tweet'); // id du tweet concerné

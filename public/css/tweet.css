@@ -10,6 +10,38 @@
 	transition: background-color .3s ease;
 }
 
+.not-found-tweet {
+	padding: 10px;
+	border-bottom: 1px solid var(--light-grey);
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.not-found-tweet .not-found-message {
+	width: 80%;
+	height: 100%;
+	display: flex;
+	justify-content: center;
+	padding: 10px;
+	background: var(--light-grey);
+	border: 1px solid var(--lighter-grey);
+	border-radius: 10px;
+}
+
+.tweet.deleted {
+	padding-top: 30px;
+}
+
+.tweet.deleted:before {
+	content: 'Ce tweet a été supprimé';
+	font-style: italic;
+	position: absolute;
+	top: 5px;
+	left: 10px;
+	color: var(--light-grey);
+}
+
 .tweet:hover {
 	background-color: #ffffff05;
 }
@@ -23,6 +55,7 @@
 	transition: .15s ease;
 	--icon-color: #f53b3b;
 }
+
 .tweet .ref {
 	position: relative;
 	color: var(--lighter-grey);
@@ -41,6 +74,7 @@
 .tweet .left {
 	padding-right: 10px;
 }
+
 .tweet .left .avatar {
 	width: 48px;
 	height: 48px;
@@ -69,6 +103,7 @@
 	white-space: nowrap;
 	max-width: 50%;
 }
+
 .tweet .right .tweet-heading .tweet-author-displayname:hover {
 	text-decoration: underline;
 }
@@ -166,6 +201,7 @@
 	font: bold 12pt 'Roboto';
 	margin-right: 4px;
 }
+
 .tweet-footer-counters .tweet-footer-counter .label {
 	color: var(--lighter-grey)
 }
@@ -205,9 +241,27 @@
 	transition: background-color .15s ease;
 	pointer-events: none;
 }
-.tweet-footer .tweet-action.retweet:hover, .tweet-footer .tweet-action.retweet.active { color: #00ba7c; }
-.tweet-footer .tweet-action.retweet:hover i { background-color: #00ba7c25; }
-.tweet-footer .tweet-action.like:hover, .tweet-footer .tweet-action.like.active { color: #f91880;}
-.tweet-footer .tweet-action.like:hover i { background-color: #f9188025;}
-.tweet-footer .tweet-action.reply:hover, .tweet-footer .tweet-action.reply.active { color: #1d9bf0; }
-.tweet-footer .tweet-action.reply:hover i { background-color: #1d9bf025; }
+
+.tweet-footer .tweet-action.retweet:hover, .tweet-footer .tweet-action.retweet.active {
+	color: #00ba7c;
+}
+
+.tweet-footer .tweet-action.retweet:hover i {
+	background-color: #00ba7c25;
+}
+
+.tweet-footer .tweet-action.like:hover, .tweet-footer .tweet-action.like.active {
+	color: #f91880;
+}
+
+.tweet-footer .tweet-action.like:hover i {
+	background-color: #f9188025;
+}
+
+.tweet-footer .tweet-action.reply:hover, .tweet-footer .tweet-action.reply.active {
+	color: #1d9bf0;
+}
+
+.tweet-footer .tweet-action.reply:hover i {
+	background-color: #1d9bf025;
+}

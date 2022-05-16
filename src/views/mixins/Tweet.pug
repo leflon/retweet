@@ -1,5 +1,5 @@
 mixin Tweet(tw, full)
-	.tweet(id=`${tw.id}`, class=`${tw.retweeter ? 'retweet' : ''} ${full ? 'full' : ''}`)
+	.tweet(id=`${tw.id}`, class=`${tw.retweeter ? 'retweet' : ''} ${full ? 'full' : ''} ${tw.isDeleted ? 'deleted' : ''}`)
 		.left
 			a(href=`/profile/${tw.author.username}`) 
 				img.avatar(src=`/public/${tw.author.avatarId || 'default_avatar'}.jpg`)
@@ -8,9 +8,9 @@ mixin Tweet(tw, full)
 				a.ref(href=`/profile/${tw.retweeter.username}`) 
 					i.fa-solid.fa-retweet
 					span #{tw.retweeter.displayName || tw.retweeter.username} a retweeté
-			if tw.author.id == user.id
+			if !tw.isDeleted && (tw.author.id == user.id || user.isAdmin)
 				.tweet-action(tweet=`${tw.id}`, action='delete').fa-solid.fa-trash-can.delete.icon-button
-			.tweet-heading 
+			.tweet-heading
 					a(href=`/profile/${tw.author.username}`).tweet-author-displayname #{tw.author.displayName || tw.author.username}
 					.tweet-author-username @#{tw.author.username}
 					.tweet-time(date=`${tw.createdAt}`)
@@ -26,7 +26,7 @@ mixin Tweet(tw, full)
 			if full
 				.tweet-footer-counters
 					.tweet-footer-counter.replies 
-						.number #{user.isAdmin ? 'éeee' : tw.repliesCount} 
+						.number #{user.isAdmin ? tw.replies.length : tw.repliesCount} 
 						.label réponses
 					.tweet-footer-counter.retweets 
 						.number #{tw.retweets.length} 

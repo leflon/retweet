@@ -38,7 +38,7 @@ router.get('/home', async (req, res) => {
 
 router.get('/tweet/:id', async (req, res) => {
 	const tweet = await req.app.db.getTweet(req.params.id);
-	if (!tweet || tweet.isDeleted) {
+	if (!tweet || (tweet.isDeleted && !req.user.isAdmin)) {
 		return res.status(404).send('Tweet not found.');
 	}
 	await tweet.fetchAuthor();
@@ -49,7 +49,7 @@ router.get('/tweet/:id', async (req, res) => {
 		const origin = await req.app.db.getTweet(current.repliesTo);
 		if (origin) {
 			if (origin.isDeleted)
-				origin.push({notFound: true});
+				origins.push({notFound: true});
 			else {
 				await origin.fetchAuthor();
 				await origin.fetchRepliesCount();
@@ -67,7 +67,7 @@ router.get('/tweet/:id', async (req, res) => {
 	const replies = [];
 	for (const id of tweet.replies) {
 		const reply = await req.app.db.getTweet(id);
-		if (reply && !reply.isDeleted) {
+		if (reply && (!reply.isDeleted || req.user.isAdmin)) {
 			await reply.fetchAuthor();
 			await reply.fetchRepliesCount();
 			replies.push(reply);
