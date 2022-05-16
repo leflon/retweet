@@ -60,6 +60,11 @@ class Tweet {
 		 */
 		this.replies = sqlRow.replies;
 		/**
+		 * Nombre de réponses (non-supprimées) à ce tweet.
+		 * @type {?number}
+		 */
+		this.repliesCount = undefined;
+		/**
 		 * Ids des utilisateurs ayant retweeté ce tweet.
 		 * @type {string[]}
 		 */
@@ -69,6 +74,11 @@ class Tweet {
 		 * @type {boolean}
 		 */
 		this.isDeleted = sqlRow.is_deleted === 1;
+	}
+
+	async fetchRepliesCount() {
+		const [result] = await this.#db.connection.query(`SELECT COUNT(*) AS count FROM tweet WHERE replies_to = ? AND is_deleted = 0`, [this.id]);
+		this.repliesCount = result[0].count;
 	}
 
 	/**

@@ -1,6 +1,6 @@
 /* Exécuter ces rquêtes SQL initialise les relations nécéssaires à l'application. */
 
-CREATE TABLE `user` (
+CREATE TABLE `User` (
   `id` char(16) NOT NULL,
   `username` varchar(16) NOT NULL,
   `display_name` varchar(50) DEFAULT NULL,
@@ -20,7 +20,7 @@ CREATE TABLE `user` (
   `is_deleted` tinyint NOT NULL DEFAULT '0',
   PRIMARY KEY (`id`));
 
-CREATE TABLE `tweet` (
+CREATE TABLE `Tweet` (
   `id` CHAR(16) NOT NULL,
   `content` VARCHAR(280) NOT NULL,
   `author_id` CHAR(16) NOT NULL,
@@ -34,7 +34,7 @@ CREATE TABLE `tweet` (
   `is_deleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `image` (
+CREATE TABLE `Image` (
   `id` CHAR(16) NOT NULL,
   `file` VARCHAR(300) NOT NULL,
   `type` INT NOT NULL,
@@ -44,7 +44,7 @@ CREATE TABLE `image` (
   `is_deleted` TINYINT NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`));
 
-CREATE TABLE `auth` (
+CREATE TABLE `Auth` (
   `user_id` CHAR(16) NOT NULL,
   `token` CHAR(32) NOT NULL,
   `created_at` DATETIME NOT NULL,
@@ -52,13 +52,13 @@ CREATE TABLE `auth` (
   `ip_address` VARCHAR(45) NOT NULL,
   PRIMARY KEY (`token`));
 
-CREATE TABLE `recover` (
+CREATE TABLE `Recover` (
   `user_id` CHAR(16) NOT NULL,
   `token` CHAR(32) NOT NULL,
   `created_at` DATETIME NOT NULL,
   PRIMARY KEY (`token`));
 
-CREATE TABLE `id` (
+CREATE TABLE `Id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,
   `type` TINYINT NOT NULL,

@@ -17,7 +17,7 @@ router.post('/tweets/add', upload.single('image'), async (req, res) => {
 		return res.status(400).send({message: 'Contenu trop long.'});
 	if (repliesTo) {
 		parentTweet = await req.app.db.getTweet(repliesTo);
-		if (!parentTweet)
+		if (!parentTweet || parentTweet.isDeleted)
 			return res.status(400).send({message: 'Ce tweet répond à un tweet inexistant.'});
 		// On récupère le nom d'utilisateur de l'auteur du tweet auquel on répond ici.
 		[[{username: repliesToUsername}]] = await req.app.db.connection.query('SELECT username FROM user WHERE id = ?', [parentTweet.authorId]); 
@@ -71,7 +71,7 @@ router.get('/tweets/like/:id', async (req, res) => {
  */
 router.get('/tweets/unlike/:id', async (req, res) => {
 	const tweet = await req.app.db.getTweet(req.params.id);
-	if (!tweet)
+	if (!tweet || tweet.isDeleted)
 		return res.status(400).send({message: 'Ce tweet n\'existe pas.'});
 	if (!tweet.likes.includes(req.user.id))
 		return res.status(400).send({message: 'Vous n\'aimez pas ce tweet.'});
@@ -90,7 +90,7 @@ router.get('/tweets/unlike/:id', async (req, res) => {
  */
 router.get('/tweets/retweet/:id', async (req, res) => {
 	const tweet = await req.app.db.getTweet(req.params.id);
-	if (!tweet)
+	if (!tweet || tweet.isDeleted)
 		return res.status(400).send({message: 'Ce tweet n\'existe pas.'});
 	if (tweet.retweets.includes(req.user.id))
 		return res.status(400).send({message: 'Vous avez déjà retweeté ce tweet.'});
@@ -111,7 +111,7 @@ router.get('/tweets/retweet/:id', async (req, res) => {
  */
 router.get('/tweets/unretweet/:id', async (req, res) => {
 	const tweet = await req.app.db.getTweet(req.params.id);
-	if (!tweet)
+	if (!tweet || tweet.isDeleted)
 		return res.status(400).send({message: 'Ce tweet n\'existe pas.'});
 	if (!tweet.retweets.includes(req.user.id))
 		return res.status(400).send({message: 'Vous n\'avez pas retweeté ce tweet.'});
@@ -128,29 +128,20 @@ router.get('/tweets/unretweet/:id', async (req, res) => {
 });
 
 router.get('/tweets/delete/:id', async (req, res) => {
-	console.log(req.params.id, 'wesh');
 	const tweet = await req.app.db.getTweet(req.params.id);
-	if (!tweet)
+	if (!tweet || tweet.isDeleted)
 		return res.status(400).send({message: 'Ce tweet n\'existe pas.'});
-	console.log(req.params.id, 'wesh2');
 	if (tweet.authorId !== req.user.id && !req.user.isAdmin)
 		return res.status(403).send('Vous n\'avez pas la permission de supprimer ce tweet.');
-	console.log(req.params.id, 'wesh3');
 	// Si le contenu du tweet correspond au format d'un retweet, on effectue les actions nécessaires.
 	if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
 		const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
-		// On retire un retweet à l'original.
-		if (original) {
-			original.retweets = original.retweets.filter(id => id !== tweet.authorId);
-			await original.save();
-		}
 		// Si c'est demandé, on renvoie le nouveau nombre de retweets de l'original.
 		if ('unretweet' in req.query) {
 			await tweet.delete();
 			return res.send({count: original.retweets.length});
 		}
 	}
-	console.log(req.params.id, 'wesh4');
 	// Si ce tweet a été retweeté, on supprime tous les tweets retweetant ce tweet.
 	if (tweet.retweets.length)
 		req.app.db.connection.query('UPDATE Tweet SET is_deleted = 1 WHERE content LIKE ?', [`%//RT:${tweet.id}%`]);

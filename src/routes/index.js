@@ -17,9 +17,11 @@ router.get('/', (req, res) => {
 router.get('/home', async (req, res) => {
 	const tweets = await req.user.getTimeline();
 	// Récupère les données des auteurs de chaque tweet et met en forme les retweets.
+	// On récupère également le nombre de réponses à chaque tweet.
 	for (const i in tweets) {
 		const tweet = tweets[i];
 		await tweet.fetchAuthor();
+		await tweet.fetchRepliesCount();
 		if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
 			// Dans le cas d'un retweet, on n'envoie pas le "retweet" lui-même.
 			// On récupère le tweet original et indique qu'il a été retweeté par un "retweeter".
@@ -40,13 +42,19 @@ router.get('/tweet/:id', async (req, res) => {
 		return res.status(404).send('Tweet not found.');
 	}
 	await tweet.fetchAuthor();
+	await tweet.fetchRepliesCount();
 	let origins = [];
 	let current = tweet;
 	while (current?.repliesTo) {
 		const origin = await req.app.db.getTweet(current.repliesTo);
 		if (origin) {
-			await origin.fetchAuthor();
-			origins.push(origin);
+			if (origin.isDeleted)
+				origin.push({notFound: true});
+			else {
+				await origin.fetchAuthor();
+				await origin.fetchRepliesCount();
+				origins.push(origin);
+			}
 		}
 		current = origin;
 		// Si le tweet d'origine n'est pas trouvé
@@ -59,8 +67,9 @@ router.get('/tweet/:id', async (req, res) => {
 	const replies = [];
 	for (const id of tweet.replies) {
 		const reply = await req.app.db.getTweet(id);
-		if (reply) {
+		if (reply && !reply.isDeleted) {
 			await reply.fetchAuthor();
+			await reply.fetchRepliesCount();
 			replies.push(reply);
 		}
 	}
@@ -84,6 +93,7 @@ router.get('/profile/:username', async (req, res) => {
 	for (const i in tweets) {
 		const tweet = tweets[i];
 		await tweet.fetchAuthor();
+		await tweet.fetchRepliesCount();
 		if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
 			const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
 			if (original) {
@@ -93,8 +103,10 @@ router.get('/profile/:username', async (req, res) => {
 			}
 		}
 	}
-	// On n'oublie pas cependant de récupérer les auteurs des tweets aimés.
+	// On n'oublie pas cependant de récupérer les auteurs des tweets aimés
+	// Ainsi que leurs nombres de réponses.
 	for (const tweet of likes) {
+		await tweet.fetchRepliesCount();
 		await tweet.fetchAuthor();
 	}
 	res.render('profile', {profile: user, tweets, likes});
