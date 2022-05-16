@@ -40,9 +40,15 @@ class Tweet {
 		 */
 		this.createdAt = new Date(sqlRow.created_at);
 		/**
+		 * Id du tweet auquel ce tweet répond.
 		 * @type {?string}
 		 */
 		this.repliesTo = sqlRow.replies_to;
+		/**
+		 * Nom d'utilisateur de l'auteur du tweet auquel ce tweet répond.
+		 * @type {?string}
+		 */
+		this.repliesToUsername = sqlRow.replies_to_username;
 		/**
 		 * Ids des des utilisateurs ayant aimé le tweet.
 		 * @type {string[]}

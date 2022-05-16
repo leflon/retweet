@@ -12,12 +12,15 @@ const router = Router();
 router.post('/tweets/add', upload.single('image'), async (req, res) => {
 	const {content, repliesTo} = req.body;
 	let parentTweet;
+	let repliesToUsername;
 	if (content.length > 280)
 		return res.status(400).send({message: 'Contenu trop long.'});
 	if (repliesTo) {
 		parentTweet = await req.app.db.getTweet(repliesTo);
 		if (!parentTweet)
 			return res.status(400).send({message: 'Ce tweet répond à un tweet inexistant.'});
+		// On récupère le nom d'utilisateur de l'auteur du tweet auquel on répond ici.
+		[[{username: repliesToUsername}]] = await req.app.db.connection.query('SELECT username FROM user WHERE id = ?', [parentTweet.authorId]); 
 	}
 	// Si le tweet a une image, on doit générer son id manuellement.
 	// L'Image en base de données nécessite l'id du tweet auquel elle est associée
@@ -34,7 +37,7 @@ router.post('/tweets/add', upload.single('image'), async (req, res) => {
 			type: 'tweet'
 		});
 	}
-	const tweet = await req.app.db.addTweet({content, authorId: req.user.id, repliesTo, id, imageId});
+	const tweet = await req.app.db.addTweet({content, authorId: req.user.id, repliesTo, repliesToUsername, id, imageId});
 	if (parentTweet) {
 		parentTweet.replies.push(tweet.id);
 		await parentTweet.save();
@@ -125,11 +128,14 @@ router.get('/tweets/unretweet/:id', async (req, res) => {
 });
 
 router.get('/tweets/delete/:id', async (req, res) => {
+	console.log(req.params.id, 'wesh');
 	const tweet = await req.app.db.getTweet(req.params.id);
 	if (!tweet)
 		return res.status(400).send({message: 'Ce tweet n\'existe pas.'});
+	console.log(req.params.id, 'wesh2');
 	if (tweet.authorId !== req.user.id && !req.user.isAdmin)
 		return res.status(403).send('Vous n\'avez pas la permission de supprimer ce tweet.');
+	console.log(req.params.id, 'wesh3');
 	// Si le contenu du tweet correspond au format d'un retweet, on effectue les actions nécessaires.
 	if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
 		const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
@@ -144,6 +150,7 @@ router.get('/tweets/delete/:id', async (req, res) => {
 			return res.send({count: original.retweets.length});
 		}
 	}
+	console.log(req.params.id, 'wesh4');
 	// Si ce tweet a été retweeté, on supprime tous les tweets retweetant ce tweet.
 	if (tweet.retweets.length)
 		req.app.db.connection.query('UPDATE Tweet SET is_deleted = 1 WHERE content LIKE ?', [`%//RT:${tweet.id}%`]);

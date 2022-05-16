@@ -1,8 +1,8 @@
 include Tweet
-mixin TweetList(tweets, id)
+mixin TweetList(tweets, id, emptyMessage)
 		if tweets.length
 			.tweet-list(id=id)
 				each tw in tweets
 					+Tweet(tw)
 		else
-			.tweet-list.empty(id=id) Rien.
+			.tweet-list.empty(id=id) #{emptyMessage}

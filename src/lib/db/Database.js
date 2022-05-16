@@ -128,6 +128,7 @@ class Database {
 	 * @param {string} data.authorId Id de l'auteur.
 	 * @param {?string} data.imageId Id de l'image du tweet.
 	 * @param {?string} data.repliesTo Id du tweet auquel ce tweet répond.
+	 * @param {?string} data.repliesToUsername Nom d'utilisateur de l'auteur du tweet auquel ce tweet répond.
 	 * @param {?string} data.id L'id du tweet, si généré au préalable (en cas de tweet avec image).
 	 * @returns {Promise<Tweet>} Le tweet généré.
 	 */
@@ -136,8 +137,8 @@ class Database {
 		const createdAt = new Date();
 		this.log.info(`Tweet ${id} créé`);
 		await this.connection.query('INSERT INTO Id VALUES (?,?,?)', [id, createdAt, 1]);
-		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
-			[id, data.content, data.authorId, data.imageId, createdAt, data.repliesTo]);
+		await this.connection.query('INSERT INTO Tweet VALUES (?, ?, ?, ?, ?, ?, ?, \'[]\', \'[]\', \'[]\', 0)',
+			[id, data.content, data.authorId, data.imageId, createdAt, data.repliesTo, data.repliesToUsername]);
 		return new Tweet({
 			// Même procédé que pour addUser
 			id,
@@ -146,6 +147,7 @@ class Database {
 			image_id: data.imageId,
 			created_at: createdAt,
 			replies_to: data.repliesTo,
+			replies_to_username: data.repliesToUsername,
 			likes: [],
 			replies: [],
 			retweets: []

@@ -19,7 +19,7 @@ html
 			.page-title Tweet
 			for o of origins
 				+Tweet(o, false)
-			+Tweet(tweet, true, origins[origins.length - 1])
+			+Tweet(tweet, true)
 			+TweetForm(`Répondre à @${tweet.author.username}`, tweet.id)
 			+TweetList(replies, 'tweet-replies')
 		a(href='/logout') Logout

@@ -36,7 +36,7 @@ router.get('/home', async (req, res) => {
 
 router.get('/tweet/:id', async (req, res) => {
 	const tweet = await req.app.db.getTweet(req.params.id);
-	if (!tweet) {
+	if (!tweet || tweet.isDeleted) {
 		return res.status(404).send('Tweet not found.');
 	}
 	await tweet.fetchAuthor();

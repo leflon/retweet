@@ -27,6 +27,7 @@ CREATE TABLE `tweet` (
   `image_id` CHAR(16) NULL,
   `created_at` DATETIME NOT NULL,
   `replies_to` CHAR(16),
+  `replies_to_username` VARCHAR(16),
   `likes` JSON NOT NULL,
   `replies` JSON NOT NULL,
   `retweets` JSON NOT NULL,

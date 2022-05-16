@@ -1,4 +1,4 @@
-mixin Tweet(tw, full, ref)
+mixin Tweet(tw, full)
 	.tweet(id=`${tw.id}`, class=`${tw.retweeter ? 'retweet' : ''} ${full ? 'full' : ''}`)
 		.left
 			a(href=`/profile/${tw.author.username}`) 
@@ -14,9 +14,9 @@ mixin Tweet(tw, full, ref)
 					a(href=`/profile/${tw.author.username}`).tweet-author-displayname #{tw.author.displayName || tw.author.username}
 					.tweet-author-username @#{tw.author.username}
 					.tweet-time(date=`${tw.createdAt}`)
-			if ref
+			if tw.repliesToUsername
 				.tweet-replying-to En réponse à 
-					a(href=`/profile/${ref.author.username}`) @#{ref.author.username}
+					a(href=`/profile/${tw.repliesToUsername}`) @#{tw.repliesToUsername}
 			.tweet-content #{tw.content}
 			if tw.imageId
 				.tweet-image-fullscreen-container

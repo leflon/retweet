@@ -195,7 +195,12 @@ class User {
 	 * @returns {Promise<Tweet[]>}
 	 */
 	async getTweets() {
-		const [tweets] = await this.#db.connection.query(`SELECT * FROM Tweet WHERE Tweet.author_id = ? AND Tweet.is_deleted = 0 ORDER BY Tweet.created_at DESC`, [this.id]);
+		const [tweets] = await this.#db.connection.query(
+			'SELECT * FROM Tweet WHERE Tweet.author_id = ?'
+			+ ' AND Tweet.is_deleted = 0'
+			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses dans la liste des tweets envoyés par l'utilisateur sur son profil
+			+ ' ORDER BY Tweet.created_at DESC',
+			[this.id]);
 		return tweets.map(t => new Tweet(t, this.#db));
 	}
 
@@ -205,13 +210,13 @@ class User {
 	 */
 	async getLikes() {
 		// Même destructuration que pour getTimeline().
-		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ?`, [this.id]);
+		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ? `, [this.id]);
 		if (likes.length === 0)
 			return [];
 		const [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
 			+ '(SELECT id FROM JSON_TABLE('
-			+ `'${JSON.stringify(likes)}',`
+			+ `'${JSON.stringify(likes)}', `
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
 			+ ' as likes) AND Tweet.is_deleted = 0 '
 			// On ordonne ces tweets en fonction de quand ils ont été aimés par l'utilisateur.
