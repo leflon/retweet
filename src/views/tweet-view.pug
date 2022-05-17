@@ -25,5 +25,5 @@ html
 					+Tweet(o, false)
 			+Tweet(tweet, true)
 			+TweetForm(`Répondre à @${tweet.author.username}`, tweet.id)
-			+TweetList(replies, 'tweet-replies')
+			+TweetList(replies, 'tweet-replies', 'Ce tweet n\'a aucune réponse.')
 		a(href='/logout') Logout

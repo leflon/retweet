@@ -80,5 +80,5 @@ html
 			#profile-tweet-list-selector
 				.select.selected#tweets Tweets
 				.select#likes Aimés
-			+TweetList(tweets, 'profile-tweets')
-			+TweetList(likes, 'profile-likes')
+			+TweetList(tweets, 'profile-tweets', 'Cet utilisateur n\'a envoyé aucun tweet.')
+			+TweetList(likes, 'profile-likes', 'Cet utilisateur n\'a aimé aucun tweet.')

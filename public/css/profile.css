@@ -233,7 +233,7 @@
 	background: var(--main-blue);
 }
 
-.tweet-list {
+.tweet-list, .tweet-list.empty{
 	display: none;
 }
 
