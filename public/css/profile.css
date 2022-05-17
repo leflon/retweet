@@ -15,7 +15,7 @@
 }
 
 .profile-banner img,
-.profile-avatar img{
+.profile-avatar img {
 	object-fit: cover;
 	width: 100%;
 	height: 100%;
@@ -32,211 +32,217 @@
 	overflow: hidden;
 }
 
-#open-profile-editor,
-#follow-toggle {
+.profile-buttons-container {
 	position: absolute;
 	right: 15px;
 	top: 220px;
-}
-
-#profile-text {
-	padding: 15px;
-}
-
-#profile-display-name {
-	font: bold 18pt 'Montserrat';
-	text-overflow: ellipsis;
-	overflow: hidden;
-	white-space: nowrap;
-}
-
-#profile-username {
-	font: 12pt 'Montserrat';
-	color: #616d75;
-}
-
-#profile-bio {
-	width: 100%;
-	margin-top: 20px;
-	white-space: pre-wrap;
-	word-wrap: break-word;
-}
-
-#profile-misc-infos {
 	display: flex;
 	flex-direction: row;
 }
 
-#profile-misc-infos .profile-misc {
-	margin-top: 10px;
-	margin-right: 10px;
-	color: #616d75;
+.profile-buttons-container .button {
+	margin: 0 2px;
 }
 
-#profile-misc-infos .profile-misc i {
-	margin-right: 5px;
-}
+	#profile-text {
+		padding: 15px;
+	}
 
-#profile-created-at {
-	color: #616d75;
-}
+	#profile-display-name {
+		font: bold 18pt 'Montserrat';
+		text-overflow: ellipsis;
+		overflow: hidden;
+		white-space: nowrap;
+	}
 
-#profile-created-at i {
-	margin-right: 10px;
-}
+	#profile-username {
+		font: 12pt 'Montserrat';
+		color: #616d75;
+	}
 
-#profile-stats {
-	margin: 10px 0;
-	display: flex;
-	flex-direction: row;
-}
+	#profile-bio {
+		width: 100%;
+		margin-top: 20px;
+		white-space: pre-wrap;
+		word-wrap: break-word;
+	}
 
-#profile-stats .profile-stat {
-	margin-right: 20px;
-	color: #616d75;
-}
+	#profile-misc-infos {
+		display: flex;
+		flex-direction: row;
+	}
 
-#profile-stats .profile-stat .counter {
-	margin-right: 5px;
-	color: #fff;
-}
+	#profile-misc-infos .profile-misc {
+		margin-top: 10px;
+		margin-right: 10px;
+		color: #616d75;
+	}
 
-#profile-tweets, #profile-likes {
-	border-top: 1px solid #38444d;
-}
+	#profile-misc-infos .profile-misc i {
+		margin-right: 5px;
+	}
 
-#profile-editor-container {
-	position: fixed;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	z-index: 999;
-	background: rgba(0, 0, 0, .5);
-	display: none;
-	justify-content: center;
-	align-items: center;
-}
+	#profile-created-at {
+		color: #616d75;
+	}
 
-#profile-editor-container.visible {
-	display: flex;
-}
+	#profile-created-at i {
+		margin-right: 10px;
+	}
 
-#profile-editor {
-	width: 500px;
-	background: #151b29;
-	border-radius: 10px;
-	box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
-}
+	#profile-stats {
+		margin: 10px 0;
+		display: flex;
+		flex-direction: row;
+	}
 
-#profile-editor #profile-editor-title-bar {
-	display: flex;
-	flex-direction: row;
-	padding: 10px;
-	font-size: 18pt;
-	position: relative;
-	align-items: center;
-}
+	#profile-stats .profile-stat {
+		margin-right: 20px;
+		color: #616d75;
+	}
 
-#profile-editor #profile-editor-title-bar #profile-editor-close {
-	font-size: 16pt;
-	width: 40px;
-	height: 40px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	border-radius: 50%;
-	transition: background-color .15s ease;
-	cursor: pointer;
-}
-#profile-editor #profile-editor-title-bar #profile-editor-close:hover {
-	background: #ffffff40;
-}
+	#profile-stats .profile-stat .counter {
+		margin-right: 5px;
+		color: #fff;
+	}
 
-#profile-editor #profile-editor-title-bar #profile-editor-title {
-	margin-left: 10px;
-	font: bold 14pt 'Montserrat';
-}
+	#profile-tweets, #profile-likes {
+		border-top: 1px solid #38444d;
+	}
 
-#profile-editor #profile-editor-title-bar #profile-editor-save {
-	--button-color: #ffffff;
-	color: #000000;
-	position: absolute;
-	right: 10px;
-}
+	#profile-editor-container {
+		position: fixed;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		z-index: 999;
+		background: rgba(0, 0, 0, .5);
+		display: none;
+		justify-content: center;
+		align-items: center;
+	}
 
-#profile-editor .profile-banner:after,
-#profile-editor .profile-avatar:after {
-	content: '\2b';
-	position: absolute;
-	top: 0;
-	left: 0;
-	width: 100%;
-	height: 100%;
-	background-color: #00000060;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	font: 20pt 'FontAwesome';
-	cursor: pointer;
-	transition: background-color .15s ease;
-}
+	#profile-editor-container.visible {
+		display: flex;
+	}
 
-#profile-editor .profile-banner:hover:after,
-#profile-editor .profile-avatar:hover:after {
-	background-color: #00000080;
-}
+	#profile-editor {
+		width: 500px;
+		background: #151b29;
+		border-radius: 10px;
+		box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
+	}
 
-#profile-editor form {
-	padding-bottom: 10px;
-}
+	#profile-editor #profile-editor-title-bar {
+		display: flex;
+		flex-direction: row;
+		padding: 10px;
+		font-size: 18pt;
+		position: relative;
+		align-items: center;
+	}
 
-#profile-editor form #avatar,
-#profile-editor form #banner {
-	display: none;
-}
+	#profile-editor #profile-editor-title-bar #profile-editor-close {
+		font-size: 16pt;
+		width: 40px;
+		height: 40px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		border-radius: 50%;
+		transition: background-color .15s ease;
+		cursor: pointer;
+	}
 
-#profile-editor form .text-input {
-	width: 90%;
-	margin: 10px auto;
-}
+	#profile-editor #profile-editor-title-bar #profile-editor-close:hover {
+		background: #ffffff40;
+	}
 
-#profile-tweet-list-selector {
-	border-top: 1px solid var(--light-grey);
-	display: flex;
-	flex-direction: row;
-}
+	#profile-editor #profile-editor-title-bar #profile-editor-title {
+		margin-left: 10px;
+		font: bold 14pt 'Montserrat';
+	}
 
-#profile-tweet-list-selector .select {
-	position: relative;
-	padding: 15px 10px;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-	flex-grow: 1;
-	font: bold 14pt 'Montserrat';
-	cursor: pointer;
-	transition: .15s ease;
-}
+	#profile-editor #profile-editor-title-bar #profile-editor-save {
+		--button-color: #ffffff;
+		color: #000000;
+		position: absolute;
+		right: 10px;
+	}
 
-#profile-tweet-list-selector .select:hover {
-	background: #ffffff08;
-}
+	#profile-editor .profile-banner:after,
+	#profile-editor .profile-avatar:after {
+		content: '\2b';
+		position: absolute;
+		top: 0;
+		left: 0;
+		width: 100%;
+		height: 100%;
+		background-color: #00000060;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		font: 20pt 'FontAwesome';
+		cursor: pointer;
+		transition: background-color .15s ease;
+	}
 
-#profile-tweet-list-selector .select.selected::after {
-	content: '';
-	position: absolute;
-	bottom: 0;
-	width: 50%;
-	left: 25%;
-	height: 3px;
-	background: var(--main-blue);
-}
+	#profile-editor .profile-banner:hover:after,
+	#profile-editor .profile-avatar:hover:after {
+		background-color: #00000080;
+	}
 
-.tweet-list, .tweet-list.empty{
-	display: none;
-}
+	#profile-editor form {
+		padding-bottom: 10px;
+	}
 
-.tweet-list.visible {
-	display: block;
-}
+	#profile-editor form #avatar,
+	#profile-editor form #banner {
+		display: none;
+	}
+
+	#profile-editor form .text-input {
+		width: 90%;
+		margin: 10px auto;
+	}
+
+	#profile-tweet-list-selector {
+		border-top: 1px solid var(--light-grey);
+		display: flex;
+		flex-direction: row;
+	}
+
+	#profile-tweet-list-selector .select {
+		position: relative;
+		padding: 15px 10px;
+		display: flex;
+		justify-content: center;
+		align-items: center;
+		flex-grow: 1;
+		font: bold 14pt 'Montserrat';
+		cursor: pointer;
+		transition: .15s ease;
+	}
+
+	#profile-tweet-list-selector .select:hover {
+		background: #ffffff08;
+	}
+
+	#profile-tweet-list-selector .select.selected::after {
+		content: '';
+		position: absolute;
+		bottom: 0;
+		width: 50%;
+		left: 25%;
+		height: 3px;
+		background: var(--main-blue);
+	}
+
+	.tweet-list, .tweet-list.empty {
+		display: none;
+	}
+
+	.tweet-list.visible {
+		display: block;
+	}

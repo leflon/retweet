@@ -18,14 +18,14 @@ html
 			window.PROFILE = !{JSON.stringify(profile || {})};
 		title #{profile.displayName || '@' + profile.username} - Retweet
 	body 
-		if user.id == profile.id
+		if user.id == profile.id || user.isAdmin
 			#profile-editor-container
 				#profile-editor
 					#profile-editor-title-bar
 						i#profile-editor-close.fa-solid.fa-close
 						#profile-editor-title Éditer le profil
 						.button#profile-editor-save Enregistrer
-					form(action=`/api/profile/edit/${user.id}`, method='post', enctype='multipart/form-data')
+					form(action=`/api/profile/edit/${profile.id}`, method='post', enctype='multipart/form-data')
 						label(for='banner')
 							div.profile-banner
 								img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
@@ -46,12 +46,13 @@ html
 					img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
 				div.profile-avatar
 					img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
-				if user.id == profile.id
-					.button.alt#open-profile-editor Éditer le profil
-				else if user.follows.includes(profile.id)
-					.button.alt#follow-toggle(action='unfollow') Suivi
-				else
-					.button#follow-toggle(action='follow') Suivre
+				.profile-buttons-container
+					if user.id == profile.id || user.isAdmin
+						.button.alt#open-profile-editor Éditer le profil
+					if user.follows.includes(profile.id)
+						.button.alt#follow-toggle(action='unfollow') Suivi
+					else
+						.button#follow-toggle(action='follow') Suivre
 				#profile-text
 					if profile.displayName
 						#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}

@@ -2,7 +2,7 @@ const createdAt = document.querySelector('#profile-created-at span');
 moment.locale('fr');
 createdAt.innerText = `A rejoint Retweet en ${moment(createdAt.getAttribute('date')).month(1).format('MMMM YYYY')}`;
 
-if (USER.id === PROFILE.id) {
+if (USER.id === PROFILE.id || USER.isAdmin) {
 	const editContainer = document.getElementById('profile-editor-container');
 
 	// Ouverture / Fermeture de l'éditeur de profil.
