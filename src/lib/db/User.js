@@ -222,7 +222,7 @@ class User {
 			+ ' as likes)'
 			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
 			// On ordonne ces tweets en fonction de quand ils ont été aimés par l'utilisateur.
-			+ `ORDER BY FIELD(Tweet.id, ${likes.reverse().map(t => `"${t}"`).join(', ')})` // `reverse` afin d'avoir les tweets aimés les plus récemment en premier.
+			+ ` ORDER BY FIELD(Tweet.id, ${likes.reverse().map(t => `"${t}"`).join(', ')})` // `reverse` afin d'avoir les tweets aimés les plus récemment en premier.
 		);
 		return tweets.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
 	}

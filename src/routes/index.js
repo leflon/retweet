@@ -48,7 +48,7 @@ router.get('/tweet/:id', async (req, res) => {
 	while (current?.repliesTo) {
 		const origin = await req.app.db.getTweet(current.repliesTo);
 		if (origin) {
-			if (origin.isDeleted)
+			if (origin.isDeleted && !req.user.isAdmin)
 				origins.push({notFound: true});
 			else {
 				await origin.fetchAuthor();
