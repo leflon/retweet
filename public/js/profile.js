@@ -47,7 +47,8 @@ if (USER.id === PROFILE.id || USER.isAdmin) {
 	};
 	avatarInput.addEventListener('change', onChange);
 	bannerInput.addEventListener('change', onChange);
-} else { // Le profil visité n'est pas celui de l'utilisateur connecté.
+}
+if (USER.id !== PROFILE.id || USER.isAdmin){ // Le profil visité n'est pas celui de l'utilisateur connecté.
 		// On affiche alors le bouton servant à suivre l'utilisateur dont on consulte le profil.
 	const followToggle = document.querySelector('#follow-toggle');
 	followToggle.addEventListener('click', async () => {

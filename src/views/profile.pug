@@ -49,10 +49,11 @@ html
 				.profile-buttons-container
 					if user.id == profile.id || user.isAdmin
 						.button.alt#open-profile-editor Éditer le profil
-					if user.follows.includes(profile.id)
-						.button.alt#follow-toggle(action='unfollow') Suivi
-					else
-						.button#follow-toggle(action='follow') Suivre
+					if user.id !== profile.id
+						if user.follows.includes(profile.id)
+							.button.alt#follow-toggle(action='unfollow') Suivi
+						else
+							.button#follow-toggle(action='follow') Suivre
 				#profile-text
 					if profile.displayName
 						#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}
