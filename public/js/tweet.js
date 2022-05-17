@@ -17,6 +17,14 @@ for (const tw of tweets) {
 			tw.classList.remove('fullscreen');
 		});
 	}
+
+	const contentContainer = tw.querySelector('.tweet-content');
+	let content = contentContainer.innerText;
+	content = content.replace(/@([a-z\d_]+)/g, '<a href=\'/profile/$1\'>@$1</a>');
+	const urlRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*))/;
+	content = content.replace(urlRegex, '<a href=\'$1\' target=\'_blank\'>$1</a>')
+	contentContainer.innerHTML = content;
+
 }
 
 
