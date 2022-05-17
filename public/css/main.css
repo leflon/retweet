@@ -30,6 +30,7 @@ a:hover {
 	margin: 0 auto;
 	border-left: 1px solid var(--light-grey);
 	border-right: 1px solid var(--light-grey);
+	min-height: 100vh;
 }
 
 .page-center .page-title {

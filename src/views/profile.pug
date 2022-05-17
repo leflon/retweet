@@ -16,71 +16,100 @@ html
 		script(src='/public/js/Tweet.js', defer)
 		script.
 			window.PROFILE = !{JSON.stringify(profile || {})};
-		title #{profile.displayName || '@' + profile.username} - Retweet
-	body 
-		if user.id == profile.id || user.isAdmin
-			#profile-editor-container
-				#profile-editor
-					#profile-editor-title-bar
-						i#profile-editor-close.fa-solid.fa-close
-						#profile-editor-title Éditer le profil
-						.button#profile-editor-save Enregistrer
-					form(action=`/api/profile/edit/${profile.id}`, method='post', enctype='multipart/form-data')
-						label(for='banner')
-							div.profile-banner
-								img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
-						label(for='avatar')
-							div.profile-avatar
-								img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
-						input#avatar(type='file', name='avatar', accept='image/jpeg,image/png')
-						input#banner(type='file', name='banner', accept='image/jpeg,image/png')
-						+TextInput('name', false, false, 'Nom', 50, profile.displayName)
-						+TextInput('bio', false, true, 'Bio', 160, profile.bio)
-						+TextInput('website', false, false, 'Site Internet', 100,  profile.website)
-						+TextInput('location', false, false, 'Localisation', 30, profile.location)
-		.page-center
-			.page-title #{profile.displayName || '@' + profile.username}
-				.page-subtitle #{tweets.length} tweets
-			#profile
-				div.profile-banner
-					img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
-				div.profile-avatar
-					img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
-				.profile-buttons-container
-					if user.id == profile.id || user.isAdmin
-						.button.alt#open-profile-editor Éditer le profil
-					if user.id !== profile.id
-						if user.follows.includes(profile.id)
-							.button.alt#follow-toggle(action='unfollow') Suivi
-						else
-							.button#follow-toggle(action='follow') Suivre
-				#profile-text
-					if profile.displayName
-						#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}
-					#profile-username @#{profile.username}
-					if profile.bio
-						#profile-bio #{profile.bio}
-					#profile-misc-infos
-						if profile.location
-							.profile-misc#location
-								i.fa-solid.fa-location-dot
-								span #{profile.location}
-						if profile.website
-							a(href=`${profile.website}`,target='_blank').profile-misc#website
-								i.fa-solid.fa-link
-								span #{profile.website}
-					#profile-created-at
-						i.fa-regular.fa-calendar
-						span(date=`${profile.createdAt}`)
-					#profile-stats
-						.profile-stat#follows
-							span.counter #{profile.follows.length}
-							span abonnements
-						.profile-stat#followers 
-							span.counter #{profile.followers.length}
-							span abonnés
-			#profile-tweet-list-selector
-				.select.selected#tweets Tweets
-				.select#likes Aimés
-			+TweetList(tweets, 'profile-tweets', 'Cet utilisateur n\'a envoyé aucun tweet.')
-			+TweetList(likes, 'profile-likes', 'Cet utilisateur n\'a aimé aucun tweet.')
+		if unknown || suspended || deleted
+			title Profil - Retweet
+		else
+			title #{profile.displayName || '@' + profile.username} - Retweet
+	body
+		if unknown || suspended || deleted
+			.page-center
+				.page-title Profil
+				#profile
+					div.profile-banner
+						img(src='/public/default_banner.jpg')
+					div.profile-avatar
+						img(src='/public/default_avatar.jpg')
+					#profile-text
+						#profile-username @#{username}
+					#profile-error-container
+						#profile-error-message
+							#main-message
+								if unknown
+									| Ce compte n'existe pas.
+								if suspended
+									| Ce compte a été suspendu.
+								if deleted
+									| Ce compte a été supprimé.
+							#suggestion Essayez d'effectuer une autre recherche.
+		else
+			if (user.id === profile.id || user.isAdmin) && !profile.isDeleted
+				#profile-editor-container
+					#profile-editor
+						#profile-editor-title-bar
+							i#profile-editor-close.fa-solid.fa-close
+							#profile-editor-title Éditer le profil
+							.button#profile-editor-save Enregistrer
+						form(action=`/api/profile/edit/${profile.id}`, method='post', enctype='multipart/form-data')
+							label(for='banner')
+								div.profile-banner
+									img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
+							label(for='avatar')
+								div.profile-avatar
+									img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
+							input#avatar(type='file', name='avatar', accept='image/jpeg,image/png')
+							input#banner(type='file', name='banner', accept='image/jpeg,image/png')
+							+TextInput('name', false, false, 'Nom', 50, profile.displayName)
+							+TextInput('bio', false, true, 'Bio', 160, profile.bio)
+							+TextInput('website', false, false, 'Site Internet', 100,  profile.website)
+							+TextInput('location', false, false, 'Localisation', 30, profile.location)
+			.page-center
+				.page-title #{profile.displayName || '@' + profile.username}
+					.page-subtitle #{tweets.length} tweets
+				#profile
+					div.profile-banner
+						img(src=`/public/${profile.bannerId || 'default_banner'}.jpg`)
+					div.profile-avatar
+						img(src=`/public/${profile.avatarId || 'default_avatar'}.jpg`)
+					if !profile.isDeleted
+						.profile-buttons-container
+							if user.id == profile.id || user.isAdmin
+								.button.alt#open-profile-editor Éditer le profil
+							if user.id !== profile.id
+								if user.follows.includes(profile.id)
+									.button.alt#follow-toggle(action='unfollow') Suivi
+								else
+									.button#follow-toggle(action='follow') Suivre
+					#profile-text
+						if profile.displayName
+							#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}
+						#profile-username @#{profile.username}
+						if profile.bio
+							#profile-bio #{profile.bio}
+						#profile-misc-infos
+							if profile.location
+								.profile-misc#location
+									i.fa-solid.fa-location-dot
+									span #{profile.location}
+							if profile.website
+								a(href=`${profile.website}`,target='_blank').profile-misc#website
+									i.fa-solid.fa-link
+									span #{profile.website}
+						#profile-created-at
+							i.fa-regular.fa-calendar
+							span(date=`${profile.createdAt}`)
+						#profile-stats
+							.profile-stat#follows
+								span.counter #{profile.follows.length}
+								span abonnements
+							.profile-stat#followers 
+								span.counter #{profile.followers.length}
+								span abonnés
+					if profile.isSuspended
+						#profile-admin-info Ce compte a été suspendu.
+					if profile.isDeleted
+						#profile-admin-info Ce compte a été supprimé.
+				#profile-tweet-list-selector
+					.select.selected#tweets Tweets
+					.select#likes Aimés
+				+TweetList(tweets, 'profile-tweets', 'Cet utilisateur n\'a envoyé aucun tweet.')
+				+TweetList(likes, 'profile-likes', 'Cet utilisateur n\'a aimé aucun tweet.')

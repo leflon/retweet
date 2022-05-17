@@ -2,7 +2,7 @@ const createdAt = document.querySelector('#profile-created-at span');
 moment.locale('fr');
 createdAt.innerText = `A rejoint Retweet en ${moment(createdAt.getAttribute('date')).month(1).format('MMMM YYYY')}`;
 
-if (USER.id === PROFILE.id || USER.isAdmin) {
+if ((USER.id === PROFILE.id || USER.isAdmin) && !PROFILE.isDeleted) {
 	const editContainer = document.getElementById('profile-editor-container');
 
 	// Ouverture / Fermeture de l'éditeur de profil.
@@ -48,8 +48,9 @@ if (USER.id === PROFILE.id || USER.isAdmin) {
 	avatarInput.addEventListener('change', onChange);
 	bannerInput.addEventListener('change', onChange);
 }
-if (USER.id !== PROFILE.id || USER.isAdmin){ // Le profil visité n'est pas celui de l'utilisateur connecté.
-		// On affiche alors le bouton servant à suivre l'utilisateur dont on consulte le profil.
+if (!PROFILE.isDeleted && (USER.id !== PROFILE.id || (USER.id !== PROFILE.id && USER.isAdmin))) {
+	// Le profil visité n'est pas celui de l'utilisateur connecté.
+	// On affiche alors le bouton servant à suivre l'utilisateur dont on consulte le profil.
 	const followToggle = document.querySelector('#follow-toggle');
 	followToggle.addEventListener('click', async () => {
 		const id = PROFILE.id;

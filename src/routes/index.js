@@ -82,9 +82,14 @@ router.get('/tweet/:id', async (req, res) => {
  * :username - Nom d'utilisateur de du profil à afficher.
  */
 router.get('/profile/:username', async (req, res) => {
-	const user = await req.app.db.getUser(req.params.username);
+	const username = req.params.username;
+	const user = await req.app.db.getUser(username);
 	if (!user)
-		return res.render('profile', {unknown: true});
+		return res.render('profile', {unknown: true, username});
+	if (user.isDeleted && !req.user.isAdmin)
+		return res.render('profile', {deleted: true, username});
+	if (user.isSuspended && !req.user.isAdmin)
+		return res.render('profile', {suspended: true, username});
 	const tweets = await user.getTweets();
 	const likes = await user.getLikes();
 	// On formatte les retweets comme dans /home.
