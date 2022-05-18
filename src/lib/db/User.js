@@ -1,5 +1,6 @@
 const bcrypt = require('bcrypt');
 const Tweet = require('./Tweet');
+const {formatTweetList} = require('../misc/TweetUtils');
 
 class User {
 	/**
@@ -96,6 +97,11 @@ class User {
 		 * @type {boolean}
 		 */
 		this.isDeleted = sqlRow.is_deleted === 1;
+		/**
+		 * Si ce tweet est affiché comme étant retweeté, l'utilisateur ayant retweeté ce tweet.
+		 * @type {?User}
+		 */
+		this.retweeter = undefined;
 	}
 
 	/**
@@ -188,7 +194,7 @@ class User {
 			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses aux tweets dans la timeline
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
-		return tweets.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
+		return formatTweetList(tweets, this.#db);
 	}
 
 	/**
@@ -202,7 +208,7 @@ class User {
 			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses dans la liste des tweets envoyés par l'utilisateur sur son profil
 			+ ' ORDER BY Tweet.created_at DESC',
 			[this.id]);
-		return tweets.map(t => new Tweet(t, this.#db));
+		return formatTweetList(tweets, this.#db);
 	}
 
 	/**
@@ -224,7 +230,7 @@ class User {
 			// On ordonne ces tweets en fonction de quand ils ont été aimés par l'utilisateur.
 			+ ` ORDER BY FIELD(Tweet.id, ${likes.reverse().map(t => `"${t}"`).join(', ')})` // `reverse` afin d'avoir les tweets aimés les plus récemment en premier.
 		);
-		return tweets.map(t => new Tweet(t, this.#db)); // Convertis chaque tweet brut en instance de Tweet.
+		return formatTweetList(tweets, this.#db);
 	}
 
 }

@@ -4,6 +4,7 @@ const mysql = require('mysql2/promise');
 const Logger = require('../misc/Logger');
 const User = require('./User');
 const Tweet = require('./Tweet');
+const {instanciateTweet, formatTweetList} = require('../misc/TweetUtils');
 
 let {rename} = require('fs');
 const {promisify} = require('util');
@@ -85,12 +86,12 @@ class Database {
 	 * @returns {Promise<Tweet[]>} Tous les tweets.
 	 */
 	async getAllTweets(includeDeleted = false) {
-		const [tweets] = await this.connection.query(
+		const [raws] = await this.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.replies_to IS NULL'
 			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
-		return tweets.map(t => new Tweet(t, this)); // Convertis chaque tweet brut en instance de Tweet.
+		return formatTweetList(raws, this);
 	}
 
 	/**
@@ -102,7 +103,8 @@ class Database {
 		const [rows] = await this.connection.query('SELECT * FROM tweet WHERE id = ?', [id]);
 		if (rows.length === 0)
 			return null;
-		return new Tweet(rows[0], this);
+		const tweet = await instanciateTweet(rows[0], this);
+		return tweet;
 	}
 
 	/**

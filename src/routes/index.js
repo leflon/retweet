@@ -16,23 +16,6 @@ router.get('/', (req, res) => {
  */
 router.get('/home', async (req, res) => {
 	const tweets = await req.user.getTimeline();
-	// Récupère les données des auteurs de chaque tweet et met en forme les retweets.
-	// On récupère également le nombre de réponses à chaque tweet.
-	for (const i in tweets) {
-		const tweet = tweets[i];
-		await tweet.fetchAuthor();
-		await tweet.fetchRepliesCount();
-		if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
-			// Dans le cas d'un retweet, on n'envoie pas le "retweet" lui-même.
-			// On récupère le tweet original et indique qu'il a été retweeté par un "retweeter".
-			const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
-			if (original) {
-				original.retweeter = tweet.author;
-				await original.fetchAuthor();
-				tweets[i] = original;
-			}
-		}
-	}
 	res.render('home', {tweets});
 });
 
@@ -42,23 +25,6 @@ router.get('/home', async (req, res) => {
  */
 router.get('/everything', async (req, res) => {
 	const tweets = await req.app.db.getAllTweets(req.user.isAdmin);
-	// Récupère les données des auteurs de chaque tweet et met en forme les retweets.
-	// On récupère également le nombre de réponses à chaque tweet.
-	for (const i in tweets) {
-		const tweet = tweets[i];
-		await tweet.fetchAuthor();
-		await tweet.fetchRepliesCount();
-		if (tweet.content.match(/^\/\/RT:[\w-]{16}$/)) {
-			// Dans le cas d'un retweet, on n'envoie pas le "retweet" lui-même.
-			// On récupère le tweet original et indique qu'il a été retweeté par un "retweeter".
-			const original = await req.app.db.getTweet(tweet.content.match(/^\/\/RT:[\w-]{16}$/)[0].slice(5));
-			if (original) {
-				original.retweeter = tweet.author;
-				await original.fetchAuthor();
-				tweets[i] = original;
-			}
-		}
-	}
 	res.render('home', {tweets});
 });
 
