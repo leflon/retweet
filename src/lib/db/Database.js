@@ -80,6 +80,20 @@ class Database {
 	}
 
 	/**
+	 * Récupère tous les tweets envoyés sur le site.
+	 * @param {boolean} includeDeleted S'il faut inclure les tweets supprimés (pour les admins).
+	 * @returns {Promise<Tweet[]>} Tous les tweets.
+	 */
+	async getAllTweets(includeDeleted = false) {
+		const [tweets] = await this.connection.query(
+			'SELECT * FROM Tweet WHERE Tweet.replies_to IS NULL'
+			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
+			+ ' ORDER BY Tweet.created_at DESC'
+		);
+		return tweets.map(t => new Tweet(t, this)); // Convertis chaque tweet brut en instance de Tweet.
+	}
+
+	/**
 	 * Récupère un tweet par son id.
 	 * @param {string} id Id du tweet za récupérer. 
 	 * @returns {Promise<?Tweet>} Tweet trouvé ou `null`.
