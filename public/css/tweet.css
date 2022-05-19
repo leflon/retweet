@@ -261,7 +261,6 @@
 .tweet-footer .tweet-action.reply:hover, .tweet-footer .tweet-action.reply.active {
 	color: #1d9bf0;
 }
-
-.tweet-footer .tweet-action.reply:hover i {
-	background-color: #1d9bf025;
-}
+.tweet.deleted .tweet-action {
+	cursor: not-allowed;
+} 
