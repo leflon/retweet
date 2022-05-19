@@ -185,13 +185,15 @@ class User {
 		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM user WHERE user.id = ?`, [this.id]);
 		follows.push(this.id); // Inclue l'utilisateur lui-même dans les comptes dont les tweets sont récupérés.
 		const [tweets] = await this.#db.connection.query(
-			'SELECT * FROM Tweet WHERE Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
+			'SELECT * FROM Tweet WHERE ((Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
 			+ '(SELECT id FROM JSON_TABLE(' // Convertis la liste JSON en table SQL
 			+ `'${JSON.stringify(follows)}',`
 			+ ' \'$[*]\' COLUMNS(id CHAR(16) PATH \'$\' ERROR ON ERROR))'
 			+ ' as follows)'
+			+ ` AND Tweet.replies_to IS NULL)` // On n'affiche pas les réponses aux tweets dans la timeline
+			+ ` OR (Tweet.content REGEXP \'@${this.username}\'` // On inclut les tweets mentionnant l'utilisateur
+			+ ` OR Tweet.replies_to_username = \'${this.username}\'))` // On inclut les tweets mentionnant l'utilisateur
 			+ (!this.isAdmin ? ' AND Tweet.is_deleted = 0' : '')
-			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses aux tweets dans la timeline
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
 		return formatTweetList(tweets, this.#db);
