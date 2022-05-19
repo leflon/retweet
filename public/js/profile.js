@@ -1,6 +1,32 @@
+
+/**
+ * Mets en forme un nombre **entier** en ajoutant les espaces entre les milliers.
+ * @param {number | string} n Le nombre à mettre en forme
+ * @returns {string} Le nombre mis en forme
+ */
+function space(n) {
+	let str = `${n}`;
+	str = str.split('').reverse().join('');
+	let spaced = '';
+	let i = 0;
+	for (const c of str) {
+		spaced = c + spaced;
+		if (++i === 3) {
+			i = 0;
+			spaced = ' ' + spaced;
+		}
+	}
+	return spaced.trim();
+}
+
 const createdAt = document.querySelector('#profile-created-at span');
 moment.locale('fr');
 createdAt.innerText = `A rejoint Retweet en ${moment(createdAt.getAttribute('date')).month(1).format('MMMM YYYY')}`;
+
+const followsCounter = document.querySelector('.profile-stat#follows .counter');
+followsCounter.innerText = space(followsCounter.innerText);
+const followersCounter = document.querySelector('.profile-stat#followers .counter');
+followersCounter.innerText = space(followersCounter.innerText);
 
 if ((USER.id === PROFILE.id || USER.isAdmin) && !PROFILE.isDeleted) {
 	const editContainer = document.getElementById('profile-editor-container');
@@ -57,7 +83,7 @@ if (!PROFILE.isDeleted && (USER.id !== PROFILE.id || (USER.id !== PROFILE.id && 
 		const action = followToggle.getAttribute('action');
 		await fetch(`/api/${action}/${id}`);
 		followToggle.setAttribute('action', action === 'follow' ? 'unfollow' : 'follow');
-		followToggle.innerText = action === 'follow' ? 'Suivre' : 'Suivi';
+		followToggle.innerText = action === 'follow' ? 'Suivi' : 'Suivre';
 		followToggle.classList.toggle('alt');
 	});
 	followToggle.addEventListener('mouseenter', () => {
