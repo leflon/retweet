@@ -77,7 +77,7 @@ class Tweet {
 	}
 
 	async fetchRepliesCount() {
-		const [result] = await this.#db.connection.query(`SELECT COUNT(*) AS count FROM tweet WHERE replies_to = ? AND is_deleted = 0`, [this.id]);
+		const [result] = await this.#db.connection.query(`SELECT COUNT(*) AS count FROM Tweet WHERE replies_to = ? AND is_deleted = 0`, [this.id]);
 		this.repliesCount = result[0].count;
 	}
 
@@ -97,7 +97,7 @@ class Tweet {
 	 */
 	async save() {
 		await this.#db.connection.query(
-			`UPDATE tweet SET 
+			`UPDATE Tweet SET 
 				likes = ?,
 				replies = ?,
 				retweets = ?
@@ -120,7 +120,7 @@ class Tweet {
 		if (this.isDeleted)
 			return;
 		this.isDeleted = true;
-		await this.#db.connection.query(`UPDATE tweet SET is_deleted = 1 WHERE id = ?`, [this.id]);
+		await this.#db.connection.query(`UPDATE Tweet SET is_deleted = 1 WHERE id = ?`, [this.id]);
 		this.#db.log.info(`Tweet "${this.id}" supprimé.`);
 	}
 }

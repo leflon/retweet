@@ -81,7 +81,7 @@ router.get('/recover', async (req, res) => {
 	// ut: token de récupération de mot de passe.
 	const {ut} = req.query;
 	if (ut) {
-		let [row] = await req.app.db.connection.query('SELECT * FROM recover WHERE token = ?', [ut]);
+		let [row] = await req.app.db.connection.query('SELECT * FROM Recover WHERE token = ?', [ut]);
 		if (row.length === 0)
 			return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
 		// Un token de récupération de mot de passe n'est valide que 5 minutes.
@@ -101,7 +101,7 @@ router.get('/recover', async (req, res) => {
  * Déconnecte l'utilisateur et le redirige vers la page de connexion.
  */
 router.get('/logout', (req, res) => {
-	req.app.db.connection.query('DELETE FROM auth WHERE token = ?', [req.signedCookies.auth]);
+	req.app.db.connection.query('DELETE FROM Auth WHERE token = ?', [req.signedCookies.auth]);
 	res.clearCookie('auth');
 	res.redirect('/login');
 });
@@ -112,7 +112,7 @@ router.get('/logout', (req, res) => {
  */
 router.post('/login', async (req, res) => {
 	const {username, password} = req.body;
-	const [result] = await req.app.db.connection.query('SELECT * FROM user WHERE username = ?', [username]);
+	const [result] = await req.app.db.connection.query('SELECT * FROM User WHERE username = ?', [username]);
 	// Nom d'utilisateur invalide.
 	if (result.length === 0) {
 		return res.render('wall', {
@@ -130,7 +130,7 @@ router.post('/login', async (req, res) => {
 	}
 	// En cas d'identifiants corrects, on génère le token d'authentification et on le stocke dans la base de données et en cookie.
 	// Cela gardera le compte connecté tant que l'user-agent et l'adresse ip correspondent.
-	const token = await user.generateToken('auth', req.get('user-agent'), req.ip);
+	const token = await user.generateToken('Auth', req.get('user-agent'), req.ip);
 	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
 	res.redirect('/home');
 });
@@ -141,7 +141,7 @@ router.post('/login', async (req, res) => {
  */
 router.post('/recover', async (req, res) => {
 	const {email} = req.body;
-	const [result] = await req.app.db.connection.query('SELECT * FROM user WHERE email = ?', [email]);
+	const [result] = await req.app.db.connection.query('SELECT * FROM User WHERE email = ?', [email]);
 	if (result.length === 0) {
 		return res.render('wall', {
 			error: 'Aucun compte ne correspond à cette adresse email.',
@@ -150,7 +150,7 @@ router.post('/recover', async (req, res) => {
 	}
 	const user = new User(result[0], req.app.db);
 	// Envoi du token par e-mail.
-	const token = await user.generateToken('recover');
+	const token = await user.generateToken('Recover');
 	const transporter = await createTransporter();
 	const mailOptions = {
 		from: `Retweet <${process.env.GMAIL_ADDRESS}>`,
@@ -178,7 +178,7 @@ router.post('/recover', async (req, res) => {
 router.post('/renew-password', async (req, res) => {
 	const {ut} = req.query;
 	const {password} = req.body;
-	const [row] = await req.app.db.connection.query('SELECT * FROM recover WHERE token = ?', [ut]);
+	const [row] = await req.app.db.connection.query('SELECT * FROM Recover WHERE token = ?', [ut]);
 	if (row.length === 0)
 		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
 	const at = row[0].created_at;
@@ -187,7 +187,7 @@ router.post('/renew-password', async (req, res) => {
 		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération a expiré. Veuillez en demander un nouveau.'});
 	const user = await req.app.db.getUserById(row[0].user_id);
 	await user.updatePassword(password);
-	await req.app.db.connection.query('DELETE FROM recover WHERE token = ?', [ut]);
+	await req.app.db.connection.query('DELETE FROM Recover WHERE token = ?', [ut]);
 	// Le paramètre newpd permet d'afficher un message de confirmation.
 	res.redirect('/login?newpwd');
 });
@@ -212,7 +212,7 @@ router.post('/register', async (req, res) => {
 	});
 	// Le compte étant crée avec succès, on génère le token d'authentification et on le stocke dans la base de données et en cookie.
 	res.user = user;
-	const token = await user.generateToken('auth', req.get('user-agent'), req.ip);
+	const token = await user.generateToken('Auth', req.get('user-agent'), req.ip);
 	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
 	// Le paramètre welcome permet d'afficher un message de confirmation.
 	res.redirect('/home?welcome');

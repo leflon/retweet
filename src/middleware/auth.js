@@ -10,7 +10,7 @@ module.exports = async function(req, res, next) {
 
 	// Redirige vers l'accueil si l'utilisateur est connecté.
 	if (req.path === '/login' && req.signedCookies.auth)
-	return res.redirect('/home');
+		return res.redirect('/home');
 	// Redirige vers la page de connexion si l'utilisateur n'est pas connecté.
 	if (!req.signedCookies.auth && req.path !== '/login')
 		return res.redirect('/login');
@@ -20,7 +20,7 @@ module.exports = async function(req, res, next) {
 
 	const db = res.app.db;
 	// Si le token envoyé par le navigateur n'est pas correct, on le supprime.
-	const [result] = await db.connection.query('SELECT * FROM auth WHERE token = ?', [req.signedCookies.auth]);
+	const [result] = await db.connection.query('SELECT * FROM Auth WHERE token = ?', [req.signedCookies.auth]);
 	if (result.length === 0) {
 		res.clearCookie('auth');
 		return res.redirect('/login');
@@ -30,7 +30,7 @@ module.exports = async function(req, res, next) {
 	// Cela pourrait être un vol de token de connexion.
 	if (req.get('user-agent') !== row.user_agent && req.ip !== row.ip_address) {
 		res.clearCookie('auth');
-		await db.connection.query('DELETE FROM auth WHERE token = ?', [req.signedCookies.auth]);
+		await db.connection.query('DELETE FROM Auth WHERE token = ?', [req.signedCookies.auth]);
 		return res.redirect('/login');
 	}
 	// L'utilisateur étant bien connecté, on ajoute ses informations à la requête.
