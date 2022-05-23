@@ -81,7 +81,7 @@ router.get('/recover', async (req, res) => {
 	// ut: token de récupération de mot de passe.
 	const {ut} = req.query;
 	if (ut) {
-		let [row] = await req.app.db.connection.query('SELECT * FROM Recover WHERE token = ?', [ut]);
+		let [row] = await req.app.db.connection.query('SELECT * FROM recover WHERE token = ?', [ut]);
 		if (row.length === 0)
 			return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
 		// Un token de récupération de mot de passe n'est valide que 5 minutes.
@@ -112,7 +112,7 @@ router.get('/logout', (req, res) => {
  */
 router.post('/login', async (req, res) => {
 	const {username, password} = req.body;
-	const [result] = await req.app.db.connection.query('SELECT * FROM User WHERE username = ?', [username]);
+	const [result] = await req.app.db.connection.query('SELECT * FROM user WHERE username = ?', [username]);
 	// Nom d'utilisateur invalide.
 	if (result.length === 0) {
 		return res.render('wall', {
@@ -141,7 +141,7 @@ router.post('/login', async (req, res) => {
  */
 router.post('/recover', async (req, res) => {
 	const {email} = req.body;
-	const [result] = await req.app.db.connection.query('SELECT * FROM User WHERE email = ?', [email]);
+	const [result] = await req.app.db.connection.query('SELECT * FROM user WHERE email = ?', [email]);
 	if (result.length === 0) {
 		return res.render('wall', {
 			error: 'Aucun compte ne correspond à cette adresse email.',
@@ -178,7 +178,7 @@ router.post('/recover', async (req, res) => {
 router.post('/renew-password', async (req, res) => {
 	const {ut} = req.query;
 	const {password} = req.body;
-	const [row] = await req.app.db.connection.query('SELECT * FROM Recover WHERE token = ?', [ut]);
+	const [row] = await req.app.db.connection.query('SELECT * FROM recover WHERE token = ?', [ut]);
 	if (row.length === 0)
 		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
 	const at = row[0].created_at;

@@ -20,7 +20,7 @@ router.post('/tweets/add', upload.single('image'), async (req, res) => {
 		if (!parentTweet || parentTweet.isDeleted)
 			return res.status(400).send({message: 'Ce tweet répond à un tweet inexistant.'});
 		// On récupère le nom d'utilisateur de l'auteur du tweet auquel on répond ici.
-		[[{username: repliesToUsername}]] = await req.app.db.connection.query('SELECT username FROM User WHERE id = ?', [parentTweet.authorId]);
+		[[{username: repliesToUsername}]] = await req.app.db.connection.query('SELECT username FROM user WHERE id = ?', [parentTweet.authorId]); 
 	}
 	// Si le tweet a une image, on doit générer son id manuellement.
 	// L'Image en base de données nécessite l'id du tweet auquel elle est associée
@@ -158,7 +158,7 @@ router.post('/profile/edit/:id', upload.fields([{name: 'avatar'}, {name: 'banner
 	const {name, bio, location, website} = req.body;
 	const user = await req.app.db.getUserById(req.params.id);
 	if (!user)
-		return res.status(400).send({message: 'Cet utilisateur n\'existe pas.'});
+	return res.status(400).send({message: 'Cet utilisateur n\'existe pas.'});
 	// Vérifications de longueur de tous les champs textuels du profil.
 	if (user.id !== req.user.id && !req.user.isAdmin)
 		return res.status(403).send('Vous n\'avez pas la permission de modifier cet utilisateur.');
@@ -229,7 +229,7 @@ router.get('/unfollow/:id', async (req, res) => {
 		return res.status(400).send({message: 'Vous ne suivez pas cet utilisateur.'});
 	// Même procédé que pour /api/follow/:id.
 	user.followers = user.followers.filter(id => id !== req.user.id);
-	req.user.follows = req.user.follows.filter(id => id !== user.id);
+	req.user.follows = req.user.follows.filter( id => id !== user.id);
 	await user.save();
 	await req.user.save();
 	return res.send({unfollowed: true});
