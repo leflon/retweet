@@ -71,17 +71,17 @@ class User {
 		 * Liste des Id des utilisateurs suivis par cet utilisateur.
 		 * @type {string[]}
 		 */
-		this.follows = sqlRow.follows;
+		this.follows = JSON.parse(sqlRow.follows);
 		/**
 		 * Liste des Id des utilisateurs suivant cet utilisateur.
 		 * @type {string[]}
 		 */
-		this.followers = sqlRow.followers;
+		this.followers = JSON.parse(sqlRow.followers);
 		/**
 		 * Liste des Id des tweets aimés par cet utilisateur.
 		 * @type {string[]}
 		 */
-		this.likes = sqlRow.likes;
+		this.likes = JSON.parse(sqlRow.likes);
 		/**
 		 * Si cet utilisateur est un administrateur. Défini manuellement dans la base de données.
 		 * @type {boolean}
@@ -110,7 +110,7 @@ class User {
 	 */
 	async updatePassword(password) {
 		const hash = await bcrypt.hash(password, 10);
-		await this.#db.connection.query(`UPDATE user SET password = ? WHERE id = ?`, [hash, this.id]);
+		await this.#db.connection.query(`UPDATE User SET password = ? WHERE id = ?`, [hash, this.id]);
 		this.encryptedPassword = hash;
 		this.#db.log.info(`[${this.id}] Mot de passe mis à jour.`);
 	}
@@ -120,7 +120,7 @@ class User {
 	 */
 	async save() {
 		await this.#db.connection.query(
-			`UPDATE user SET 
+			`UPDATE User SET 
 			display_name = ?,
 				avatar_id = ?,
 				banner_id = ?,
@@ -150,7 +150,7 @@ class User {
 
 	/**
 	 * Génère un token d'authentification ou de récupération de mot de passe.
-	 * @param {'auth' | 'recover'} table Type de token à générer.
+	 * @param {'Auth' | 'Recover'} table Type de token à générer.
 	 * @param {string} userAgent L'user-agent lié au token (pour un token auth).
 	 * @param {string} ip L'ip liée au token (pour un token auth).
 	 */
@@ -165,11 +165,11 @@ class User {
 		if (rows.length !== 0)
 			return await this.generateToken(table, userAgent, ip);
 		if (table === 'auth') {
-			await this.#db.connection.query('INSERT INTO auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
+			await this.#db.connection.query('INSERT INTO Auth VALUES (?, ?, NOW(), ?, ?)', [this.id, token, userAgent, ip]);
 			this.#db.log.info(`[${this.id}] Token d'authentification généré.`);
 		} else {
-			await this.#db.connection.query('DELETE FROM recover WHERE user_id = ?', [this.id]);
-			await this.#db.connection.query('INSERT INTO recover VALUES (?, ?, NOW())', [this.id, token]);
+			await this.#db.connection.query('DELETE FROM Recover WHERE user_id = ?', [this.id]);
+			await this.#db.connection.query('INSERT INTO Recover VALUES (?, ?, NOW())', [this.id, token]);
 			this.#db.log.info(`[${this.id}] Token de récupération généré.`);
 		}
 		return token;
@@ -182,7 +182,7 @@ class User {
 	async getTimeline() {
 		// La requête renvoie un objet de cette forme : [[{follows: [...]}]]. 
 		// On utilise des destructurations imbriquées pour récupérer le tableau simple des comptes suivis.
-		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM user WHERE user.id = ?`, [this.id]);
+		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM User WHERE User.id = ?`, [this.id]);
 		follows.push(this.id); // Inclue l'utilisateur lui-même dans les comptes dont les tweets sont récupérés.
 		const [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE ((Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
@@ -219,7 +219,7 @@ class User {
 	 */
 	async getLikes(includeDeleted = false) {
 		// Même destructuration que pour getTimeline().
-		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE user.id = ? `, [this.id]);
+		const [[{likes}]] = await this.#db.connection.query(`SELECT likes FROM User WHERE User.id = ? `, [this.id]);
 		if (likes.length === 0)
 			return [];
 		const [tweets] = await this.#db.connection.query(

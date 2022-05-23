@@ -130,7 +130,7 @@ router.post('/login', async (req, res) => {
 	}
 	// En cas d'identifiants corrects, on génère le token d'authentification et on le stocke dans la base de données et en cookie.
 	// Cela gardera le compte connecté tant que l'user-agent et l'adresse ip correspondent.
-	const token = await user.generateToken('auth', req.get('user-agent'), req.ip);
+	const token = await user.generateToken('Auth', req.get('user-agent'), req.ip);
 	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
 	res.redirect('/home');
 });
@@ -150,7 +150,7 @@ router.post('/recover', async (req, res) => {
 	}
 	const user = new User(result[0], req.app.db);
 	// Envoi du token par e-mail.
-	const token = await user.generateToken('recover');
+	const token = await user.generateToken('Recover');
 	const transporter = await createTransporter();
 	const mailOptions = {
 		from: `Retweet <${process.env.GMAIL_ADDRESS}>`,
@@ -212,7 +212,7 @@ router.post('/register', async (req, res) => {
 	});
 	// Le compte étant crée avec succès, on génère le token d'authentification et on le stocke dans la base de données et en cookie.
 	res.user = user;
-	const token = await user.generateToken('auth', req.get('user-agent'), req.ip);
+	const token = await user.generateToken('Auth', req.get('user-agent'), req.ip);
 	res.cookie('auth', token, {signed: true, httpOnly: true, maxAge: 1000 * 60 * 60 * 24 * 30, sameSite: 'strict', secure: true});
 	// Le paramètre welcome permet d'afficher un message de confirmation.
 	res.redirect('/home?welcome');

@@ -50,7 +50,7 @@ class Database {
 			.map(() => chars[Math.floor(Math.random() * chars.length)])
 			.join('');
 		// Vérifie si l'id existe déjà, si oui, en génère un autre récursivement.
-		const [rows] = await this.connection.query('SELECT * FROM id WHERE id = ? ', [id]);
+		const [rows] = await this.connection.query('SELECT * FROM Id WHERE id = ? ', [id]);
 		if (rows.length !== 0)
 			return await this.generateId();
 		return id;
@@ -62,7 +62,7 @@ class Database {
 	 * @returns {Promise<?User>} Utilisateur trouvé ou `null`.
 	 **/
 	async getUserById(id) {
-		const [rows] = await this.connection.query('SELECT * FROM user WHERE id = ?', [id]);
+		const [rows] = await this.connection.query('SELECT * FROM User WHERE id = ?', [id]);
 		if (rows.length === 0)
 			return null;
 		return new User(rows[0], this);
@@ -74,7 +74,7 @@ class Database {
 	 * @returns {Promise<?User>} Utilisateur trouvé ou `null`.
 	 **/
 	async getUser(username) {
-		const [rows] = await this.connection.query('SELECT * FROM user WHERE username= ? ', [username]);
+		const [rows] = await this.connection.query('SELECT * FROM User WHERE username= ? ', [username]);
 		if (rows.length === 0)
 			return null;
 		return new User(rows[0], this);
@@ -100,7 +100,7 @@ class Database {
 	 * @returns {Promise<?Tweet>} Tweet trouvé ou `null`.
 	 */
 	async getTweet(id) {
-		const [rows] = await this.connection.query('SELECT * FROM tweet WHERE id = ?', [id]);
+		const [rows] = await this.connection.query('SELECT * FROM Tweet WHERE id = ?', [id]);
 		if (rows.length === 0)
 			return null;
 		const tweet = await instanciateTweet(rows[0], this);
@@ -131,9 +131,9 @@ class Database {
 			email: data.email,
 			password: encrypted,
 			created_at: createdAt,
-			follows: [],
-			followers: [],
-			likes: []
+			follows: '[]',
+			followers: '[]',
+			likes: '[]'
 		}, this);
 	}
 
@@ -164,9 +164,9 @@ class Database {
 			created_at: createdAt,
 			replies_to: data.repliesTo,
 			replies_to_username: data.repliesToUsername,
-			likes: [],
-			replies: [],
-			retweets: []
+			likes: '[]',
+			replies: '[]',
+			retweets: '[]'
 		}, this);
 	}
 
