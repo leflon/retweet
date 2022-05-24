@@ -108,6 +108,10 @@
 	text-decoration: underline;
 }
 
+.tweet .right .tweet-heading .tweet-author-displayname .tweet-author-admin {
+	margin-left: 5px;
+}
+
 .tweet .right .tweet-heading .tweet-author-username {
 	color: #616d75;
 	margin-right: 5px;
@@ -261,6 +265,7 @@
 .tweet-footer .tweet-action.reply:hover, .tweet-footer .tweet-action.reply.active {
 	color: #1d9bf0;
 }
+
 .tweet.deleted .tweet-action {
 	cursor: not-allowed;
-} 
+}

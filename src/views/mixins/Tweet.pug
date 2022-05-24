@@ -11,7 +11,11 @@ mixin Tweet(tw, full)
 			if !tw.isDeleted && (tw.author.id == user.id || user.isAdmin)
 				.tweet-action(tweet=`${tw.id}`, action='delete').fa-solid.fa-trash-can.delete.icon-button
 			.tweet-heading
-					a(href=`/profile/${tw.author.username}`).tweet-author-displayname #{tw.author.displayName || tw.author.username}
+					a(href=`/profile/${tw.author.username}`).tweet-author-displayname 
+						span #{tw.author.displayName || tw.author.username}
+						if tw.author.isAdmin
+							span.tweet-author-admin(title='Administrateur')
+								i.fa-solid.fa-hammer
 					.tweet-author-username @#{tw.author.username}
 					.tweet-time(date=`${tw.createdAt}`)
 			if tw.repliesToUsername

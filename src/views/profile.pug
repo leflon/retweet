@@ -81,7 +81,11 @@ html
 									.button#follow-toggle(action='follow') Suivre
 					#profile-text
 						if profile.displayName
-							#profile-display-name(title=`${profile.displayName}`) #{profile.displayName}
+							#profile-display-name(title=`${profile.displayName}`) 
+								span #{profile.displayName}
+								if profile.isAdmin
+									span#profile-admin(title='Administrateur')
+										i.fa-solid.fa-hammer
 						#profile-username @#{profile.username}
 						if profile.bio
 							#profile-bio #{profile.bio}

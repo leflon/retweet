@@ -55,6 +55,10 @@
 	white-space: nowrap;
 }
 
+#profile-admin {
+	margin-left: 5px;
+}
+
 #profile-username {
 	font: 12pt 'Montserrat';
 	color: #616d75;
