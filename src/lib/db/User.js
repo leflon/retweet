@@ -184,7 +184,7 @@ class User {
 		// On utilise des destructurations imbriquées pour récupérer le tableau simple des comptes suivis.
 		const [[{follows}]] = await this.#db.connection.query(`SELECT follows FROM User WHERE id = ?`, [this.id]);
 		follows.push(this.id); // Inclue l'utilisateur lui-même dans les comptes dont les tweets sont récupérés.
-		const [tweets] = await this.#db.connection.query(
+		let [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE ((Tweet.author_id COLLATE utf8mb4_unicode_ci IN ' // Collate corrige un bug étrange
 			+ '(SELECT id FROM JSON_TABLE(' // Convertis la liste JSON en table SQL
 			+ `'${JSON.stringify(follows)}',`
@@ -196,6 +196,9 @@ class User {
 			+ (!this.isAdmin ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
+		if (this.isAdmin) {
+			tweets = tweets.filter(tweet => (tweet.content.startsWith('//RT:') && tweet.is_deleted === 0) || !tweet.content.startsWith('//RT:'));
+		}
 		return formatTweetList(tweets, this.#db);
 	}
 
@@ -204,12 +207,15 @@ class User {
 	 * @returns {Promise<Tweet[]>}
 	 */
 	async getTweets(includeDeleted = false) {
-		const [tweets] = await this.#db.connection.query(
+		let [tweets] = await this.#db.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.author_id = ?'
 			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' AND Tweet.replies_to IS NULL' // On n'affiche pas les réponses dans la liste des tweets envoyés par l'utilisateur sur son profil
 			+ ' ORDER BY Tweet.created_at DESC',
 			[this.id]);
+		if (includeDeleted) {
+			tweets = tweets.filter(tweet => (tweet.content.startsWith('//RT:') && tweet.is_deleted === 0) || !tweet.content.startsWith('//RT:'));
+		}
 		return formatTweetList(tweets, this.#db);
 	}
 

@@ -86,12 +86,15 @@ class Database {
 	 * @returns {Promise<Tweet[]>} Tous les tweets.
 	 */
 	async getAllTweets(includeDeleted = false) {
-		const [raws] = await this.connection.query(
+		let [tweets] = await this.connection.query(
 			'SELECT * FROM Tweet WHERE Tweet.replies_to IS NULL'
 			+ (!includeDeleted ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
-		return formatTweetList(raws, this);
+		if (includeDeleted) {
+			tweets = tweets.filter(tweet => (tweet.content.startsWith('//RT:') && tweet.is_deleted === 0) || !tweet.content.startsWith('//RT:'));
+		}
+		return formatTweetList(tweets, this);
 	}
 
 	/**
