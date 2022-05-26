@@ -116,6 +116,8 @@ router.get('/tweets/unretweet/:id', async (req, res) => {
 	if (!tweet.retweets.includes(req.user.id))
 		return res.status(400).send({message: 'Vous n\'avez pas retweeté ce tweet.'});
 
+	tweet.retweets = tweet.retweets.filter(id => id !== req.user.id);
+	await tweet.save();
 	// Un retweet est un tweet contenant l'id du tweet à retweeter. (//RT:)
 	// Dans le client, il est directement affiché comme le tweet retweeté.
 	// Il s'agit donc de supprimer le "retweet" envoyé par l'auteur de la requête.
