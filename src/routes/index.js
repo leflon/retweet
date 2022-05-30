@@ -20,7 +20,15 @@ router.get('/home', async (req, res) => {
 });
 
 /**
- * GET /home
+ * GET /all
+ * Redirige vers /everything.
+ */
+router.get('/all', async (req, res) => {
+	res.redirect('/everything');
+});
+
+/**
+ * GET /everything
  * Affiche tous les tweets.
  */
 router.get('/everything', async (req, res) => {
