@@ -179,6 +179,7 @@ router.post('/renew-password', async (req, res) => {
 	const {ut} = req.query;
 	const {password} = req.body;
 	const [row] = await req.app.db.connection.query('SELECT * FROM Recover WHERE token = ?', [ut]);
+	console.log(req.body);
 	if (row.length === 0)
 		return res.render('wall', {mode: 'recover-step2', error: 'Ce lien de récupération est invalide.'});
 	const at = row[0].created_at;

@@ -85,7 +85,7 @@ html
 					if error
 						#error #{error}
 						#form-actions
-							a#recover(href='/recover') Retour
+							a#recover.button(href='/recover') Retour
 					else
 						.input-line
 							+TextInput('password', true, false, 'Nouveau mot de passe')
@@ -93,6 +93,6 @@ html
 								.info-icon ?
 								.info-text Doit faire au minimum 8 caractères, contenir une majuscule, une minuscule, un chiffre et un symbole.
 						.input-line
-							+TextInput('password', true, false, 'Confirmer le mot de passe')
+							+TextInput('pw-confirm', true, false, 'Confirmer le mot de passe')
 						#form-actions
-							input#submit(type='submit', value='Réinitialiser')
+							input#submit.button(type='submit', value='Réinitialiser')

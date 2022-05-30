@@ -1,0 +1,14 @@
+mixin Menu
+	#main-menu
+		a.main-menu-button(href='/home')
+			i.fa-solid.fa-house
+			div Accueil
+		a.main-menu-button(href=`/everything`)
+			i.fa-regular.fa-hashtag
+			div Tous les tweets
+		a.main-menu-button(href=`/profile/${user.username}`)
+			i.fa-regular.fa-user
+			div Profil
+		a.main-menu-button(href='/logout')
+			i.fa-solid.fa-arrow-right-from-bracket
+			div Se déconnecter

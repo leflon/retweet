@@ -1,0 +1,44 @@
+#main-menu {
+	position: fixed;
+	right: 50vw;
+	transform: translateX(-300px);
+	display: flex;
+	flex-direction: column;
+	padding: 12px 12px;
+}
+
+.main-menu-button {
+	display: flex;
+	padding: 12px;
+	border-radius: 30px;
+	text-decoration: none;
+	transition: .2s ease;
+	color: white;
+	text-decoration: none !important;
+}
+
+.main-menu-button * {
+	font-size: 15pt;
+	margin-right: 12px;
+}
+
+.main-menu-button:hover {
+	cursor: pointer;
+	background-color: #ffffff20;
+}
+
+@media screen and (max-width: 1050px) {
+	#main-menu {
+		position: relative;
+		right: auto;
+		transform: translateX(0px);
+	}
+
+	.main-menu-button div {
+		display: none;
+	}
+
+	.main-menu-button * {
+		margin-right: 0px;
+	}
+}

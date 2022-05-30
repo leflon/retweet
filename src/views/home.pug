@@ -1,5 +1,6 @@
 include mixins/TweetList
 include mixins/TweetForm
+include mixins/Menu
 doctype html
 html
 	head
@@ -10,12 +11,13 @@ html
 		script(src='/public/js/TweetForm.js', defer)
 		link(rel='stylesheet', href='/public/css/home.css')
 		link(rel='stylesheet', href='/public/css/Tweet.css')
+		link(rel='stylesheet', href='/public/css/Menu.css')
 		link(rel='stylesheet', href='/public/css/TweetForm.css')
 		link(rel='stylesheet', href='/public/css/TextInput.css')
 		title Home - Retweet
 	body 
+		+Menu
 		.page-center
 			.page-title Accueil
 			+TweetForm('Quoi de neuf ?')
 			+TweetList(tweets, 'home-timeline', 'Aucun tweet.')
-		a(href='/logout') Logout
