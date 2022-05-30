@@ -33,7 +33,7 @@ router.get('/all', async (req, res) => {
  */
 router.get('/everything', async (req, res) => {
 	const tweets = await req.app.db.getAllTweets(req.user.isAdmin);
-	res.render('home', {tweets});
+	res.render('home', {tweets, everything: true});
 });
 
 router.get('/tweet/:id', async (req, res) => {
