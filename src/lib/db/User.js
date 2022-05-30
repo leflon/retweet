@@ -192,7 +192,7 @@ class User {
 			+ ' as follows)'
 			+ ` AND Tweet.replies_to IS NULL)` // On n'affiche pas les réponses aux tweets dans la timeline
 			+ ` OR (Tweet.content REGEXP \'@${this.username}\'` // On inclut les tweets mentionnant l'utilisateur
-			+ ` OR Tweet.replies_to_username = \'${this.username}\'))` // On inclut les tweets mentionnant l'utilisateur
+			+ ` OR Tweet.replies_to_username = \'${this.username}\'))` // On inclut les tweets répondant à l'utilisateur
 			+ (!this.isAdmin ? ' AND Tweet.is_deleted = 0' : '')
 			+ ' ORDER BY Tweet.created_at DESC'
 		);
