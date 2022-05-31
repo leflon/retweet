@@ -42,3 +42,16 @@
 		margin-right: 0px;
 	}
 }
+
+@media screen and (max-width: 450px) {
+	#main-menu {
+		flex-direction: row;
+		justify-content: space-around;
+		position: fixed;
+		top: 0;
+		right: 0;
+		/* L'éditeur de profil est à 999 */
+		z-index: 998;
+		padding: 5px 0;
+	}
+}
