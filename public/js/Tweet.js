@@ -22,7 +22,7 @@ for (const tw of tweets) {
 	let content = contentContainer.innerText;
 	content = content.replace(/@([a-z\d_]+)/g, '<a href=\'/profile/$1\'>@$1</a>');
 	const urlRegex = /(https?:\/\/(?:www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b(?:[-a-zA-Z0-9()@:%_\+.~#?&//=]*))/g;
-	content = content.replace(urlRegex, '<a href=\'$1\' target=\'_blank\'>$1</a>')
+	content = content.replace(urlRegex, '<a href=\'$1\' target=\'_blank\'>$1</a>');
 	contentContainer.innerHTML = content;
 
 }
@@ -90,5 +90,12 @@ for (const elm of tweetTimes) {
 	elm.innerText = '• ' + moment(date).fromNow().replace('il y a', '');
 	if (elm.innerText === '• un jour')
 		elm.innerText = '• hier';
+	elm.setAttribute('title', moment(date).format('LLLL'));
+}
+const footerTweetTimes = document.querySelectorAll('.tweet-footer-time');
+for (const elm of footerTweetTimes) {
+	const date = new Date(elm.getAttribute('date'));
+	moment.locale('fr');
+	elm.innerText = moment().format('HH:mm [·] DD MMMM YYYY');
 	elm.setAttribute('title', moment(date).format('LLLL'));
 }

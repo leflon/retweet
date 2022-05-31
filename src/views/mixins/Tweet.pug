@@ -17,7 +17,8 @@ mixin Tweet(tw, full)
 							span.tweet-author-admin(title='Administrateur')
 								i.fa-solid.fa-hammer
 					.tweet-author-username @#{tw.author.username}
-					.tweet-time(date=`${tw.createdAt}`)
+					if !full
+						.tweet-time(date=tw.createdAt)
 			if tw.repliesToUsername
 				.tweet-replying-to En réponse à 
 					a(href=`/profile/${tw.repliesToUsername}`) @#{tw.repliesToUsername}
@@ -28,6 +29,7 @@ mixin Tweet(tw, full)
 						i.fa-solid.fa-xmark
 					img.tweet-image(src='/public/' + tw.imageId + '.jpg')
 			if full
+				.tweet-footer-time(date=tw.createdAt)
 				.tweet-footer-counters
 					.tweet-footer-counter.replies 
 						.number #{user.isAdmin ? tw.replies.length : tw.repliesCount} 
