@@ -98,7 +98,7 @@
 }
 
 .tweet .right .tweet-heading .tweet-author-displayname {
-	color: #fff;
+	color: var(--main-white);
 	text-decoration: none;
 	margin-right: 5px;
 	text-overflow: ellipsis;
@@ -116,12 +116,12 @@
 }
 
 .tweet .right .tweet-heading .tweet-author-username {
-	color: #616d75;
+	color: var(--lighter-grey);
 	margin-right: 5px;
 }
 
 .tweet .right .tweet-heading .tweet-time {
-	color: #616d75;
+	color: var(--lighter-grey);
 }
 
 .tweet .right .tweet-content {
@@ -182,7 +182,7 @@
 	position: absolute;
 	top: 20px;
 	right: 20px;
-	color: #fff;
+	color: var(--main-white);
 	font-size: 20pt;
 	padding: 10px;
 	cursor: pointer;

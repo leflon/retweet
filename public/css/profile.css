@@ -61,7 +61,7 @@
 
 #profile-username {
 	font: 12pt 'Montserrat';
-	color: #616d75;
+	color: var(--light-grey);
 }
 
 #profile-error-container {
@@ -100,7 +100,7 @@
 #profile-misc-infos .profile-misc {
 	margin-top: 10px;
 	margin-right: 10px;
-	color: #616d75;
+	color: var(--light-grey);
 }
 
 #profile-misc-infos .profile-misc i {
@@ -108,7 +108,7 @@
 }
 
 #profile-created-at {
-	color: #616d75;
+	color: var(--light-grey);
 }
 
 #profile-created-at i {
@@ -123,7 +123,7 @@
 
 #profile-stats .profile-stat {
 	margin-right: 20px;
-	color: #616d75;
+	color: var(--light-grey);
 }
 
 #profile-stats .profile-stat .counter {
@@ -132,7 +132,7 @@
 }
 
 #profile-tweets, #profile-likes {
-	border-top: 1px solid #38444d;
+	border-top: 1px solid var(--light-grey);
 }
 
 #profile-editor-container {

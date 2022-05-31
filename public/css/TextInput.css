@@ -9,7 +9,7 @@
 	font: 14pt 'Roboto';
 	width: 100%;
 	appearance: none;
-	border: 1px solid #555;
+	border: 1px solid var(--light-grey);
 	color: #fff;
 	padding: 14px 6px;
 	border-radius: 8px;
@@ -22,7 +22,7 @@
 	display: block;
 	width: 100%;
 	box-sizing: border-box;
-	color: #fff;
+	color: var(--main-white);
 	overflow: hidden;
 	height: auto;
 	white-space: pre-wrap;
@@ -37,14 +37,14 @@
 	top: 2px;
 	transform: translateY(0);
 	left: 8px;
-	color: #555;
+	color: var(--light-grey);
 	transition: all .3s ease;
 	pointer-events: none;
 }
 
 .text-input input:focus,
 .text-input .textarea:focus {
-	outline: 2px solid #1D9BF0;
+	outline: 2px solid var(--main-blue);
 	border-color: transparent;
 }
 
@@ -57,7 +57,7 @@
 
 .text-input input:focus~.text-input-placeholder,
 .text-input .textarea:focus~.text-input-placeholder {
-	color: #1D9BF0;
+	color: var(--main-blue);
 	font-size: 0.8rem;
 	top: 2px;
 	transform: translateY(0);
@@ -87,13 +87,14 @@
 	position: absolute;
 	top: 3px;
 	right: 5px;
-	color: #616d75;
+	color: var(--main-white);
 	font-size: 10pt;
 }
 
-.text-input.invalid .limit-indicator{
-	 color: #b61212;
+.text-input.invalid .limit-indicator {
+	color: #b61212;
 }
+
 .text-input.invalid input {
 	outline-color: #b61212 !important;
 	border-color: #b61212 !important;

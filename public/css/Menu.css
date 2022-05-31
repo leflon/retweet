@@ -13,7 +13,7 @@
 	border-radius: 30px;
 	text-decoration: none;
 	transition: .2s ease;
-	color: white;
+	color: var(--main-white);
 	text-decoration: none !important;
 }
 

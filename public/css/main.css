@@ -16,6 +16,21 @@ html, body {
 	background-color: var(--bg-blue);
 }
 
+body.epilepsie {
+	animation: moche 2s linear infinite;
+	--main-blue: #c6f01d;
+	--main-white: #2587bb;
+	--light-grey: #09ff00;
+	--lighter-grey: #11ff00;
+	--bg-blue: #f9bdfb;
+}
+
+@keyframes moche {
+	to {
+		filter: hue-rotate(360deg);
+	}
+}
+
 body {
 	display: flex;
 	flex-direction: row;
@@ -47,7 +62,7 @@ a:hover {
 	justify-content: center;
 	padding: 0 20px;
 	font: bold 16pt 'Montserrat';
-	color: #fff;
+	color: var(--main-white);
 	position: sticky;
 	top: 0;
 	backdrop-filter: blur(15px);

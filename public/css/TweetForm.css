@@ -3,9 +3,10 @@
 	width: 100%;
 	margin: 0 auto;
 	padding: 10px 0;
-	border-bottom: 1px solid #38444d;
+	border-bottom: 1px solid var(--light-grey);
 	box-sizing: border-box;
 }
+
 .tweet-form .flex-input {
 	display: flex;
 	flex-direction: row;
@@ -13,8 +14,8 @@
 
 .tweet-form .flex-input img {
 	width: 48px;
-    height: 48px;
-    border-radius: 50%;
+	height: 48px;
+	border-radius: 50%;
 	object-fit: cover;
 	margin-left: 10px;
 	margin-top: 10px;
@@ -31,7 +32,7 @@
 
 .tweet-form .content:empty:before {
 	content: 'Quoi de neuf ?';
-	color: #616d75;
+	color: var(--light-grey);
 }
 
 .tweet-form .image-preview-container img {
@@ -51,7 +52,7 @@
 	margin-left: 58px;
 }
 
-.tweet-form input[type='submit']	{
+.tweet-form input[type='submit'] {
 	position: absolute;
 	bottom: 10px;
 	right: 10px;
