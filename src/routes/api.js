@@ -42,7 +42,7 @@ router.post('/tweets/add', upload.single('image'), async (req, res) => {
 		parentTweet.replies.push(tweet.id);
 		await parentTweet.save();
 	}
-	return res.redirect(`/home`);
+	return res.redirect(`/tweet/${tweet.id}`);
 });
 
 /**
