@@ -1,3 +1,5 @@
+const {escape} = require('html-escaper');
+
 class Tweet {
 	/**
 	 * Connection à la base de données.
@@ -17,7 +19,7 @@ class Tweet {
 		 * Contenu du tweet.
 		 * @type {string}
 		 */
-		this.content = sqlRow.content;
+		this.content = escape(sqlRow.content);
 		/**
 		 * Auteur du tweet.
 		 * Doit être récupéré par un appel manuel de la méthode `fetchAuthor`.

@@ -1,12 +1,12 @@
 {
 	"name": "retweet",
-	"version": "1.0.0",
-	"description": "Twitter mais par des jeunes français",
+	"version": "1.0.1",
+	"description": "Twitter comme à l'époque",
 	"main": "src/app.js",
-	"repository": "https://github.com/hickatheworld/retweet.git",
-	"author": "Hicka, Florilaige",
+	"repository": "https://github.com/paulleflon/retweet.git",
+	"author": "Paul Leflon",
 	"license": "MIT",
-	"private": true,
+	"private": false,
 	"scripts": {
 		"start": "node src/app.js",
 		"dev": "nodemon -e js -L"
@@ -18,6 +18,7 @@
 		"dotenv": "^15.0.0",
 		"express": "^4.17.2",
 		"googleapis": "^95.0.0",
+		"html-escaper": "^3.0.3",
 		"multer": "^1.4.4",
 		"mysql2": "^2.3.3",
 		"nodemailer": "^6.7.2",
@@ -26,5 +27,5 @@
 	"devDependencies": {
 		"nodemon": "^2.0.15"
 	},
-	"packageManager": "yarn@3.1.1"
+	"packageManager": "yarn@4.4.1+sha512.f825273d0689cc9ead3259c14998037662f1dcd06912637b21a450e8da7cfeb4b1965bbee73d16927baa1201054126bc385c6f43ff4aa705c8631d26e12460f1"
 }
