@@ -221,7 +221,6 @@ router.get('/follow/:id', async (req, res) => {
  * :id - Id de l'utilisateur à ne plus suivre.
  */
 router.get('/unfollow/:id', async (req, res) => {
-	console.log(req.params.id);
 	const user = await req.app.db.getUserById(req.params.id);
 	if (!user)
 		return res.status(400).send({message: 'Cet utilisateur n\'existe pas.'});

@@ -34,7 +34,6 @@ if ((USER.id === PROFILE.id || USER.isAdmin) && !PROFILE.isDeleted) {
 	const avatarInput = form.querySelector('input#avatar');
 	const bannerInput = form.querySelector('input#banner');
 	const onChange = e => {
-		console.log(e);
 		const file = e.target.files[0];
 		const img = form.querySelector(`.profile-${e.target.id} img`);
 		if (file) {
