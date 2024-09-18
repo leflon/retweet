@@ -123,8 +123,8 @@ router.get('/search', async (req, res) => {
 	if (!req.query.q || !req.query.q.trim())
 		return res.render('search', {welcome: true});
 	let query = '%' + req.query.q + '%';
-	const [tweets] = await req.app.db.connection.query('SELECT * FROM Tweet WHERE content LIKE ? ORDER BY JSON_LENGTH(retweets) DESC, JSON_LENGTH(likes) DESC', [query]);
-	const [users] = await req.app.db.connection.query('SELECT * FROM User WHERE username LIKE ? OR display_name LIKE ?', [query, query]);
+	const [tweets] = await req.app.db.connection.query('SELECT * FROM Tweet WHERE content LIKE ? AND is_deleted = 0 ORDER BY JSON_LENGTH(retweets) DESC, JSON_LENGTH(likes) DESC', [query]);
+	const [users] = await req.app.db.connection.query('SELECT * FROM User WHERE is_deleted = 0 AND is_suspended = 0 AND (username LIKE ? OR display_name LIKE ?)', [query, query]);
 	const formattedTweets = await formatTweetList(tweets, req.app.db);
 	const formattedUsers = users.map(u => new User(u));
 	console.log(formattedTweets, formattedUsers);
