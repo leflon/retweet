@@ -1,4 +1,6 @@
 const {Router} = require('express');
+const {formatTweetList} = require('../lib/misc/TweetUtils');
+const User = require('../lib/db/User');
 const router = Router();
 
 
@@ -115,6 +117,19 @@ router.get('/profile/:username', async (req, res) => {
 		await tweet.fetchAuthor();
 	}
 	res.render('profile', {profile: user, tweets, likes});
+});
+
+router.get('/search', async (req, res) => {
+	if (!req.query.q || !req.query.q.trim())
+		return res.render('search', {welcome: true});
+	let query = '%' + req.query.q + '%';
+	const [tweets] = await req.app.db.connection.query('SELECT * FROM Tweet WHERE content LIKE ? ORDER BY JSON_LENGTH(retweets) DESC, JSON_LENGTH(likes) DESC', [query]);
+	const [users] = await req.app.db.connection.query('SELECT * FROM User WHERE username LIKE ? OR display_name LIKE ?', [query, query]);
+	const formattedTweets = await formatTweetList(tweets, req.app.db);
+	const formattedUsers = users.map(u => new User(u));
+	console.log(formattedTweets, formattedUsers);
+	res.render('search', {tweets: formattedTweets, users: formattedUsers, query: req.query.q});
+
 });
 
 module.exports = router;

@@ -1,0 +1,43 @@
+.page-center .page-title.search {
+	padding: 0;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.page-title.search, .page-title.people, .page-title.tweets {
+	border-bottom: 1px solid var(--light-grey);
+}
+
+
+.page-title.search > div {
+	position: relative;
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	& i {
+		position: absolute;
+		right: 9%;
+		font-size: 11pt;
+	}
+}
+.page-title.search input {
+	border: 1px solid var(--light-grey);
+	color: var(--main-white);
+	background: none;
+	padding: 5px 20px;
+	border-radius: 10em;
+	font-size: 14pt;
+	width: 80%;
+	&:focus {
+		border-color: var(--lighter-grey);
+		outline: none;
+	}
+}
+
+.no-result {
+	font: 700 20pt 'Montserrat';
+	text-align: center;
+	margin: 20px 0;
+}

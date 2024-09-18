@@ -1,0 +1,39 @@
+a.listing-profile {
+	position: relative;
+	display: block;
+	text-decoration: none;
+	height: 60px;
+	border-bottom: 1px solid var(--light-grey);
+	display: flex;
+	padding: 10px;
+	overflow: hidden;
+	transition: background .3s ease;
+	&:hover {
+		background: #ffffff05;
+	}
+}
+
+.listing-profile .left {
+	padding-right: 10px;
+
+	& img {
+		width: 48px;
+		height: 48px;
+		border-radius: 50%;
+	}
+}
+
+.listing-profile .right {
+	& .profile-heading {
+		display: flex;
+		gap: 5px;
+		& .profile-display-name { color: var(--main-white);}
+		& .profile-user-name {color: var(--lighter-grey);}
+	}
+
+	& .profile-bio {
+		margin-top: 5px;
+		color: var(--main-white);
+		word-break: break-all;
+	}
+}

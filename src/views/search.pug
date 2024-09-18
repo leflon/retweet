@@ -1,0 +1,41 @@
+include mixins/TweetList
+include mixins/TextInput
+include mixins/ListingProfile
+include mixins/Menu
+doctype html
+html
+	head
+		include _head
+		meta(charset='UTF-8')
+		meta(http-equiv='X-UA-Compatible', content='IE=edge')
+		meta(name='viewport', content='width=device-width, initial-scale=1.0')
+		link(rel='stylesheet', href='/public/css/search.css')
+		link(rel='stylesheet', href='/public/css/Tweet.css')
+		link(rel='stylesheet', href='/public/css/TextInput.css')
+		link(rel='stylesheet', href='/public/css/ListingProfile.css')
+		link(rel='stylesheet', href='/public/css/Menu.css')
+		script(src='https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.29.3/moment-with-locales.min.js')
+		script(src='/public/js/Tweet.js', defer)
+		
+	body
+		+Menu
+		.page-center
+			.page-title Search
+			.page-title.search
+				div
+					input#search-input(type='text',name='query', placeholder='Search tweets and people', value=query)
+					i.fa-solid.fa-magnifying-glass
+			if users && users.length
+				.page-title.people People
+				each u in users
+					+ListingProfile(u)
+			if tweets && tweets.length
+				.page-title.tweets Tweets
+				+TweetList(tweets, 'search-results', 'Aucun résultat')
+			if !welcome && !users.length && !tweets.length
+				.no-result Aucun résultat
+			script.
+				document.querySelector('#search-input').addEventListener('keydown', ({target,key}) => {
+					if (key === 'Enter' && target.value.trim())
+						location.href = '/search?q=' + encodeURIComponent(target.value.trim());
+				});

@@ -1,0 +1,12 @@
+mixin ListingProfile(user)
+	a.listing-profile(href=`/profile/${user.username}`)
+		.left
+			img.avatar(src=`/public/${user.avatarId || 'default_avatar'}.jpg`)
+		.right
+			.profile-heading
+				.profile-display-name #{user.displayName}
+				.profile-user-name @#{user.username}
+				if user.isAdmin
+					span.profile-admin(title='Administrateur')
+								i.fa-solid.fa-hammer
+			.profile-bio #{user.bio}
