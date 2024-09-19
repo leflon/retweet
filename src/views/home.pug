@@ -18,6 +18,7 @@ html
 	body
 		+Menu
 		.page-center
-			.page-title #{everything ? 'Tous les tweets' : 'Accueil'}
+			.page-title 
+				.page-title-text #{everything ? 'Tous les tweets' : 'Accueil'}
 			+TweetForm('Quoi de neuf ?')
 			+TweetList(tweets, 'home-timeline', 'Aucun tweet.')

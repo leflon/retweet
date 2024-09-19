@@ -64,6 +64,14 @@
 	color: var(--lighter-grey);
 	font-size: 10pt;
 	text-decoration: none;
+	display: flex;
+	align-items: center;
+	& .username {
+		width: 30%;
+		overflow: hidden;
+		text-overflow: ellipsis;
+		display: inline-block;
+	}
 }
 
 .tweet .ref i {

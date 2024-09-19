@@ -1,6 +1,6 @@
 {
 	"name": "retweet",
-	"version": "1.1.1",
+	"version": "1.1.2",
 	"description": "Twitter comme à l'époque",
 	"main": "src/app.js",
 	"repository": "https://github.com/paulleflon/retweet.git",

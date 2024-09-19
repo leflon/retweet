@@ -26,7 +26,8 @@ html
 		+Menu
 		if unknown || suspended || deleted
 			.page-center
-				.page-title Profil
+				.page-title 
+					.page-title-text Profil
 				#profile
 					div.profile-banner
 						img(src='/public/default_banner.jpg')
@@ -66,7 +67,8 @@ html
 							+TextInput('website', false, false, 'Site Internet', 100,  profile.website)
 							+TextInput('location', false, false, 'Localisation', 30, profile.location)
 			.page-center
-				.page-title #{profile.displayName || '@' + profile.username}
+				.page-title 
+					.page-title-text #{profile.displayName || '@' + profile.username}
 					.page-subtitle #{tweets.length} tweets
 				#profile
 					div.profile-banner

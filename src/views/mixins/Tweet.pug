@@ -7,7 +7,8 @@ mixin Tweet(tw, full)
 			if tw.retweeter 
 				a.ref(href=`/profile/${tw.retweeter.username}`) 
 					i.fa-solid.fa-retweet
-					span #{tw.retweeter.displayName || tw.retweeter.username} a retweeté
+					span.username #{tw.retweeter.displayName || tw.retweeter.username}
+					span a retweeté
 			if !tw.isDeleted && (tw.author.id == user.id || user.isAdmin)
 				.tweet-action(tweet=`${tw.id}`, action='delete').fa-solid.fa-trash-can.delete.icon-button
 			.tweet-heading
