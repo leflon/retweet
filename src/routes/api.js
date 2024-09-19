@@ -78,6 +78,18 @@ router.get('/tweets/like/:id', async (req, res) => {
 	req.user.likes.push(tweet.id);
 	await req.user.save();
 	await tweet.save();
+	const [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription WHERE user_id = ?', [tweet.authorId]);
+	if (subs.length) {
+		const notification = {
+			title: `${req.user.displayName || '@' + req.user.username} a aimé votre tweet`,
+			body: `${tweet.content.slice(0, 10)}${tweet.content.length > 10 ? '...' : ''}\n${tweet.likes.length} like${tweet.likes.length > 1 ? 's' : ''}`,
+			icon: process.env.APP_URL + `/public/${req.user.avatarId || 'default_avatar'}.jpg`,
+			url: process.env.APP_URL + `/tweet/${tweet.id}`
+		};
+		for (const sub of subs) {
+			webpush.sendNotification(sub.subscription, JSON.stringify(notification)).catch(console.error);
+		}
+	}
 	return res.status(200).send({count: tweet.likes.length});
 });
 
