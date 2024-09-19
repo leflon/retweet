@@ -11,9 +11,12 @@ const router = Router();
  * Envoie un tweet.
  */
 router.post('/tweets/add', upload.single('image'), async (req, res) => {
-	const {content, repliesTo} = req.body;
+	let {content, repliesTo} = req.body;
+	content = content.trim();
 	let parentTweet;
 	let repliesToUsername;
+	if (content.length < 1)
+		return res.status(400).send({message: 'Contenu trop court.'});
 	if (content.length > 280)
 		return res.status(400).send({message: 'Contenu trop long.'});
 	if (repliesTo) {
