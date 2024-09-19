@@ -271,6 +271,20 @@ router.get('/follow/:id', async (req, res) => {
 	req.user.follows.push(user.id);
 	await user.save();
 	await req.user.save();
+
+	const [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription WHERE user_id = ?', [user.id]);
+	if (subs.length) {
+		const notification = {
+			title: `Nouveau follower !`,
+			body: `${req.user.displayName || '@' + req.user.username} vous a suivi. Dites lui bonjour !`,
+			icon: process.env.APP_URL + `/public/${req.user.avatarId || 'default_avatar'}.jpg`,
+			url: process.env.APP_URL + `/profile/${req.user.username}`
+		};
+		for (const sub of subs) {
+			webpush.sendNotification(sub.subscription, JSON.stringify(notification)).catch(console.error);
+		}
+	}
+
 	return res.send({followed: true});
 });
 
