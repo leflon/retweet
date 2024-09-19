@@ -45,10 +45,8 @@ router.post('/tweets/add', upload.single('image'), async (req, res) => {
 	}
 
 	const {followers} = req.user;
-	console.log(req.user);
 	if (followers) {
 		const [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription WHERE user_id IN (?)', [followers]);
-		console.log(subs);
 		const notification = {
 			title: `Nouveau tweet de ${(req.user.displayName || '@' + req.user.username)}`,
 			body: content,
