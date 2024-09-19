@@ -6,6 +6,8 @@ const path = require('path');
 const Logger = require('./lib/misc/Logger');
 const app = express();
 const upload = multer({dest: './uploads'});
+const webpushConfig = require('./web-push');
+const webpush = require('web-push');
 
 // Middleware
 app.use(cookieParser(process.env.COOKIE_SECRET));
@@ -24,6 +26,22 @@ app.db = require('./lib/db/Database');
 app.use('/', require('./routes/index'));
 app.use('/', require('./routes/wall'));
 app.use('/api', require('./routes/api'));
+app.get('/sw.js', (req, res) => {
+	res.sendFile('./sw.js', {root: path.join(__dirname)});
+});
+
+app.get('/test', async (req, res) => {
+	const [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription');
+	const notification = {title: 'NOTIFICATION'};
+	const notifs = [];
+	console.log(subs);
+	for (const sub of subs) {
+		notifs.push(webpush.sendNotification(sub.subscription, JSON.stringify(notification)));
+	}
+	await Promise.all(notifs).catch((err) => console.log(err));
+	res.sendStatus(201);
+});
+webpushConfig();
 
 app.db.connect().then(() => {
 	app.log.info('Connecté à la base de données.');

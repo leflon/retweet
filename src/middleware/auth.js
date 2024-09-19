@@ -5,7 +5,8 @@ module.exports = async function(req, res, next) {
 	if (req.path.startsWith('/public') ||
 		req.path.startsWith('/register') ||
 		req.path.startsWith('/renew-password') ||
-		req.path.startsWith('/recover'))
+		req.path.startsWith('/recover') ||
+		req.path.startsWith('/test'))
 		return next();
 
 	// Redirige vers l'accueil si l'utilisateur est connecté.

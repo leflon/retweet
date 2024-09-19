@@ -15,3 +15,16 @@ mixin Menu
 		a.main-menu-button(href='/logout')
 			i.fa-solid.fa-arrow-right-from-bracket
 			div Se déconnecter
+		a.main-menu-button(href='#')#allow-push
+			i.fa-solid.fa-bell
+			div Activer les notifications !
+	// I put it here because Menu is already everywhere. Debt is high enough I don't care anymore.
+	#notification-container
+		#notification-popup
+			#beta-banner BETA
+			i.fa-solid.fa-bell
+			#notification-title Activer les notifications
+			#notification-desc Ne manquez plus rien du meilleur d'Internet ! Activez les notifications Push.
+			#notification-buttons
+				#accept Activer
+				#decline Non merci

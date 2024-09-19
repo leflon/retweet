@@ -58,6 +58,11 @@ CREATE TABLE `Recover` (
   `created_at` DATETIME NOT NULL,
   PRIMARY KEY (`token`));
 
+CREATE TABLE `Subscription`(
+  `user_id` CHAR(16) NOT NULL,
+  `subscription` json NOT NULL
+);
+
 CREATE TABLE `Id` (
   `id` CHAR(16) NOT NULL,
   `created_at` DATETIME NOT NULL,

@@ -2,6 +2,7 @@ const {Router} = require('express');
 const {join} = require('path');
 const multer = require('multer');
 const upload = multer({dest: 'uploads/'});
+const webpush = require('web-push');
 
 const router = Router();
 
@@ -42,6 +43,24 @@ router.post('/tweets/add', upload.single('image'), async (req, res) => {
 		parentTweet.replies.push(tweet.id);
 		await parentTweet.save();
 	}
+
+	const {followers} = req.user;
+	console.log(req.user);
+	if (followers) {
+		const [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription WHERE user_id IN (?)', [followers]);
+		console.log(subs);
+		const notification = {
+			title: `Nouveau tweet de ${(req.user.displayName || '@' + req.user.username)}`,
+			body: content,
+			icon: process.env.APP_URL + `/public/${req.user.avatarId || 'default_avatar'}.jpg`,
+			image: process.env.APP_URL + `/public/${imageId}.jpg`,
+			url: process.env.APP_URL + `/tweet/${tweet.id}`
+		};
+		for (const sub of subs) {
+			webpush.sendNotification(sub.subscription, JSON.stringify(notification)).catch(console.error);
+		}
+	}
+
 	return res.redirect(`/tweet/${tweet.id}`);
 });
 
@@ -234,6 +253,12 @@ router.get('/unfollow/:id', async (req, res) => {
 	await user.save();
 	await req.user.save();
 	return res.send({unfollowed: true});
+});
+
+router.post('/subscription', async (req, res) => {
+	const subscription = req.body;
+	await req.app.db.connection.query('INSERT INTO Subscription VALUES (?, ?)', [req.user.id, JSON.stringify(subscription)]);
+	res.sendStatus(201);
 });
 
 module.exports = router;

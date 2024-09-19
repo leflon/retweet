@@ -1,0 +1,26 @@
+{
+	"theme_color": "#151b29",
+	"background_color": "#1e9bf0",
+	"icons": [
+		{
+			"purpose": "maskable",
+			"sizes": "512x512",
+			"src": "icon512_maskable.png",
+			"type": "image/png"
+		},
+		{
+			"purpose": "any",
+			"sizes": "512x512",
+			"src": "icon512_rounded.png",
+			"type": "image/png"
+		}
+	],
+	"orientation": "portrait",
+	"display": "standalone",
+	"dir": "auto",
+	"lang": "fr-FR",
+	"name": "Twitter",
+	"short_name": "Twitter",
+	"start_url": "https://twitter.paulleflon.fr",
+	"scope": "https://twitter.paulleflon.fr/"
+}
