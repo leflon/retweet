@@ -130,6 +130,36 @@ router.get('/tweets/retweet/:id', async (req, res) => {
 	});
 	tweet.retweets.push(req.user.id);
 	await tweet.save();
+
+	// Notify the author of the tweet
+	let [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription WHERE user_id = ?', [tweet.authorId]);
+	if (subs.length) {
+		const notification = {
+			title: `${req.user.displayName || '@' + req.user.username} a retweeté votre tweet`,
+			body: `${tweet.content}`,
+			icon: process.env.APP_URL + `/public/${req.user.avatarId || 'default_avatar'}.jpg`,
+			url: process.env.APP_URL + `/tweet/${tweet.id}`
+		};
+		for (const sub of subs) {
+			webpush.sendNotification(sub.subscription, JSON.stringify(notification)).catch(console.error);
+		}
+	}
+	if (req.user.followers.length) {
+		// Notify the followers of the retweeter. (But if the author is part of them, we don't notify them again)
+		[subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription WHERE user_id IN (?) AND user_id <> ?', [req.user.followers, tweet.authorId]);
+		if (subs.length) {
+			await tweet.fetchAuthor();
+			const notification = {
+				title: `${req.user.displayName || '@' + req.user.username} a retweeté un tweet de ${tweet.author.displayName || '@' + tweet.author.username}`,
+				body: `${tweet.content}`,
+				icon: process.env.APP_URL + `/public/${req.user.avatarId || 'default_avatar'}.jpg`,
+				url: process.env.APP_URL + `/tweet/${tweet.id}`
+			};
+			for (const sub of subs) {
+				webpush.sendNotification(sub.subscription, JSON.stringify(notification)).catch(console.error);
+			}
+		}
+	}
 	return res.status(200).send({count: tweet.retweets.length});
 });
 
