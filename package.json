@@ -9,7 +9,8 @@
 	"private": false,
 	"scripts": {
 		"start": "node src/app.js",
-		"dev": "nodemon -e js -L"
+		"dev": "nodemon -e js -L",
+		"update": "git reset --hard && git pull && pm2 restart \"Retweet\""
 	},
 	"dependencies": {
 		"bcrypt": "^5.0.1",
