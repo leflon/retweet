@@ -29,18 +29,6 @@ app.use('/api', require('./routes/api'));
 app.get('/sw.js', (req, res) => {
 	res.sendFile('./sw.js', {root: path.join(__dirname)});
 });
-
-app.get('/test', async (req, res) => {
-	const [subs] = await req.app.db.connection.query('SELECT subscription FROM Subscription');
-	const notification = {title: 'NOTIFICATION'};
-	const notifs = [];
-	console.log(subs);
-	for (const sub of subs) {
-		notifs.push(webpush.sendNotification(sub.subscription, JSON.stringify(notification)));
-	}
-	await Promise.all(notifs).catch((err) => console.log(err));
-	res.sendStatus(201);
-});
 webpushConfig();
 
 app.db.connect().then(() => {
