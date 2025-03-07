@@ -1,4 +1,4 @@
-# [retweet](https://retweet-nsi.xyz)
+# retweet
 
 This project was made as a school project for the last year of high school (🇫🇷 La Terminale).
 
